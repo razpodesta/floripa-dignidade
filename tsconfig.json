@@ -8,6 +8,9 @@
     },
     {
       "path": "./apps/floripa-dignidade"
+    },
+    {
+      "path": "./libs/core/logger"
     }
   ]
 }
