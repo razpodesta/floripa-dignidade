@@ -1,0 +1,10 @@
+{
+  "name": "@floripa-dignidade/floripa-dignidade-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@floripa-dignidade/floripa-dignidade"
+    ]
+  }
+}

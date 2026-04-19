@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/floripa-dignidade-e2e"
+    },
+    {
+      "path": "./apps/floripa-dignidade"
+    }
+  ]
+}
