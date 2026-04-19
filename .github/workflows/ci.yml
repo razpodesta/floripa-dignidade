@@ -3,9 +3,10 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - main # Cambiado de master a main según tus capturas de pantalla previas
   pull_request:
 
+# Estándar de seguridad: Mínimos privilegios necesarios
 permissions:
   actions: read
   contents: read
@@ -14,35 +15,46 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # 1. Checkout con historial completo para que Nx pueda comparar versiones (necesario para affected)
+      - name: Checkout Repo
+        uses: actions/checkout@v4
         with:
-          filter: tree:0
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
+      # 2. Setup de pnpm (usando v4 como en tu base)
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
           run_install: false
 
-      # This enables task distribution via Nx Cloud
-      # Run this command as early as possible, before dependencies are installed
-      # Learn more at https://nx.dev/ci/reference/nx-cloud-cli#npx-nxcloud-startcirun
-      # Connect your workspace by running "nx connect" and uncomment this line to enable task distribution
-      # - run: pnpm dlx nx start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
-
-      # Cache node_modules
-      - uses: actions/setup-node@v4
+      # 3. Setup de Node.js con Cache agresiva de pnpm
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
 
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps
+      # 4. Instalación de dependencias (estricta para CI)
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
 
-      # Prepend any command with "nx record --" to record its logs to Nx Cloud
-      # - run: pnpm exec nx record -- echo Hello World
-      # When you enable task distribution, run the e2e-ci task instead of e2e
-      - run: pnpm exec nx run-many -t lint test build typecheck e2e
-      # Nx Cloud recommends fixes for failures to help you get CI green faster. Learn more: https://nx.dev/ci/features/self-healing-ci
-      - run: pnpm exec nx fix-ci
+      # 5. Instalación de Playwright (solo las dependencias de sistema necesarias)
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+
+      # 6. Determinar el rango de comparación para Nx (Vital para el sistema Lego)
+      # Esto permite a Nx saber qué "bloques" han cambiado desde el último commit exitoso.
+      - name: Derive appropriate SHAs for help with affected commands
+        uses: nrwl/nx-set-shas@v4
+
+      # 7. EJECUCIÓN DE TAREAS (Arquitectura Lego en acción)
+      # Usamos 'affected' en lugar de 'run-many' para ahorrar tiempo y recursos.
+      # Solo probaremos los módulos que tocaste o los que se ven afectados por tus cambios.
+      - name: Run Quality Gate (Affected)
+        run: pnpm exec nx affected -t lint test build typecheck e2e --parallel=3
+
+      # 8. Nx Cloud Self-Healing
+      # Si algo falla, la IA de Nx intentará darte la solución exacta en el log.
+      - name: Nx Cloud Fix-CI
+        run: pnpm exec nx fix-ci
         if: always()

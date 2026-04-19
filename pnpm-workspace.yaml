@@ -1,11 +1,15 @@
 packages:
-  - 'apps/*'
-  - 'libs/core/*'
+  - apps/*
+  - libs/core/*
+  - libs/modules/*
+
 autoInstallPeers: true
+
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@swc/core'
-  - 'less'
-  - 'nx'
-  - 'sharp'
-  - 'unrs-resolver'
+  - esbuild
+  - less
+  - nx
+  - sharp
+  - unrs-resolver

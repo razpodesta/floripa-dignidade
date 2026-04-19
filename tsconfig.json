@@ -11,6 +11,27 @@
     },
     {
       "path": "./libs/core/logger"
+    },
+    {
+      "path": "./libs/core/logger"
+    },
+    {
+      "path": "./libs/core/errors"
+    },
+    {
+      "path": "./libs/core/metrics"
+    },
+    {
+      "path": "./libs/core/health"
+    },
+    {
+      "path": "./libs/modules/newsletter"
+    },
+    {
+      "path": "./apps/content-manager-system-e2e"
+    },
+    {
+      "path": "./apps/content-manager-system"
     }
   ]
 }
