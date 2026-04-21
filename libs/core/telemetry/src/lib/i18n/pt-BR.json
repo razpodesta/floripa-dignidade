@@ -1,0 +1,7 @@
+{
+  "signals": {
+    "START_PROCESS": "Iniciando processamento atômico.",
+    "END_PROCESS": "Processamento finalizado com sucesso.",
+    "LATENCY_REPORT": "Latência de execução medida em milissegundos."
+  }
+}

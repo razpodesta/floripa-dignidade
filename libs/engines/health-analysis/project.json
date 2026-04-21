@@ -1,0 +1,35 @@
+{
+  "name": "@floripa-dignidade/health-analysis-engine",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/engines/health-analysis/src",
+  "projectType": "library",
+  "tags": [
+    "scope:engines",
+    "type:logic",
+    "platform:isomorphic"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{workspaceRoot}/dist/libs/engines/health-analysis"],
+      "options": {
+        "outputPath": "dist/libs/engines/health-analysis",
+        "main": "libs/engines/health-analysis/src/index.ts",
+        "tsConfig": "libs/engines/health-analysis/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p libs/engines/health-analysis/tsconfig.lib.json"
+      },
+      "cache": true
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "@floripa-dignidade/telemetry",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/core/telemetry/src",
+  "projectType": "library",
+  "tags":[
+    "scope:core",
+    "type:core",
+    "platform:isomorphic"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs":[
+        "{workspaceRoot}/dist/libs/core/telemetry"
+      ],
+      "options": {
+        "outputPath": "dist/libs/core/telemetry",
+        "main": "libs/core/telemetry/src/index.ts",
+        "tsConfig": "libs/core/telemetry/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p libs/core/telemetry/tsconfig.lib.json"
+      },
+      "cache": true
+    }
+  }
+}

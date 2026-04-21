@@ -1,21 +1,38 @@
 {
   "compilerOptions": {
-    "composite": true,
-    "declarationMap": true,
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": true,
+    "moduleResolution": "bundler",
     "emitDeclarationOnly": true,
+    "module": "esnext",
+    "target": "es2022",
     "importHelpers": true,
     "isolatedModules": true,
-    "lib": ["es2022"],
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "noEmitOnError": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "skipLibCheck": true,
     "strict": true,
-    "target": "es2022",
-    "customConditions": ["@floripa-dignidade/source"]
-  }
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "baseUrl": ".",
+    "paths": {
+      "@floripa-dignidade/analytics": ["libs/core/analytics/src/index.ts"],
+      "@floripa-dignidade/exceptions": ["libs/core/exceptions/src/index.ts"],
+      "@floripa-dignidade/telemetry": ["libs/core/telemetry/src/index.ts"],
+      "@floripa-dignidade/health-monitor": ["libs/engines/health-monitor/src/index.ts"],
+      "@floripa-dignidade/health-analysis-engine": ["libs/engines/health-analysis/src/index.ts"],
+      "@floripa-dignidade/newsletter": ["libs/modules/newsletter/src/index.ts"],
+      "@floripa-dignidade/identity": ["libs/modules/identity/src/index.ts"],
+      "@floripa-dignidade/social-media": ["libs/modules/social-media/src/index.ts"],
+      "@floripa-dignidade/whatsapp-communication-service": ["libs/modules/whatsapp/communication-service/src/index.ts"],
+      "@floripa-dignidade/shared": ["libs/shared/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp", "dist"]
 }

@@ -1,0 +1,9 @@
+{
+  "errors": {
+    "ADN_CORRUPTO": "The analytical event was rejected for failing the security structure.",
+    "PERDIDA_CONEXION": "Telemetry synchronization failed. Retrying in background."
+  },
+  "logs": {
+    "EVENTO_CAPTURADO": "Anonymized user event captured successfully."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "@floripa-dignidade/health-monitor",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/engines/health-monitor/src",
+  "projectType": "library",
+  "tags": [
+    "scope:engines",
+    "type:logic",
+    "platform:node"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{workspaceRoot}/dist/libs/engines/health-monitor"],
+      "options": {
+        "outputPath": "dist/libs/engines/health-monitor",
+        "main": "libs/engines/health-monitor/src/index.ts",
+        "tsConfig": "libs/engines/health-monitor/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p libs/engines/health-monitor/tsconfig.lib.json"
+      },
+      "cache": true
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "@floripa-dignidade/analytics",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/core/analytics/src",
+  "projectType": "library",
+  "tags": [
+    "scope:core",
+    "type:core",
+    "platform:web"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": [
+        "{workspaceRoot}/dist/libs/core/analytics"
+      ],
+      "options": {
+        "outputPath": "dist/libs/core/analytics",
+        "main": "libs/core/analytics/src/index.ts",
+        "tsConfig": "libs/core/analytics/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p libs/core/analytics/tsconfig.lib.json"
+      },
+      "cache": true
+    }
+  }
+}

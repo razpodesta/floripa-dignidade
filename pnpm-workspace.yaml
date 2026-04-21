@@ -1,15 +1,15 @@
 packages:
-  - apps/*
-  - libs/core/*
-  - libs/modules/*
-
+  - 'apps/*'
+  - 'libs/core/*'
+  - 'libs/modules/*'
+  - 'libs/engines/*'
+  - 'libs/modules/whatsapp/*'
 autoInstallPeers: true
-
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@swc/core'
-  - esbuild
-  - less
-  - nx
-  - sharp
-  - unrs-resolver
+  - 'esbuild'
+  - 'less'
+  - 'nx'
+  - 'sharp'
+  - 'unrs-resolver'

@@ -1,0 +1,9 @@
+{
+  "errors": {
+    "ADN_CORRUPTO": "El evento analítico fue rechazado por no cumplir la estructura de seguridad.",
+    "PERDIDA_CONEXION": "Falla de sincronización telemétrica. Reintentando en segundo plano."
+  },
+  "logs": {
+    "EVENTO_CAPTURADO": "Evento de usuario anonimizado capturado exitosamente."
+  }
+}

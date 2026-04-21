@@ -1,0 +1,35 @@
+{
+  "name": "@floripa-dignidade/exceptions",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/core/exceptions/src",
+  "projectType": "library",
+  "tags":[
+    "scope:core",
+    "type:core",
+    "platform:isomorphic"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{workspaceRoot}/dist/libs/core/exceptions"],
+      "options": {
+        "outputPath": "dist/libs/core/exceptions",
+        "main": "libs/core/exceptions/src/index.ts",
+        "tsConfig": "libs/core/exceptions/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p libs/core/exceptions/tsconfig.lib.json"
+      },
+      "cache": true
+    }
+  }
+}

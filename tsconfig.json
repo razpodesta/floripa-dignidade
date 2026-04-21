@@ -3,35 +3,17 @@
   "compileOnSave": false,
   "files": [],
   "references": [
-    {
-      "path": "./apps/floripa-dignidade-e2e"
-    },
-    {
-      "path": "./apps/floripa-dignidade"
-    },
-    {
-      "path": "./libs/core/logger"
-    },
-    {
-      "path": "./libs/core/logger"
-    },
-    {
-      "path": "./libs/core/errors"
-    },
-    {
-      "path": "./libs/core/metrics"
-    },
-    {
-      "path": "./libs/core/health"
-    },
-    {
-      "path": "./libs/modules/newsletter"
-    },
-    {
-      "path": "./apps/content-manager-system-e2e"
-    },
-    {
-      "path": "./apps/content-manager-system"
-    }
+    { "path": "./apps/floripa-dignidade" },
+    { "path": "./apps/content-manager-system" },
+    { "path": "./libs/core/analytics" },
+    { "path": "./libs/core/exceptions" },
+    { "path": "./libs/core/telemetry" },
+    { "path": "./libs/engines/health-monitor" },
+    { "path": "./libs/engines/health-analysis" },
+    { "path": "./libs/modules/newsletter" },
+    { "path": "./libs/modules/identity" },
+    { "path": "./libs/modules/social-media" },
+    { "path": "./libs/modules/whatsapp/communication-service" },
+    { "path": "./libs/shared" }
   ]
 }
