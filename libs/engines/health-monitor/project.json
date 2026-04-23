@@ -27,7 +27,7 @@
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc --noEmit -p libs/engines/health-monitor/tsconfig.lib.json"
+        "command": "tsc -b libs/engines/health-monitor/tsconfig.lib.json"
       },
       "cache": true
     }

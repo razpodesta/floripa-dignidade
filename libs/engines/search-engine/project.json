@@ -1,0 +1,36 @@
+{
+  "name": "@floripa-dignidade/search-engine",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/engines/search-engine/src",
+  "projectType": "library",
+  "tags": [
+    "scope:engines",
+    "type:logic",
+    "platform:isomorphic"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/engines/search-engine",
+        "main": "libs/engines/search-engine/src/index.ts",
+        "tsConfig": "libs/engines/search-engine/tsconfig.lib.json",
+        "swcrc": ".swcrc",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -b libs/engines/search-engine/tsconfig.lib.json"
+      },
+      "cache": true
+    }
+  }
+}

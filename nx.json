@@ -4,7 +4,7 @@
   "analytics": true,
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
-    "production": [
+    "production":[
       "default",
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/eslint.config.mjs",
@@ -16,7 +16,7 @@
     ],
     "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
-  "plugins": [
+  "plugins":[
     {
       "plugin": "@nx/js/typescript",
       "options": {
@@ -68,7 +68,10 @@
     "@nx/js:swc": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "inputs": ["production", "^production"],
+      "options": {
+        "swcrc": "{workspaceRoot}/.swcrc"
+      }
     }
   },
   "generators": {

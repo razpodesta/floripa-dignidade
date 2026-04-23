@@ -1,0 +1,35 @@
+{
+  "name": "@floripa-dignidade/routing",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/core/routing/src",
+  "projectType": "library",
+  "tags": [
+    "scope:core",
+    "type:logic",
+    "platform:isomorphic"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/core/routing",
+        "main": "libs/core/routing/src/index.ts",
+        "tsConfig": "libs/core/routing/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -b libs/core/routing/tsconfig.lib.json"
+      },
+      "cache": true
+    }
+  }
+}

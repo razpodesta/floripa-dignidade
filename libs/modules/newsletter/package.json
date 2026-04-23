@@ -1,21 +1,21 @@
 {
   "name": "@floripa-dignidade/newsletter",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
-    "./package.json": "./package.json",
     ".": {
-      "@floripa-dignidade/source": "./src/index.ts",
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "import": "./dist/index.js"
     }
   },
-  "dependencies": {
-    "tslib": "^2.3.0"
-  }
+  "nx": {
+    "tags": [
+      "scope:modules",
+      "type:logic",
+      "platform:isomorphic"
+    ]
+  },
+  "dependencies": {}
 }

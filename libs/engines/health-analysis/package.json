@@ -3,15 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "description": "Búnker de orquestación de inteligencia artificial y auditoría cognitiva de salud del sistema",
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
     }
   },
   "dependencies": {
     "@floripa-dignidade/telemetry": "workspace:*",
+    "@swc/helpers": "~0.5.18",
     "zod": "^3.25.76"
   }
 }

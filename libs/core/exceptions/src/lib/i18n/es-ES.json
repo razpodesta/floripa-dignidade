@@ -1,0 +1,9 @@
+{
+  "codes": {
+    "VALIDATION_FAILED": "Los datos proporcionados no cumplen con los criterios de seguridad o formato.",
+    "UNAUTHORIZED_ACCESS": "Su identidad no posee permisos para realizar esta acción.",
+    "INTERNAL_SYSTEM_FAILURE": "Ocurrió una falla interna en la plataforma. Nuestro equipo técnico ha sido notificado.",
+    "RESOURCE_NOT_FOUND": "El recurso solicitado no existe o fue eliminado permanentemente.",
+    "EXTERNAL_SERVICE_TIMEOUT": "Un servicio externo tardó demasiado en responder. Por favor, intente de nuevo."
+  }
+}

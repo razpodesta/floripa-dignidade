@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "description": "Búnker de captura de eventos de comportamiento y métricas de rendimiento (Web Vitals)",
   "sideEffects": false,
   "exports": {
     ".": {
@@ -10,7 +11,15 @@
       "import": "./dist/index.js"
     }
   },
+  "nx": {
+    "tags": [
+      "scope:core",
+      "type:core",
+      "platform:web"
+    ]
+  },
   "dependencies": {
+    "@floripa-dignidade/telemetry": "workspace:*",
     "zod": "^3.25.76"
   }
 }

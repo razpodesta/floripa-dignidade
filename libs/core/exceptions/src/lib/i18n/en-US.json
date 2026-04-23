@@ -1,0 +1,9 @@
+{
+  "codes": {
+    "VALIDATION_FAILED": "The provided data does not meet security or format criteria.",
+    "UNAUTHORIZED_ACCESS": "Your identity does not have permissions to perform this action.",
+    "INTERNAL_SYSTEM_FAILURE": "An internal platform failure occurred. Our technical team has been notified.",
+    "RESOURCE_NOT_FOUND": "The requested resource does not exist or has been permanently removed.",
+    "EXTERNAL_SERVICE_TIMEOUT": "An external service took too long to respond. Please try again."
+  }
+}

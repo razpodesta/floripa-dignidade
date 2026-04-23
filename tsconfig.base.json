@@ -1,36 +1,52 @@
 {
   "compilerOptions": {
     "rootDir": ".",
-    "sourceMap": true,
-    "declaration": true,
+    "baseUrl": ".",
+    "target": "ES2022",
+    /* Protocolo de Módulos de Alto Rendimiento (Next.js 15+ Optimized) */
+    "module": "Preserve",
     "moduleResolution": "bundler",
-    "emitDeclarationOnly": true,
-    "module": "esnext",
-    "target": "es2022",
-    "importHelpers": true,
-    "isolatedModules": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    /* Rigor Técnico y Seguridad de ADN */
     "strict": true,
     "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noPropertyAccessFromIndexSignature": true,
+
+    /* Configuración Isomórfica y Bundling */
+    "isolatedModules": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "baseUrl": ".",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+
+    /* Gestión de Rutas Soberanas (Alias del Workspace) */
     "paths": {
+      /* CAPA CORE: Infraestructura Transversal */
       "@floripa-dignidade/analytics": ["libs/core/analytics/src/index.ts"],
       "@floripa-dignidade/exceptions": ["libs/core/exceptions/src/index.ts"],
+      "@floripa-dignidade/routing": ["libs/core/routing/src/index.ts"],
       "@floripa-dignidade/telemetry": ["libs/core/telemetry/src/index.ts"],
-      "@floripa-dignidade/health-monitor": ["libs/engines/health-monitor/src/index.ts"],
+
+      /* CAPA ENGINES: Inteligencia y Auditoría */
       "@floripa-dignidade/health-analysis-engine": ["libs/engines/health-analysis/src/index.ts"],
-      "@floripa-dignidade/newsletter": ["libs/modules/newsletter/src/index.ts"],
+      "@floripa-dignidade/health-monitor": ["libs/engines/health-monitor/src/index.ts"],
+      "@floripa-dignidade/search-engine": ["libs/engines/search-engine/src/index.ts"],
+
+      /* CAPA MODULES: Dominios de Negocio */
       "@floripa-dignidade/identity": ["libs/modules/identity/src/index.ts"],
+      "@floripa-dignidade/newsletter": ["libs/modules/newsletter/src/index.ts"],
       "@floripa-dignidade/social-media": ["libs/modules/social-media/src/index.ts"],
       "@floripa-dignidade/whatsapp-communication-service": ["libs/modules/whatsapp/communication-service/src/index.ts"],
+
+      /* CAPA SHARED: Fundición Visual y Utilidades */
       "@floripa-dignidade/shared": ["libs/shared/src/index.ts"]
     }
   },

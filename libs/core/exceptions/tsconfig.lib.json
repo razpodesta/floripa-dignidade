@@ -1,18 +1,41 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "rootDir": "src",
-    "outDir": "dist",
-    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
-    "emitDeclarationOnly": false,
+
+    /* 🛡️ SANACIÓN DE RUTAS (Alignment OEDP-V13.0)
+       Sincronizamos la salida con la raíz del monorepo para caché distribuida. */
+    "outDir": "../../../dist/out-tsc/libs/core/exceptions",
+    "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/exceptions/tsconfig.lib.tsbuildinfo",
+
+    /* Protocolo de Proyecto Compuesto (Project References) */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true, /* Habilita navegación al código fuente desde otros búnkeres */
+    "emitDeclarationOnly": true,
+
+    /* Estándar TypeScript 6.0+ / Next.js 15+ */
     "module": "Preserve",
     "moduleResolution": "bundler",
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+
     "types": [],
-    "lib":["DOM", "DOM.Iterable", "ES2022"]
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2022"
+    ]
   },
-  "include":["src/**/*.ts", "src/**/*.json"],
-  "exclude":["src/**/*.spec.ts", "src/**/*.test.ts", "jest.config.ts"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.json"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "jest.config.ts"
+  ]
 }

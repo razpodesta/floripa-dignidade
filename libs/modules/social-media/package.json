@@ -1,42 +1,14 @@
 {
   "name": "@floripa-dignidade/social-media",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
-    "./package.json": "./package.json",
     ".": {
-      "@floripa-dignidade/source": "./src/index.ts",
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "import": "./dist/index.js"
     }
-  },
-  "nx": {
-    "sourceRoot": "libs/modules/social-media/src",
-    "targets": {
-      "build": {
-        "executor": "@nx/js:swc",
-        "outputs": [
-          "{options.outputPath}"
-        ],
-        "options": {
-          "outputPath": "libs/modules/social-media/dist",
-          "main": "libs/modules/social-media/src/index.ts",
-          "tsConfig": "libs/modules/social-media/tsconfig.lib.json",
-          "skipTypeCheck": true,
-          "stripLeadingPaths": true
-        }
-      }
-    },
-    "tags": [
-      "scope:modules",
-      "type:data",
-      "platform:node"
-    ]
   },
   "dependencies": {
     "@swc/helpers": "~0.5.18"

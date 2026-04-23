@@ -3,19 +3,40 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "description": "Global Visual System: Design Tokens, UI Primitives and Layout Orchestrators",
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./design-system": {
+      "types": "./src/lib/design-system/index.ts",
+      "import": "./src/lib/design-system/index.ts",
+      "default": "./src/lib/design-system/index.ts"
+    },
+    "./ui-primitives": {
+      "types": "./src/lib/ui-primitives/index.ts",
+      "import": "./src/lib/ui-primitives/index.ts",
+      "default": "./src/lib/ui-primitives/index.ts"
+    },
+    "./composite-ui": {
+      "types": "./src/lib/composite-ui/index.ts",
+      "import": "./src/lib/composite-ui/index.ts",
+      "default": "./src/lib/composite-ui/index.ts"
     }
   },
   "dependencies": {
+    "@floripa-dignidade/telemetry": "workspace:*",
     "@radix-ui/react-slot": "^1.1.0",
+    "@swc/helpers": "~0.5.18",
     "clsx": "^2.1.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "tailwind-merge": "^2.3.0",
     "zod": "^3.25.76"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }

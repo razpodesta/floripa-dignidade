@@ -16,10 +16,15 @@
         "name": "next"
       }
     ],
+    /**
+     * @important Resolución de Conflictos de Rutas
+     * Se mantienen los alias de la base y se añade el alias local de la app.
+     */
     "paths": {
+      "@floripa-dignidade/*": ["../../libs/*/src/index.ts"],
       "@/*": ["./src/*"]
     },
-    "types": ["jest", "node"],
+    "types": ["node"],
     "outDir": "dist",
     "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
@@ -27,23 +32,13 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/**/*.js",
-    "src/**/*.jsx",
-    "../../apps/floripa-dignidade/.next/types/**/*.ts",
-    "../../dist/apps/floripa-dignidade/.next/types/**/*.ts",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
-    "out-tsc",
-    "dist",
     "node_modules",
-    "jest.config.ts",
-    "jest.config.cts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    ".next",
-    "eslint.config.js",
-    "eslint.config.cjs",
-    "eslint.config.mjs"
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts"
   ]
 }

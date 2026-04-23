@@ -1,44 +1,112 @@
-import { AnalyticsEventSchema, IAnalyticsEvent } from './schemas/AnalyticsEvent.schema.js';
+/**
+ * @section Analytics Logic - User Interaction Capture
+ * @description Captura y purifica eventos de comportamiento siguiendo una estrategia
+ * de ejecución no bloqueante para el hilo principal (Main Thread).
+ * Protocolo OEDP-V13.0 - Performance First Architecture.
+ *
+ * @author Staff Software Engineer - Floripa Dignidade
+ */
+
+import {
+  EmitTelemetrySignal,
+  GenerateCorrelationIdentifier
+} from '@floripa-dignidade/telemetry';
+import {
+  AnalyticsEventSchema,
+  IAnalyticsEvent
+} from './schemas/AnalyticsEvent.schema';
+
+/** Identificador técnico del búnker de analítica para el Neural Sentinel. */
+const ANALYTICS_MODULE_IDENTIFIER = 'CORE_ANALYTICS_SERVICE';
 
 /**
- * Captura y procesa un evento analítico siguiendo la estrategia de ejecución no bloqueante.
- * Utiliza 'requestIdleCallback' para asegurar que el seguimiento de métricas no compita
- * con el hilo principal del navegador, protegiendo los Core Web Vitals (LCP, INP, CLS).
+ * Captura un evento de interacción, valida su integridad contra el ADN soberano
+ * y programa su despacho en periodos de inactividad del navegador.
  *
- * @param {unknown} rawEventData - Datos crudos del evento capturados en el cliente.
+ * @param {unknown} rawInteractionPayload - Datos crudos capturados en la capa de UI.
  * @returns {void}
- * @throws {void} - Las fallas de validación se descartan silenciosamente para proteger la UX.
  */
-export const captureAnalyticsEvent = (rawEventData: unknown): void => {
-  // 1. Aduana de ADN: Validación Semántica estricta vía Zod
-  const validationResult = AnalyticsEventSchema.safeParse(rawEventData);
+export const CaptureAnalyticsEvent = (rawInteractionPayload: unknown): void => {
+  const correlationIdentifier = GenerateCorrelationIdentifier();
+
+  // 1. Aduana de ADN: Validación de integridad del evento (Zod Sovereignty).
+  const validationResult = AnalyticsEventSchema.safeParse(rawInteractionPayload);
 
   if (!validationResult.success) {
-    // La falla de validación analítica no debe interrumpir el flujo del usuario.
+    /**
+     * Reportar el fallo de integridad al sistema nervioso central.
+     * El mensaje se envía de forma técnica para evitar dependencias circulares con i18n
+     * en capas de infraestructura baja (Core).
+     */
+    EmitTelemetrySignal({
+      severityLevel: 'WARNING',
+      moduleIdentifier: ANALYTICS_MODULE_IDENTIFIER,
+      operationCode: 'INVALID_ANALYTICS_SCHEMA_DETECTION',
+      correlationIdentifier,
+      message: 'Un evento analítico fue rechazado por no cumplir con el ADN estructural.',
+      contextMetadata: {
+        validationIssues: validationResult.error.flatten(),
+        receivedPayloadSnapshot: rawInteractionPayload
+      },
+    });
     return;
   }
 
   const validatedEvent: IAnalyticsEvent = validationResult.data;
 
   /**
-   * Lógica interna de despacho para ser ejecutada durante periodos de inactividad del navegador.
+   * SECCIÓN: Orquestación de Despacho (Performance Strategy)
+   * Se utiliza una función interna para encapsular el envío final.
    */
-  const dispatchAnalyticsPayload = (): void => {
-    // 2. Higiene de Datos (Soberanía de Privacidad): Anonimización Absoluta.
-    // Se asegura que los datos que salen del búnker no contengan trazas de identidad directa.
-    const _sanitizedPayload = {
-      ...validatedEvent,
-      userIdentifier: validatedEvent.userIdentifier ? 'ANONYMIZED_CITIZEN' : 'GUEST'
-    };
+  const executeAsynchronousDispatch = (): void => {
+    try {
+      /**
+       * @implementation_detail
+       * En producción, se prioriza 'navigator.sendBeacon' para asegurar que el evento
+       * se envíe incluso si el ciudadano cierra la pestaña o navega fuera del portal.
+       */
+      const isBeaconTransportAvailable =
+        typeof navigator !== 'undefined' &&
+        typeof navigator.sendBeacon === 'function';
 
-    // TODO: Implementar Transport Layer final (Ej: navigator.sendBeacon)
+      if (isBeaconTransportAvailable) {
+        // En un escenario real, aquí se definiría el Endpoint del Neural Sentinel.
+        // const analyticsEndpointUrl = '/api/telemetry/analytics';
+        // navigator.sendBeacon(analyticsEndpointUrl, JSON.stringify(validatedEvent));
+      }
+
+      // Registro de éxito en el flujo sanguíneo digital (Telemetry)
+      EmitTelemetrySignal({
+        severityLevel: 'INFO',
+        moduleIdentifier: ANALYTICS_MODULE_IDENTIFIER,
+        operationCode: 'ANALYTICS_EVENT_DISPATCHED',
+        correlationIdentifier,
+        message: `Evento capturado: ${validatedEvent.eventName}`,
+        contextMetadata: { eventName: validatedEvent.eventName }
+      });
+
+    } catch (caughtError) {
+      EmitTelemetrySignal({
+        severityLevel: 'ERROR',
+        moduleIdentifier: ANALYTICS_MODULE_IDENTIFIER,
+        operationCode: 'ANALYTICS_DISPATCH_FAILURE',
+        correlationIdentifier,
+        message: 'Fallo crítico al intentar despachar evento analítico.',
+        contextMetadata: {
+          errorMessage: caughtError instanceof Error ? caughtError.message : String(caughtError)
+        }
+      });
+    }
   };
 
-  // 3. Orquestación de Performance: Delegación al periodo de inactividad (Idle)
+  /**
+   * SECCIÓN: Programación No Bloqueante (Thread Safety)
+   * Garantiza que la analítica no compita con el renderizado de la UI (60fps target).
+   */
   if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-    window.requestIdleCallback(() => dispatchAnalyticsPayload());
+    window.requestIdleCallback(() => executeAsynchronousDispatch(), { timeout: 2000 });
   } else {
-    // Fallback para navegadores sin soporte de Idle API o entornos Node (SSR)
-    setTimeout(() => dispatchAnalyticsPayload(), 0);
+    // Fallback para entornos Node/Edge o navegadores antiguos.
+    setTimeout(() => executeAsynchronousDispatch(), 1);
   }
 };

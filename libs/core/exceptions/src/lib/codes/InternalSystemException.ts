@@ -1,19 +1,30 @@
-import { GlobalBaseException } from './GlobalBaseException.js';
+import { GlobalBaseException } from './GlobalBaseException';
 
 /**
- * Excepción de Fallo Interno del Sistema.
- * Representa errores críticos de nivel de servidor (500) donde la lógica
- * ha fallado de forma inesperada. Esta excepción activa alertas de alta
- * prioridad en el Health Analysis Engine.
+ * @section Exception Engine - Specialized Exceptions
+ * @description Excepción de Fallo Interno del Sistema (Nivel Servidor / 500).
+ * Protocolo OEDP-V13.0 - High Severity Infrastructure Signal.
+ */
+
+/**
+ * Representa errores críticos imprevistos donde la infraestructura o la lógica central
+ * han colapsado. Esta excepción posee la máxima prioridad operativa y activa
+ * automáticamente directivas de intervención en el Health Analysis Engine.
+ *
+ * @extends {GlobalBaseException}
  */
 export class InternalSystemException extends GlobalBaseException {
   /**
-   * Crea una instancia de error de sistema con severidad crítica.
+   * Inicializa una instancia de error de sistema con severidad de colapso (HTTP 500).
    *
-   * @param {string} message - Descripción técnica de la anomalía detectada.
-   * @param {Record<string, unknown>} contextMetadata - Datos del entorno para debugging forense.
+   * @param {string} message - Descripción técnica detallada de la anomalía detectada.
+   * @param {Record<string, unknown>} contextMetadata - Snapshot forense del entorno al momento del fallo.
    */
   public constructor(message: string, contextMetadata: Record<string, unknown> = {}) {
+    /**
+     * @constant INTERNAL_SYSTEM_FAILURE - Código semántico inmutable.
+     * @constant 500 - Status code de error interno del servidor.
+     */
     super(message, 'INTERNAL_SYSTEM_FAILURE', 500, contextMetadata);
   }
 }
