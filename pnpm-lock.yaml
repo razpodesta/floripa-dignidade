@@ -228,6 +228,15 @@ importers:
 
   apps/floripa-dignidade:
     dependencies:
+      '@floripa-dignidade/environment-validator':
+        specifier: workspace:*
+        version: link:../../libs/core/environment-validator
+      '@floripa-dignidade/exceptions':
+        specifier: workspace:*
+        version: link:../../libs/core/exceptions
+      '@floripa-dignidade/newsletter':
+        specifier: workspace:*
+        version: link:../../libs/modules/newsletter
       '@floripa-dignidade/routing':
         specifier: workspace:*
         version: link:../../libs/core/routing
@@ -237,6 +246,9 @@ importers:
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../../libs/core/telemetry
+      '@floripa-dignidade/whatsapp-communication-service':
+        specifier: workspace:*
+        version: link:../../libs/modules/whatsapp/communication-service
       next:
         specifier: ~15.1.6
         version: 15.1.12(@babel/core@7.29.0)(@playwright/test@1.59.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(sass@1.99.0)
@@ -277,6 +289,18 @@ importers:
       '@types/node':
         specifier: 20.19.9
         version: 20.19.9
+
+  libs/core/environment-validator:
+    dependencies:
+      '@floripa-dignidade/exceptions':
+        specifier: workspace:*
+        version: link:../exceptions
+      '@floripa-dignidade/telemetry':
+        specifier: workspace:*
+        version: link:../telemetry
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
 
   libs/core/exceptions:
     dependencies:
@@ -386,7 +410,17 @@ importers:
         specifier: ~0.5.18
         version: 0.5.21
 
-  libs/modules/whatsapp/communication-service: {}
+  libs/modules/whatsapp/communication-service:
+    dependencies:
+      '@floripa-dignidade/exceptions':
+        specifier: workspace:*
+        version: link:../../../core/exceptions
+      '@floripa-dignidade/telemetry':
+        specifier: workspace:*
+        version: link:../../../core/telemetry
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
 
   libs/shared:
     dependencies:
