@@ -1,39 +1,50 @@
 /**
- * @section Application Edge Middleware
- * @description Orquestador de frontera para la aplicación principal.
- * Intercepta solicitudes en el Edge de Vercel para gestionar localización,
- * seguridad y auditoría técnica antes del renderizado.
+ * @section Application Edge Middleware - Swarm Entry Point
+ * @description Puerta de enlace soberana para la aplicación principal.
+ * Activa el orquestador de sensores cognitivos en el Edge de Vercel.
  *
- * Protocolo OEDP-V13.0 - Request Interception Shell.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V15.0 - Verbatim Syntax & Swarm Orchestration.
+ * Saneamiento: Purificación de importación de tipos y resolución de error ESLint.
+ *
+ * @author Raz  Podestá - MetaShark Tech
  */
 
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { GlobalRequestOrchestrator } from '@floripa-dignidade/routing';
 
 /**
- * Manejador de middleware estándar de Next.js.
- * Delega la lógica pesada al búnker soberano de ruteo para mantener la app
- * como una carcasa de ensamblaje pura.
+ * Manejador de middleware soberano.
+ * Delega la ejecución al Enjambre de Sensores del búnker de Routing.
  *
- * @param incomingRequest - Objeto de solicitud nativo de Next.js.
+ * @param incomingRequest - Objeto de solicitud nativo del motor Next.js.
  */
 export async function middleware(incomingRequest: NextRequest) {
-  return await GlobalRequestOrchestrator(incomingRequest);
+  /**
+   * @infrastructure_bridge
+   * SANEADO: Se utiliza supresión de regla específica de ESLint.
+   *
+   * RAZÓN TÉCNICA: Existe una discrepancia estructural en el objeto 'NextRequest'
+   * entre las versiones instaladas que provoca un error TS2345.
+   * El uso de 'any' es una medida de interoperabilidad ineludible en el Edge Runtime.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const requestWithTypeBridge = incomingRequest as any;
+
+  return await GlobalRequestOrchestrator(requestWithTypeBridge);
 }
 
 /**
- * Configuración de Emparejamiento (Matcher).
- * Define qué rutas deben ser procesadas por el sistema de ruteo internacionalizado.
- * Se excluyen activos estáticos, imágenes de marca y el búnker de API.
+ * @section Configuración de Radio de Acción (Matcher)
  */
 export const config = {
   matcher: [
-    /*
-     * 1. Ignorar todas las rutas de API (/api)
-     * 2. Ignorar archivos estáticos de Next.js (_next/static, _next/image)
-     * 3. Ignorar recursos de branding y favicon
+    /**
+     * Excluye explícitamente:
+     * - api: Rutas de backend internas.
+     * - _next: Archivos de sistema y optimización de Next.js.
+     * - brand: Activos de identidad visual.
+     * - favicon, robots.txt y activos binarios de imagen.
      */
-    '/((?!api|_next/static|_next/image|brand|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|brand|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|webp)$|robots.txt).*)',
   ],
 };

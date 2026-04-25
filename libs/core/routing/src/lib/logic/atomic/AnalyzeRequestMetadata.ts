@@ -3,18 +3,20 @@
  * @description Extrae e inyecta metadatos técnicos de las cabeceras HTTP en el contexto
  * soberano de ruteo. Implementa detección de IP multi-capa y normalización de User Agent.
  *
- * Protocolo OEDP-V13.0 - Forensic Capture & Zero Unused Vars.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V16.0 - Forensic Capture & Zero Unused Vars.
+ * Saneamiento: Resolución de TS2532 (noUncheckedIndexedAccess) en extracción de IP.
+ *
+ * @author Raz  Podestá - MetaShark Tech
  */
 
-import { IRoutingContext } from '../../schemas/RoutingContext.schema';
+import type { IRoutingContext } from '../../schemas/RoutingContext.schema';
 
 /**
  * Analiza las cabeceras de la solicitud entrante y enriquece el contexto de ruteo.
  *
  * @param incomingRequestHeaders - Cabeceras nativas de la petición HTTP.
  * @param existingRoutingContext - Contexto previo que será evolucionado.
- * @returns Un nuevo IRoutingContext inmutable con metadatos técnicos inyectados.
+ * @returns {IRoutingContext} Un nuevo IRoutingContext inmutable con metadatos técnicos inyectados.
  */
 export const AnalyzeRequestMetadata = (
   incomingRequestHeaders: Headers,
@@ -23,12 +25,19 @@ export const AnalyzeRequestMetadata = (
   /**
    * 1. EXTRACCIÓN DE IDENTIDAD TÉCNICA
    * Capturamos la IP considerando la cadena de confianza de proxies (x-forwarded-for).
-   * Se toma el primer segmento de la cadena si existe.
    */
   const rawForwardedForHeaderLiteral = incomingRequestHeaders.get('x-forwarded-for');
-  const clientIpAddressLiteral = rawForwardedForHeaderLiteral
-    ? rawForwardedForHeaderLiteral.split(',')[0].trim()
-    : '127.0.0.1';
+  let clientIpAddressLiteral = '127.0.0.1';
+
+  if (rawForwardedForHeaderLiteral) {
+    const ipAddressPartsCollection = rawForwardedForHeaderLiteral.split(',');
+    const firstIpAddressLiteral = ipAddressPartsCollection[0];
+
+    // 🛡️ SANEADO: Validación segura para cumplir con "noUncheckedIndexedAccess"
+    if (firstIpAddressLiteral) {
+      clientIpAddressLiteral = firstIpAddressLiteral.trim();
+    }
+  }
 
   const userAgentLiteral = incomingRequestHeaders.get('user-agent') || 'unknown-agent';
 
@@ -41,7 +50,7 @@ export const AnalyzeRequestMetadata = (
     ...existingRoutingContext,
     clientMetadata: {
       ...existingRoutingContext.clientMetadata,
-      ipAddressLiteral: clientIpAddressLiteral, // SANEADO: Uso explícito de la variable.
+      ipAddressLiteral: clientIpAddressLiteral,
       userAgentLiteral: userAgentLiteral,
     }
   };

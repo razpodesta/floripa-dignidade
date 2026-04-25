@@ -1,87 +1,56 @@
 /**
- * @section Localized Application Layout
- * @description Ensamblador de UI para rutas con prefijo de idioma.
- * Inyecta el contexto lingüístico, valida la integridad de los diccionarios
- * y orquesta la navegación global y el sistema visual.
+ * @section Application Root Layout
+ * @description Carcasa estructural de la aplicación. Actúa como el ancestro
+ * común para todas las rutas del portal, gestionando fuentes y SEO base.
  *
- * Protocolo OEDP-V13.0 - Linguistic Sovereignty & Atomic Assembly.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V15.0 - Single Source Resolution.
+ * @author Raz Podestá - MetaShark Tech
  */
 
-import { notFound } from 'next/navigation';
-import {
-  GlobalMainNavigationHeader,
-  MainNavigationHeaderI18nSchema
-} from '@floripa-dignidade/shared';
-import {
-  SupportedLocaleSchema,
-  ValidateLinguisticContract
-} from '@floripa-dignidade/routing';
+import './global.css';
+import React from 'react';
+
+/** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN como tipo */
+import type { Metadata } from 'next';
 
 /**
- * Tipado de parámetros de ruta Next.js 15+
+ * @section SEO Strategy - Metadata Foundation
+ * Configuración soberana para el rastro de motores de búsqueda.
  */
-interface ILocalizedLayoutProperties {
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Floripa Dignidade',
+    default: 'Floripa Dignidade - Defensa de los Derechos Humanos',
+  },
+  description: 'Plataforma tecnológica para la transparencia y acción social en Florianópolis.',
+  alternates: {
+    canonical: '/',
+    languages: {
+      'pt-BR': '/pt-BR',
+      'es-ES': '/es-ES',
+      'en-US': '/en-US',
+    },
+  },
+  robots: {
+    index: true,
+    follow: true,
+  }
+};
+
+interface IRootLayoutProperties {
   readonly children: React.ReactNode;
-  readonly params: Promise<{ locale: string }>;
 }
 
 /**
- * Cargador de Diccionarios de Élite.
- * En una fase futura, este aparato será sustituido por el 'DictionaryBuilder' unificado.
- * Actualmente extrae los silos directamente de las librerías compartidas.
+ * Componente raíz inmutable.
+ * Implementa 'suppressHydrationWarning' para permitir extensiones de navegador (DarkReader, etc).
  */
-async function getNavigationDictionary(locale: string) {
-  try {
-    // Importación dinámica de los silos JSON del búnker shared
-    const dictionary = await import(`../../../../../libs/shared/src/lib/composite-ui/i18n/${locale}.json`);
-
-    // AUDITORÍA DE ADN: El Guardián de Contratos valida el JSON antes de entregarlo a la UI
-    ValidateLinguisticContract(
-      'MAIN_NAVIGATION_HEADER',
-      MainNavigationHeaderI18nSchema,
-      dictionary.default,
-      locale
-    );
-
-    return dictionary.default;
-  } catch (_caughtError) {
-    return null;
-  }
-}
-
-export default async function LocalizedLayout({ children, params }: ILocalizedLayoutProperties) {
-  const { locale } = await params;
-
-  // 1. Validación de Guardia: Si el locale no está en nuestro ADN, 404 instantáneo.
-  const localeValidation = SupportedLocaleSchema.safeParse(locale);
-  if (!localeValidation.success) {
-    notFound();
-  }
-
-  // 2. Carga de "Almas Lingüísticas" para los orquestadores de UI
-  const navigationDictionary = await getNavigationDictionary(locale);
-
-  if (!navigationDictionary) {
-    notFound();
-  }
-
+export default function RootLayout({ children }: IRootLayoutProperties) {
   return (
-    <>
-      {/*
-        ORQUESTADOR DE NAVEGACIÓN:
-        Se inyecta el diccionario validado y los componentes de acción.
-      */}
-      <GlobalMainNavigationHeader
-        translationDictionary={navigationDictionary}
-        currentActivePathLiteral={`/${locale}`}
-      />
-
-      <main className="relative pt-[80px] min-h-screen flex flex-col bg-slate-50">
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body className="antialiased font-sans">
         {children}
-      </main>
-
-      {/* @todo Implementar GlobalFooter aquí una vez nivelado el búnker */}
-    </>
+      </body>
+    </html>
   );
 }

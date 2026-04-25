@@ -4,7 +4,7 @@
   "analytics": true,
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
-    "production":[
+    "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/eslint.config.mjs",
@@ -14,15 +14,17 @@
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/test-setup.[jt]s"
     ],
-    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
+    "sharedGlobals": [
+      "{workspaceRoot}/.github/workflows/ci.yml",
+      "{workspaceRoot}/.swcrc",
+      "{workspaceRoot}/apps/floripa-dignidade/src/app/i18n/dictionaries/*.json"
+    ]
   },
-  "plugins":[
+  "plugins": [
     {
       "plugin": "@nx/js/typescript",
       "options": {
-        "typecheck": {
-          "targetName": "typecheck"
-        },
+        "typecheck": { "targetName": "typecheck" },
         "build": {
           "targetName": "build",
           "configName": "tsconfig.lib.json",
@@ -37,49 +39,32 @@
         "startTargetName": "start",
         "buildTargetName": "build",
         "devTargetName": "dev",
-        "serveStaticTargetName": "serve-static",
-        "buildDepsTargetName": "build-deps",
-        "watchDepsTargetName": "watch-deps"
+        "serveStaticTargetName": "serve-static"
       }
     },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
-    },
-    {
-      "plugin": "@nx/playwright/plugin",
-      "options": {
-        "targetName": "e2e"
-      }
-    },
-    {
-      "plugin": "@nx/jest/plugin",
-      "options": {
-        "targetName": "test"
-      }
-    }
+    { "plugin": "@nx/eslint/plugin", "options": { "targetName": "lint" } },
+    { "plugin": "@nx/jest/plugin", "options": { "targetName": "test" } }
   ],
   "targetDefaults": {
-    "test": {
-      "dependsOn": ["^build"]
+    "build": {
+      "dependsOn": ["^build", "internationalization-build"],
+      "inputs": ["production", "^production"],
+      "cache": true
+    },
+    "internationalization-build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx scripts/src/run-weaver.ts"
+      },
+      "cache": true,
+      "inputs": ["{workspaceRoot}/libs/**/src/lib/i18n/*.json"],
+      "outputs": ["{workspaceRoot}/apps/floripa-dignidade/src/app/i18n/dictionaries/*.json"]
     },
     "@nx/js:swc": {
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"],
-      "options": {
-        "swcrc": "{workspaceRoot}/.swcrc"
-      }
-    }
-  },
-  "generators": {
-    "@nx/next": {
-      "application": {
-        "style": "tailwind",
-        "linter": "eslint"
-      }
+      "options": { "swcrc": "{workspaceRoot}/.swcrc" }
     }
   }
 }

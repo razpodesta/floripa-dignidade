@@ -1,36 +1,16 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
-    /* 🛡️ SANACIÓN DE CACHÉ: Redirección hacia la raíz para integridad de construcción */
     "outDir": "../../../dist/out-tsc/libs/core/routing",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/routing/tsconfig.lib.tsbuildinfo",
-
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
-
-    /* Estándar de Alto Rendimiento Next.js 15+ / Vercel Edge */
-    "module": "Preserve",
-    "moduleResolution": "bundler",
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-
     "lib": ["DOM", "DOM.Iterable", "ES2022"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts", "jest.config.ts"],
-  "references": [
-    {
-      "path": "../../modules/identity/tsconfig.lib.json"
-    },
-    {
-      "path": "../exceptions/tsconfig.lib.json"
-    },
-    {
-      "path": "../telemetry/tsconfig.lib.json"
-    }
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "jest.config.ts",
+    "dist",
+    "out-tsc"
   ]
 }

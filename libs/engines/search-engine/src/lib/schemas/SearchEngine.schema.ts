@@ -1,75 +1,87 @@
+/**
+ * @section Discovery DNA - Search & Interlinking Schema
+ * @description Contrato soberano para la indexación y recuperación de entidades.
+ * Define la estructura de búsqueda compatible con RBAC de forma agnóstica.
+ *
+ * Protocolo OEDP-V13.0 - Entity Sovereignty & Zero Abbreviations.
+ * Saneamiento: Eliminación de dependencia de 'identity' para cumplir Module Boundaries.
+ *
+ * @author Raz  Podestá - MetaShark Tech
+ */
+
 import { z } from 'zod';
-import { UserAccessRoleSchema } from '@floripa-dignidade/identity';
 
 /**
- * @section Discovery DNA - Search & Interlinking
- * Protocolo OEDP-V13.0 - Entity Sovereignty
+ * @section ADN de Autoridad Agnóstica
+ * Define los rangos de autoridad de forma literal para evitar acoplamiento con módulos.
  */
+export const SearchAuthorityRoleSchema = z.enum([
+  'INFRASTRUCTURE_SOVEREIGN_AUDITOR',
+  'PLATFORM_GLOBAL_MANAGER',
+  'ORGANIZATION_ADMINISTRATOR',
+  'ORGANIZATION_OPERATOR',
+  'CITIZEN_REGISTERED',
+  'CITIZEN_ANONYMOUS'
+]).describe('Rangos de autoridad institucional reconocidos por el motor.');
+
+export type SearchAuthorityRole = z.infer<typeof SearchAuthorityRoleSchema>;
 
 /**
  * Identificador Nominal para Entidades Buscables.
- * Evita que se confundan IDs de búsqueda con IDs de base de datos crudos.
  */
-export const SearchableEntityIdSchema = z.string().uuid().brand<'SearchableEntityId'>();
-export type SearchableEntityId = z.infer<typeof SearchableEntityIdSchema>;
+export const SearchableEntityIdentifierSchema = z.string().uuid().brand<'SearchableEntityIdentifier'>();
+export type SearchableEntityIdentifier = z.infer<typeof SearchableEntityIdentifierSchema>;
 
 /**
  * Esquema de Categorías de Entidad.
- * Define el origen y propósito del dato.
  */
-export const EntityCategorySchema = z.enum([
-  'INSTITUCIONAL', // Quienes somos, valores, etc.
-  'NOTICIA',       // Artículos del blog/prensa.
-  'DENUNCIA',      // Casos públicos (respetando RBAC).
-  'RECURSO',       // Espacio solidario, descargas, guías.
-]).describe('Categoría semántica para filtrado y CSI');
+export const SearchEntityCategorySchema = z.enum([
+  'INSTITUTIONAL_CONTENT',
+  'NEWS_ARTICLE',
+  'HUMAN_RIGHTS_REPORT',
+  'SOLIDARITY_RESOURCE',
+]).describe('Categorización semántica para el motor de descubrimiento.');
 
 /**
  * @name SearchIndexSchema
- * @description El contrato maestro para cualquier objeto que desee ser "encontrable"
- * o "enlazable" dinámicamente en el portal.
+ * @description Contrato maestro para objetos localizables en el portal.
  */
 export const SearchIndexSchema = z.object({
-  identifier: SearchableEntityIdSchema.describe('ID único inmutable en el índice'),
+  searchableEntityIdentifier: SearchableEntityIdentifierSchema
+    .describe('Identificador único e inalterable en el índice de búsqueda.'),
 
-  title: z.string()
+  titleLiteral: z.string()
     .min(3)
     .max(150)
-    .describe('Título optimizado para el buscador y el SEO'),
+    .describe('Título optimizado para el motor de búsqueda y rastreo SEO.'),
 
-  keywords: z.array(z.string())
+  indexKeywordsCollection: z.array(z.string())
     .min(1)
-    .describe('Términos clave para el sistema CSI (Contextual Interlinking)'),
+    .describe('Colección de términos clave para el sistema de interconexión semántica.'),
 
-  contentSnippet: z.string()
+  contentDescriptionSnippet: z.string()
     .max(300)
-    .describe('Resumen breve para mostrar en los resultados de búsqueda'),
+    .describe('Resumen breve para visualización en los resultados de búsqueda.'),
 
-  path: z.string()
+  internalPathRouteLiteral: z.string()
     .regex(/^\//)
-    .describe('Ruta relativa ISO (debe empezar con /)'),
+    .describe('Ruta relativa ISO dentro del ecosistema (Debe iniciar con /).'),
 
-  requiredAccessRole: UserAccessRoleSchema
-    .default('ANONYMOUS_USER')
-    .describe('Mínimo nivel de autoridad para ver este resultado (RBAC)'),
+  requiredAuthorityRole: SearchAuthorityRoleSchema
+    .default('CITIZEN_ANONYMOUS')
+    .describe('Mínimo nivel de autoridad institucional para descubrir este resultado.'),
 
-  relevanceWeight: z.number()
+  discoveryRelevanceWeightScore: z.number()
     .min(0)
     .max(1)
     .default(0.5)
-    .describe('Prioridad en los resultados (1.0 es máxima)'),
+    .describe('Prioridad de visualización (1.0 representa máxima relevancia).'),
+
 }).readonly();
 
-/**
- * Interfaces e Inferencias para el Motor
- */
+/** Interfaces e Inferencias */
 export type ISearchableEntity = z.infer<typeof SearchIndexSchema>;
-export type EntityCategory = z.infer<typeof EntityCategorySchema>;
+export type SearchEntityCategory = z.infer<typeof SearchEntityCategorySchema>;
 
-/**
- * Esquema de Respuesta de Búsqueda Purificada.
- * Garantiza que el frontend nunca reciba datos que no deba.
- */
 export const SearchResponseSchema = z.array(SearchIndexSchema).readonly();
 export type ISearchResponse = z.infer<typeof SearchResponseSchema>;
-

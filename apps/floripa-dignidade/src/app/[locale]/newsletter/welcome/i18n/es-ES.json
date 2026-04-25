@@ -1,0 +1,13 @@
+{
+  "hero": {
+    "headlineLiteral": "¡Bienvenido a nuestra red de transparencia!",
+    "descriptionLiteral": "Tu soberanía ha sido confirmada con éxito. Ahora formas parte de la red que vigila y protege Florianópolis. Recibirás información crítica y alertas de impacto directamente en tu correo electrónico."
+  },
+  "actions": {
+    "primaryActionLabelLiteral": "Ver Reportes de Transparencia",
+    "secondaryActionLabelLiteral": "Volver al Inicio"
+  },
+  "metadata": {
+    "pageTitleLiteral": "Soberanía Confirmada"
+  }
+}

@@ -3,11 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/core/exceptions/src",
   "projectType": "library",
-  "tags": [
-    "scope:core",
-    "type:core",
-    "platform:isomorphic"
-  ],
+  "tags": ["scope:core", "type:core", "platform:isomorphic"],
   "targets": {
     "build": {
       "executor": "@nx/js:swc",
@@ -21,15 +17,15 @@
       },
       "cache": true
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "cache": true
-    },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc -b libs/core/exceptions/tsconfig.lib.json"
+        "command": "tsc -p libs/core/exceptions/tsconfig.lib.json --noEmit"
       },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
       "cache": true
     }
   }

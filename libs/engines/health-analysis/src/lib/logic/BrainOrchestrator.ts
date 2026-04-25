@@ -1,76 +1,43 @@
 /**
  * @section Cognitive Logic - Neural Sentinel Brain Orchestrator
- * @description Punto de entrada soberano para la inferencia predictiva y auditoría lógica.
- * Transforma señales de telemetría en directivas de acción mediante modelos de IA.
+ * @description Punto de entrada para la inferencia predictiva y auditoría lógica.
+ * Transforma señales de telemetría en directivas de acción delegando a proveedores de IA.
  *
- * Protocolo OEDP-V13.0 - Atomic Intelligence & Forensic Traceability.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V15.0 - Verbatim Module Syntax & Type Purification.
+ * Saneamiento: Resolución de infracción consistent-type-imports y desacoplamiento de esquemas.
+ *
+ * @author Dirección de Ingeniería - Floripa Dignidade
  */
 
-import { z } from 'zod';
 import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier,
-  TraceExecutionTime
+  TraceExecutionTime,
 } from '@floripa-dignidade/telemetry';
-import {
-  AIProviderSchema,
-  IInferenceResponse,
-  InferenceResponseSchema
-} from '../schemas/Inference.schema';
 
-/** Identificador técnico del búnker de análisis para el Neural Sentinel. */
+import { InternalSystemException } from '@floripa-dignidade/exceptions';
+
+/** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN como tipos */
+import type { IInferenceResponse, TAIProvider } from '../schemas/Inference.schema';
+
+/** 🛡️ LÓGICA: Importación de esquemas para validación en tiempo de ejecución */
+import { InferenceResponseSchema } from '../schemas/Inference.schema';
+
+import { executeHuggingFaceInference } from '../providers/HuggingFaceInferenceDriver';
+
 const ANALYSIS_ENGINE_IDENTIFIER = 'HEALTH_ANALYSIS_ENGINE';
 
 /**
- * @private
- * Simulador de Despacho Multi-Proveedor (Stub de Producción).
- * Prepara la infraestructura para la integración con adaptadores de OpenAI y Hugging Face.
+ * Ejecuta un análisis cognitivo sobre señales de salud orquestando al proveedor seleccionado.
  *
- * @param {unknown} healthPayloadSnapshot - Datos de infraestructura capturados.
- * @param {string} targetAiProvider - Tier de inteligencia seleccionado.
- * @returns {Promise<unknown>} Respuesta cruda para validación en la aduana.
- */
-const requestAiModelInference = async (
-  healthPayloadSnapshot: unknown,
-  targetAiProvider: string
-): Promise<unknown> => {
-  /**
-   * @todo Implementar 'NeuralStrategyFactory' para conmutar entre proveedores
-   * según la sensibilidad del dato (ISO/IEC 27001).
-   */
-
-  // Simulación de latencia cognitiva
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        analysisId: crypto.randomUUID(),
-        confidenceScore: 0.98,
-        observation: `Análisis nominal completado vía ${targetAiProvider}. No se detectan anomalías de entropía en el flujo sanguíneo digital.`,
-        suggestedAction: 'NONE',
-        detectedAnomalies: [],
-        metadata: {
-          isMock: true,
-          modelTier: 'SENTINEL_ALPHA_V1',
-          processedPayloadSize: JSON.stringify(healthPayloadSnapshot).length
-        }
-      });
-    }, 150);
-  });
-};
-
-/**
- * ORQUESTRADOR SOBERANO: Ejecuta un análisis cognitivo sobre señales de salud.
- * Valida el ADN de la respuesta de la IA y reporta métricas de confianza
- * al flujo sanguíneo digital (Telemetry).
- *
- * @param {unknown} unvalidatedHealthPayload - Instantánea del estado del sistema.
- * @param {z.infer<typeof AIProviderSchema>} targetAiProvider - Proveedor de IA (Default: HUGGING_FACE).
- * @returns {Promise<IInferenceResponse>} Sabiduría operativa validada por Zod.
+ * @param unvalidatedHealthPayload - Estado del sistema capturado en el snapshot.
+ * @param targetAiProvider - Proveedor de IA (OPENAI | ANTHROPIC | HUGGING_FACE | LOCAL_SLM).
+ * @returns {Promise<IInferenceResponse>} Directiva de sanación validada y estructurada.
+ * @throws {InternalSystemException} Si el modelo falla o retorna un ADN corrupto.
  */
 export const AnalyzeSystemHealthInference = async (
   unvalidatedHealthPayload: unknown,
-  targetAiProvider: z.infer<typeof AIProviderSchema> = 'HUGGING_FACE'
+  targetAiProvider: TAIProvider = 'HUGGING_FACE'
 ): Promise<IInferenceResponse> => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
@@ -80,53 +47,55 @@ export const AnalyzeSystemHealthInference = async (
     correlationIdentifier,
     async () => {
       try {
-        // 1. EJECUCIÓN DE INFERENCIA (External Service Communication)
-        const rawAiResponse = await requestAiModelInference(
-          unvalidatedHealthPayload,
-          targetAiProvider
-        );
+        let rawAiResponse: unknown;
 
-        // 2. ADUANA DE ADN (Inference Validation)
-        // Garantizamos que la IA no "alucine" y cumpla el contrato estructural.
+        // SELECCIÓN ATÓMICA DE DRIVER
+        // En una fase futura, este bloque evolucionará a un 'InferenceProviderRegistry'.
+        if (targetAiProvider === 'HUGGING_FACE') {
+          rawAiResponse = await executeHuggingFaceInference(unvalidatedHealthPayload);
+        } else {
+          // Fallback resiliente hacia Hugging Face para otros proveedores no implementados.
+          rawAiResponse = await executeHuggingFaceInference(unvalidatedHealthPayload);
+        }
+
+        // ADUANA DE ADN: Purificación de la respuesta de la IA
         const validatedInferenceResult = InferenceResponseSchema.parse(rawAiResponse);
 
-        // 3. TELEMETRÍA DE SABIDURÍA (Forensic Reporting)
-        const isConfidenceBelowThreshold = validatedInferenceResult.confidenceScore < 0.75;
+        const isConfidenceBelowThresholdBoolean = validatedInferenceResult.confidenceScore < 0.75;
 
+        // REPORTE DE ESTADO COGNITIVO
         EmitTelemetrySignal({
-          severityLevel: isConfidenceBelowThreshold ? 'WARNING' : 'INFO',
+          severityLevel: isConfidenceBelowThresholdBoolean ? 'WARNING' : 'INFO',
           moduleIdentifier: ANALYSIS_ENGINE_IDENTIFIER,
           operationCode: 'INFERENCE_ORCHESTRATION_COMPLETED',
           correlationIdentifier,
-          message: `Inferencia finalizada: [${targetAiProvider}] Confianza: ${(validatedInferenceResult.confidenceScore * 100).toFixed(2)}%`,
+          message: `Inferencia finalizada con éxito vía [${targetAiProvider}]`,
           contextMetadata: {
-            suggestedAction: validatedInferenceResult.suggestedAction,
-            analysisIdentifier: validatedInferenceResult.analysisId,
-            anomalyCount: validatedInferenceResult.detectedAnomalies.length
-          }
+            suggestedActionLiteral: validatedInferenceResult.suggestedAction,
+            analysisIdentifierLiteral: validatedInferenceResult.analysisId,
+            confidenceScoreNumeric: validatedInferenceResult.confidenceScore,
+          },
         });
 
         return validatedInferenceResult;
 
       } catch (caughtError) {
-        // 4. GESTIÓN DE COLAPSO COGNITIVO
-        const errorDescriptionLiteral = caughtError instanceof Error
-          ? caughtError.message
-          : 'Error cognitivo desconocido en BrainOrchestrator';
+        const errorDescriptionLiteral =
+          caughtError instanceof Error ? caughtError.message : 'Fallo cognitivo no identificado.';
 
         EmitTelemetrySignal({
           severityLevel: 'CRITICAL',
           moduleIdentifier: ANALYSIS_ENGINE_IDENTIFIER,
           operationCode: 'INFERENCE_ORCHESTRATION_FAILURE',
           correlationIdentifier,
-          message: `Fallo crítico en el motor de análisis: ${errorDescriptionLiteral}`,
-          contextMetadata: {
-            targetAiProvider,
-            errorType: caughtError instanceof z.ZodError ? 'SCHEMA_VIOLATION' : 'PROVIDER_TIMEOUT'
-          }
+          message: `Colapso crítico en el motor de análisis: ${errorDescriptionLiteral}`,
+          contextMetadata: { targetAiProvider, correlationIdentifier },
         });
 
-        throw caughtError;
+        throw new InternalSystemException('COLAPSO_COGNITIVO_EN_ORQUESTACION', {
+          aiProviderLiteral: targetAiProvider,
+          errorTraceLiteral: errorDescriptionLiteral,
+        });
       }
     }
   );

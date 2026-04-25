@@ -5,7 +5,7 @@
  * estados de interacción proactiva y visibilidad responsiva atómica.
  *
  * Protocolo OEDP-V13.0 - Atomic Visual Integrity & Zero Abbreviations.
- * @author Staff Software Engineer - Floripa Dignidade
+ * @author Raz  Podestá - MetaShark Tech
  */
 
 import { z } from 'zod';

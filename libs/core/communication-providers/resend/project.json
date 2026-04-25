@@ -1,0 +1,35 @@
+{
+  "name": "@floripa-dignidade/resend-provider",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/core/communication-providers/resend/src",
+  "projectType": "library",
+  "tags": [
+    "scope:core",
+    "type:data",
+    "platform:node"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/core/communication-providers/resend",
+        "main": "libs/core/communication-providers/resend/src/index.ts",
+        "tsConfig": "libs/core/communication-providers/resend/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p libs/core/communication-providers/resend/tsconfig.lib.json --noEmit"
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    }
+  }
+}

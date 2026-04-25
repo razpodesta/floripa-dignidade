@@ -1,34 +1,16 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
-    /* 🛡️ SANACIÓN DE CACHÉ: Salida simétrica a la raíz */
     "outDir": "../../../dist/out-tsc/libs/engines/search-engine",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/engines/search-engine/tsconfig.lib.tsbuildinfo",
-
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
-
-    /* Estándar Next.js 15+ / Turbopack */
-    "module": "Preserve",
-    "moduleResolution": "bundler",
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-
     "lib": ["DOM", "DOM.Iterable", "ES2022"]
   },
   "include": ["src/**/*.ts", "src/**/*.json"],
-  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts", "jest.config.ts"],
-  "references": [
-    {
-      "path": "../../modules/identity/tsconfig.lib.json"
-    },
-    {
-      "path": "../../core/telemetry/tsconfig.lib.json"
-    }
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "jest.config.ts",
+    "dist",
+    "out-tsc"
   ]
 }

@@ -1,0 +1,41 @@
+{
+  "name": "@floripa-dignidade/floripa-dignidade",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/floripa-dignidade/src",
+  "projectType": "application",
+  "tags": [
+    "scope:app",
+    "type:app",
+    "platform:web"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "root": "apps/floripa-dignidade",
+        "outputPath": "dist/apps/floripa-dignidade"
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "@floripa-dignidade/floripa-dignidade:build",
+        "dev": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p apps/floripa-dignidade/tsconfig.json --noEmit"
+      },
+      "cache": true
+    }
+  }
+}

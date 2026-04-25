@@ -1,0 +1,13 @@
+{
+  "hero": {
+    "headlineLiteral": "Welcome to our transparency network!",
+    "descriptionLiteral": "Your sovereignty has been successfully confirmed. You are now part of the network that monitors and protects Florianópolis. You will receive critical information and impact alerts directly in your email."
+  },
+  "actions": {
+    "primaryActionLabelLiteral": "View Transparency Reports",
+    "secondaryActionLabelLiteral": "Back to Home"
+  },
+  "metadata": {
+    "pageTitleLiteral": "Sovereignty Confirmed"
+  }
+}

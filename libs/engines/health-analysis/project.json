@@ -11,24 +11,25 @@
   "targets": {
     "build": {
       "executor": "@nx/js:swc",
-      "outputs": ["{workspaceRoot}/dist/libs/engines/health-analysis"],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/engines/health-analysis",
         "main": "libs/engines/health-analysis/src/index.ts",
         "tsConfig": "libs/engines/health-analysis/tsconfig.lib.json",
+        "swcrc": ".swcrc",
         "stripLeadingPaths": true
       },
-      "cache": true
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
       "cache": true
     },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc -b libs/engines/health-analysis/tsconfig.lib.json"
+        "command": "tsc -p libs/engines/health-analysis/tsconfig.lib.json --noEmit"
       },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
       "cache": true
     }
   }

@@ -1,48 +1,42 @@
-import { GlobalBaseException } from '@floripa-dignidade/exceptions';
-import { EmitTelemetrySignal } from './EmitTelemetrySignal';
-
 /**
- * @section Logic: ReportForensicException
- * @description Transforma una excepción de dominio en una señal de telemetría.
- * Protocolo OEDP-V13.0 - Forensic Observability.
- * Cumplimiento ISO/IEC 11179 - Zero Abbreviations.
+ * @section Telemetry Logic - Forensic Exception Reporter
+ * @description Transforma una instancia de excepción en una señal de telemetría estructurada.
+ *
+ * Protocolo OEDP-V14.0 - Verbatim Module Syntax.
+ * @author Dirección de Ingeniería - Floripa Dignidade
  */
 
-/** Identificador técnico inmutable del orquestador de excepciones. */
-const EXCEPTION_HANDLER_IDENTIFIER = 'GLOBAL_EXCEPTION_REPORTER';
+import type { GlobalBaseException } from '@floripa-dignidade/exceptions';
+import { EmitTelemetrySignal } from './EmitTelemetrySignal';
+
+const EXCEPTION_REPORTER_IDENTIFIER = 'GLOBAL_EXCEPTION_REPORTER';
 
 /**
- * Procesa una excepción de la base global, extrae su snapshot forense
- * y emite una señal de alerta con el nivel de severidad correspondiente.
+ * Procesa una excepción, extrae su snapshot y emite la señal de alerta.
  *
  * @param exceptionContext - Instancia de la excepción capturada.
- * @param correlationIdentifier - Identificador UUID para trazabilidad cruzada.
- * @returns {void}
+ * @param correlationIdentifier - Identificador único de transacción.
  */
 export const ReportForensicException = (
   exceptionContext: GlobalBaseException,
   correlationIdentifier: string
 ): void => {
-  // 1. Clasificación de Severidad Técnica (Standard ISO/HTTP)
-  // Los errores de servidor (500+) se marcan como CRITICAL para activar al Neural Sentinel.
-  const isServerFailure = exceptionContext.httpStatusCode >= 500;
-  const severityLevelLiteral = isServerFailure ? 'CRITICAL' : 'ERROR';
+  const isInternalServerError = exceptionContext.httpStatusCode >= 500;
+  const severityLevelLiteral = isInternalServerError ? 'CRITICAL' : 'ERROR';
 
-  // 2. Construcción del Payload de Señalización
   const telemetrySignalPayload = {
     severityLevel: severityLevelLiteral,
-    moduleIdentifier: EXCEPTION_HANDLER_IDENTIFIER,
+    moduleIdentifier: EXCEPTION_REPORTER_IDENTIFIER,
     operationCode: exceptionContext.operationalErrorCode,
     correlationIdentifier,
     message: exceptionContext.message,
     contextMetadata: {
       ...exceptionContext.runtimeContextSnapshot,
-      originalExceptionName: exceptionContext.name,
-      httpStatusCode: exceptionContext.httpStatusCode,
-      occurrenceTimestamp: exceptionContext.occurrenceTimestamp,
+      originalExceptionNameLiteral: exceptionContext.name,
+      httpStatusCodeNumeric: exceptionContext.httpStatusCode,
+      occurrenceTimestampISO: exceptionContext.occurrenceTimestamp,
     },
   };
 
-  // 3. Despacho al Átomo de Emisión
   EmitTelemetrySignal(telemetrySignalPayload);
 };

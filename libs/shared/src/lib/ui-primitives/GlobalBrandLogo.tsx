@@ -12,7 +12,7 @@ import { GlobalStyleClassMerger } from '../utility/GlobalStyleMerger';
  * internacionalización total y accesibilidad de grado ISO.
  *
  * Protocolo OEDP-V13.0 - Branding Authority & Zero Abbreviations.
- * @author Staff Software Engineer - Floripa Dignidade
+ * @author Raz  Podestá - MetaShark Tech
  */
 
 interface IGlobalBrandLogoProperties {

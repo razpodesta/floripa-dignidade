@@ -1,7 +1,8 @@
 {
   "name": "@floripa-dignidade/exceptions",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
+  "description": "Búnker soberano de gestión de anomalías, códigos de error ISO e integridad forense del ecosistema.",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -11,7 +12,16 @@
       "default": "./src/index.ts"
     }
   },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "dependencies": {
     "zod": "^3.25.76"
+  },
+  "nx": {
+    "tags": [
+      "scope:core",
+      "type:core",
+      "platform:isomorphic"
+    ]
   }
 }

@@ -3,11 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@floripa-dignidade/environment-validator": "workspace:*",
+    "@floripa-dignidade/exceptions": "workspace:*",
+    "@floripa-dignidade/newsletter": "workspace:*",
     "@floripa-dignidade/routing": "workspace:*",
     "@floripa-dignidade/shared": "workspace:*",
     "@floripa-dignidade/telemetry": "workspace:*",
-
-
+    "@floripa-dignidade/whatsapp-communication-service": "workspace:*",
     "next": "~15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

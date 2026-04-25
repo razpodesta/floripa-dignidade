@@ -1,0 +1,63 @@
+{
+  "core/lib": {
+    "signals": {
+      "START_PROCESS": "Iniciando procesamiento atómico.",
+      "END_PROCESS": "Procesamiento finalizado con éxito.",
+      "LATENCY_REPORT": "Latencia de ejecución medida en milisegundos."
+    }
+  },
+  "modules/lib": {
+    "email": {
+      "confirmationSubjectLiteral": "Confirma tu suscripción | Floripa Dignidade",
+      "greetingLiteral": "Hola,",
+      "instructionLiteral": "Has solicitado unirte a nuestra red de transparencia. Tu código de verificación soberana es:",
+      "trackingFooterLiteral": "ID de Seguimiento Forense:"
+    }
+  },
+  "shared/composite-ui": {
+    "navigationPaths": {
+      "identity": "Identidad",
+      "transparency": "Transparencia",
+      "solidarity": "Ecosistema Solidario",
+      "press": "Noticias",
+      "complaint": "Denuncias"
+    },
+    "actions": {
+      "donateCallToAction": "Dona Ahora",
+      "searchPlaceholder": "Buscar información...",
+      "mobileMenuToggle": "Alternar menú de navegación",
+      "reportEmergencyLabel": "Denuncia Urgente"
+    }
+  },
+  "apps/frontpage": {
+    "hero": {
+      "badgeLabelLiteral": "Protección de Derechos Humanos",
+      "headlineMainLiteral": "Tecnología al servicio de la",
+      "headlineAccentLiteral": "dignidad humana",
+      "descriptionLiteral": "Plataforma de transparencia y acción social para la defensa de los ciudadanos en Florianópolis. Únete a la red que vigila y protege.",
+      "primaryActionLabelLiteral": "Apoyar la Causa",
+      "secondaryActionLabelLiteral": "Ver Noticias"
+    },
+    "features": [
+      {
+        "identifier": "TRANSPARENCY",
+        "titleLiteral": "Transparencia Real",
+        "descriptionLiteral": "Datos abiertos y auditoría forense sobre las violaciones de derechos en la región."
+      },
+      {
+        "identifier": "ALERTS",
+        "titleLiteral": "Alertas de Impacto",
+        "descriptionLiteral": "Recibe información crítica sobre vulnerabilidades sociales en tiempo real."
+      },
+      {
+        "identifier": "ACTION",
+        "titleLiteral": "Acción Comunitaria",
+        "descriptionLiteral": "Conectamos donantes y voluntarios con las necesidades más urgentes de la ciudad."
+      }
+    ],
+    "newsletter": {
+      "sectionHeadlineLiteral": "Únete a nuestra red de protección.",
+      "sectionDescriptionLiteral": "Recibe actualizaciones soberanas sobre derechos humanos y transparencia directamente en tu correo electrónico."
+    }
+  }
+}

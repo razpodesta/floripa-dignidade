@@ -1,10 +1,10 @@
 /**
- * @section Health Monitoring - SRE Infrastructure Probe Apparatus
+ * @section Health Monitoring - Infrastructure Probe
  * @description Aparato de vigilancia lógica para servicios externos del ecosistema.
- * Evalúa disponibilidad y latencia, reportando anomalías al flujo sanguíneo digital.
+ * Evalúa disponibilidad y latencia, reportando anomalías al sistema de telemetría.
  *
- * Protocolo OEDP-V13.0 - Atomic SRE & Zero Abbreviations.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V14.0 - Verbatim Module Syntax.
+ * @author Dirección de Ingeniería - Floripa Dignidade
  */
 
 import { mapHttpErrorToException } from '@floripa-dignidade/exceptions';
@@ -13,24 +13,22 @@ import {
   GenerateCorrelationIdentifier,
   ReportForensicException
 } from '@floripa-dignidade/telemetry';
-import {
+
+/** 🛡️ SANEAMIENTO Zenith: Importación de ADN como tipo puro */
+import type {
   HealthStatus,
   IInfrastructureCheck
 } from '../schemas/HealthStatus.schema';
 
-/** Umbral técnico en milisegundos para marcar un servicio como degradado (ISO Performance). */
 const MAXIMUM_NOMINAL_LATENCY_MILLISECONDS = 500;
-
-/** Identificador soberano del búnker monitor para el Neural Sentinel. */
 const MONITOR_MODULE_IDENTIFIER = 'INFRASTRUCTURE_HEALTH_MONITOR';
 
 /**
- * Ejecuta una sonda de salud sobre un servicio externo, evalúa su pulso vital
- * y registra el reporte inmutable en el sistema de telemetría.
+ * Ejecuta una sonda de salud sobre un servicio externo.
  *
- * @param targetServiceNameLiteral - Nombre técnico del servicio (ej: 'POSTGRES_DB_MAIN').
- * @param executeHealthCheckAction - Promesa encapsulada que valida la conectividad.
- * @returns {Promise<IInfrastructureCheck>} Reporte estructurado del estado de salud.
+ * @param targetServiceNameLiteral - Nombre técnico del servicio.
+ * @param executeHealthCheckAction - Acción encapsulada de validación.
+ * @returns Reporte estructurado del estado de salud.
  */
 export const MonitorInfrastructureService = async (
   targetServiceNameLiteral: string,
@@ -42,25 +40,12 @@ export const MonitorInfrastructureService = async (
   let infrastructureHealthStatus: HealthStatus = 'UP';
 
   try {
-    /**
-     * 1. EJECUCIÓN DE LA SONDA (Infrastructure Probe)
-     * Se intenta realizar la acción de validación (ping, handshake, etc.).
-     */
     await executeHealthCheckAction();
-
   } catch (caughtError) {
-    /**
-     * 2. GESTIÓN FORENSE DE CAÍDA (Fault Tolerance)
-     * Si la sonda falla, el estado se degrada a DOWN inmediatamente.
-     */
     infrastructureHealthStatus = 'DOWN';
 
-    /**
-     * Transformamos el error de red en una excepción soberana para capturar
-     * el snapshot del entorno (variables de entorno, stack trace purificado).
-     */
     const infrastructureServiceException = mapHttpErrorToException(
-      503, // Service Unavailable (Estándar ISO para infraestructura)
+      503,
       `FALLO_CRITICO_EN_SERVICIO_EXTERNO: ${targetServiceNameLiteral}`,
       {
         targetServiceNameLiteral,
@@ -68,16 +53,11 @@ export const MonitorInfrastructureService = async (
       }
     );
 
-    // Reporte forense automático al búnker de telemetría.
     ReportForensicException(infrastructureServiceException, correlationIdentifier);
   }
 
   const executionLatencyInMilliseconds = performance.now() - startTimeInMilliseconds;
 
-  /**
-   * 3. EVALUACIÓN DE DEGRADACIÓN (Latency Check)
-   * Si el servicio responde pero excede el umbral nominal, se reporta como degradado.
-   */
   if (
     infrastructureHealthStatus === 'UP' &&
     executionLatencyInMilliseconds > MAXIMUM_NOMINAL_LATENCY_MILLISECONDS
@@ -85,7 +65,6 @@ export const MonitorInfrastructureService = async (
     infrastructureHealthStatus = 'DEGRADED';
   }
 
-  // 4. CONSTRUCCIÓN DEL REPORTE FINAL (Atomic Report)
   const infrastructureHealthReport: IInfrastructureCheck = {
     serviceName: targetServiceNameLiteral,
     status: infrastructureHealthStatus,
@@ -93,10 +72,6 @@ export const MonitorInfrastructureService = async (
     lastCheckTimestamp: new Date().toISOString()
   };
 
-  /**
-   * 5. EMISIÓN DE SEÑAL VITAL (Heartbeat Signaling)
-   * Despachamos el pulso al flujo sanguíneo digital.
-   */
   EmitTelemetrySignal({
     severityLevel: infrastructureHealthStatus === 'DOWN' ? 'CRITICAL' :
                    infrastructureHealthStatus === 'DEGRADED' ? 'WARNING' : 'INFO',

@@ -4,18 +4,21 @@
  * óptimo del ciudadano. Implementa una estrategia de coincidencia exacta y
  * fallback resiliente.
  *
- * Protocolo OEDP-V13.0 - Atomic Functional & Zero Abbreviations.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V16.0 - Atomic Functional, Zero Abbreviations & Verbatim Syntax.
+ * Saneamiento: Resolución de TS2532 en mapeo de cabeceras.
+ *
+ * @author Dirección de Ingeniería - Floripa Dignidade
  */
 
 import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier
 } from '@floripa-dignidade/telemetry';
-import {
-  ISupportedLocale, // SANEADO: Ordenado alfabéticamente (I < S)
-  SupportedLocaleSchema,
-} from '../../schemas/RoutingConfiguration.schema';
+
+import { SupportedLocaleSchema } from '../../schemas/RoutingConfiguration.schema';
+
+/** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN estructural */
+import type { ISupportedLocale } from '../../schemas/RoutingConfiguration.schema';
 
 /** Identificador técnico del búnker de ruteo para el Neural Sentinel. */
 const ROUTING_ENGINE_IDENTIFIER = 'CORE_ROUTING_ENGINE';
@@ -25,7 +28,7 @@ const ROUTING_ENGINE_IDENTIFIER = 'CORE_ROUTING_ENGINE';
  *
  * @param acceptLanguageHeaderLiteral - Valor crudo de la cabecera de lenguaje del navegador.
  * @param fallbackLocaleIdentifier - Idioma por defecto definido en la configuración (Default: pt-BR).
- * @returns El código de localización validado por el esquema soberano.
+ * @returns {ISupportedLocale} El código de localización validado por el esquema soberano.
  */
 export const DetermineDeviceLocale = (
   acceptLanguageHeaderLiteral: string | null,
@@ -54,7 +57,18 @@ export const DetermineDeviceLocale = (
      */
     const preferredLocalesCollection = acceptLanguageHeaderLiteral
       .split(',')
-      .map((segment) => segment.split(';')[0].trim());
+      .map((segmentLiteral) => {
+        const segmentPartsCollection = segmentLiteral.split(';');
+        const targetLocalePartLiteral = segmentPartsCollection[0];
+
+        // 🛡️ SANEADO: Validación segura para cumplir con "noUncheckedIndexedAccess"
+        if (targetLocalePartLiteral) {
+          return targetLocalePartLiteral.trim();
+        }
+
+        return '';
+      })
+      .filter((purifiedLocaleLiteral) => purifiedLocaleLiteral.length > 0);
 
     /**
      * Buscamos la primera coincidencia exacta dentro de nuestro ADN de idiomas soportados.
@@ -90,7 +104,7 @@ export const DetermineDeviceLocale = (
       operationCode: 'LOCALE_PARSING_ANOMALY',
       correlationIdentifier,
       message: 'Se detectó una anomalía al procesar las cabeceras de lenguaje.',
-      contextMetadata: { error: String(caughtError) }
+      contextMetadata: { errorTrace: String(caughtError) }
     });
   }
 

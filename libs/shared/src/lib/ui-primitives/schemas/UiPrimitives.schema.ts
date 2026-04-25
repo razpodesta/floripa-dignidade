@@ -5,7 +5,7 @@
  * que todo componente compartido debe heredar.
  *
  * Protocolo OEDP-V13.0 - Atomic Visual Consistency & Zero Abbreviations.
- * @author Staff Software Engineer - Floripa Dignidade
+ * @author Raz  Podestá - MetaShark Tech
  */
 
 import { z } from 'zod';

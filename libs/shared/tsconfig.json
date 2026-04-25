@@ -1,11 +1,8 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": {},
-  "files": [],
-  "include": [],
-  "references": [
-    {
-      "path": "./tsconfig.lib.json"
-    }
-  ]
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"],
+  "exclude": ["dist", "out-tsc", "node_modules"]
 }

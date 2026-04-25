@@ -1,0 +1,9 @@
+{
+  "logs": {
+    "INTEGRITY_VIOLATION": "Violación de integridad detectada en las variables de entorno. El sistema ha sido bloqueado por seguridad.",
+    "VERIFICATION_SUCCESS": "Infraestructura de entorno validada con éxito. Iniciando motores."
+  },
+  "errors": {
+    "ENVIRONMENT_ADN_CORRUPT": "El contrato de entorno está corrompido o incompleto."
+  }
+}

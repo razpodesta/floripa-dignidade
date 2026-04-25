@@ -1,0 +1,63 @@
+{
+  "core/lib": {
+    "signals": {
+      "START_PROCESS": "Starting atomic processing.",
+      "END_PROCESS": "Processing finished successfully.",
+      "LATENCY_REPORT": "Execution latency measured in milliseconds."
+    }
+  },
+  "modules/lib": {
+    "email": {
+      "confirmationSubjectLiteral": "Confirm your subscription | Floripa Dignidade",
+      "greetingLiteral": "Hello,",
+      "instructionLiteral": "You have requested to join our transparency network. Your sovereign verification code is:",
+      "trackingFooterLiteral": "Forensic Tracking ID:"
+    }
+  },
+  "shared/composite-ui": {
+    "navigationPaths": {
+      "identity": "Identity",
+      "transparency": "Transparency",
+      "solidarity": "Solidarity Ecosystem",
+      "press": "News",
+      "complaint": "Complaints"
+    },
+    "actions": {
+      "donateCallToAction": "Donate Now",
+      "searchPlaceholder": "Search information...",
+      "mobileMenuToggle": "Toggle navigation menu",
+      "reportEmergencyLabel": "Urgent Complaint"
+    }
+  },
+  "apps/frontpage": {
+    "hero": {
+      "badgeLabelLiteral": "Human Rights Protection",
+      "headlineMainLiteral": "Technology at the service of",
+      "headlineAccentLiteral": "human dignity",
+      "descriptionLiteral": "Transparency and social action platform for citizen defense in Florianópolis. Join the network that monitors and protects.",
+      "primaryActionLabelLiteral": "Support the Cause",
+      "secondaryActionLabelLiteral": "View News"
+    },
+    "features": [
+      {
+        "identifier": "TRANSPARENCY",
+        "titleLiteral": "Real Transparency",
+        "descriptionLiteral": "Open data and forensic auditing of rights violations in the region."
+      },
+      {
+        "identifier": "ALERTS",
+        "titleLiteral": "Impact Alerts",
+        "descriptionLiteral": "Receive critical information about social vulnerabilities in real-time."
+      },
+      {
+        "identifier": "ACTION",
+        "titleLiteral": "Community Action",
+        "descriptionLiteral": "Connecting donors and volunteers with the city's most urgent needs."
+      }
+    ],
+    "newsletter": {
+      "sectionHeadlineLiteral": "Join our protection network.",
+      "sectionDescriptionLiteral": "Receive sovereign updates on human rights and transparency directly in your email."
+    }
+  }
+}

@@ -6,14 +6,31 @@
  * Implementa un sistema de 'Sticky Glassmorphism', gestión de menús móviles
  * mediante Framer Motion y trazabilidad forense.
  *
- * Protocolo OEDP-V13.0 - Atomic Visual Architecture.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V13.0 - Atomic Visual Architecture & Zero Abbreviations.
+ * Saneamiento: Resolución definitiva de errores 'sort-imports' y optimización de renderizado.
+ *
+ * @author Raz  Podestá - MetaShark Tech
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, {
+  useCallback,
+  useEffect,
+  useState
+} from 'react';
+
+import {
+  AnimatePresence,
+  motion
+} from 'framer-motion';
+
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
-import { Menu, X, Heart, ShieldAlert } from 'lucide-react';
+
+import {
+  Heart,
+  Menu,
+  ShieldAlert,
+  X
+} from 'lucide-react';
 
 /* 1. Infraestructura de Telemetría (Standard PascalCase) */
 import {
@@ -23,12 +40,14 @@ import {
 
 /* 2. Primitivos y Utilidades Sincronizadas */
 import {
-  GlobalBrandLogo,
   GlobalActionButton,
+  GlobalBrandLogo,
   GlobalSearchWidget
 } from '../ui-primitives';
 import { GlobalStyleClassMerger } from '../utility/GlobalStyleMerger';
-import { IMainNavigationHeaderI18n } from './i18n/MainNavigationHeaderI18n.schema';
+
+/** 🛡️ SANEAMIENTO Zenith: Importación de ADN como tipo puro */
+import type { IMainNavigationHeaderI18n } from './i18n/MainNavigationHeaderI18n.schema';
 
 /**
  * @interface IGlobalMainNavigationHeaderProperties
@@ -60,6 +79,10 @@ export const GlobalMainNavigationHeader: React.FC<IGlobalMainNavigationHeaderPro
       setHasUserScrolledPastThresholdBoolean(window.scrollY > scrollThresholdInPixelsQuantity);
     };
 
+    /**
+     * Optimización de Rendimiento:
+     * El uso de { passive: true } mejora el FPS del hilo principal durante el scroll.
+     */
     window.addEventListener('scroll', handleWindowScrollEvent, { passive: true });
 
     EmitTelemetrySignal({
@@ -95,15 +118,28 @@ export const GlobalMainNavigationHeader: React.FC<IGlobalMainNavigationHeaderPro
           <GlobalBrandLogo
             imageWidthPixelQuantity={hasUserScrolledPastThresholdBoolean ? 130 : 160}
             isNavigationLinkEnabled={true}
+            labels={{
+              logoAlternativeTextLiteral: "Floripa Dignidade Logo",
+              navigationAriaLabelLiteral: "Ir al inicio"
+            }}
           />
         </div>
 
         {/* CENTRO: Navegación Institucional (Desktop) */}
         <NavigationMenu.Root className="hidden lg:flex relative">
           <NavigationMenu.List className="flex gap-10 items-center">
-            <HeaderNavLink href="/identidad" label={translationDictionary.navigationPaths.identity} />
-            <HeaderNavLink href="/transparencia" label={translationDictionary.navigationPaths.transparency} />
-            <HeaderNavLink href="/prensa" label={translationDictionary.navigationPaths.press} />
+            <HeaderNavLink
+              href="/identidad"
+              label={translationDictionary.navigationPaths.identity}
+            />
+            <HeaderNavLink
+              href="/transparencia"
+              label={translationDictionary.navigationPaths.transparency}
+            />
+            <HeaderNavLink
+              href="/prensa"
+              label={translationDictionary.navigationPaths.press}
+            />
           </NavigationMenu.List>
         </NavigationMenu.Root>
 
@@ -134,22 +170,32 @@ export const GlobalMainNavigationHeader: React.FC<IGlobalMainNavigationHeaderPro
       </div>
 
       {/* MENÚ MÓVIL: SISTEMA DE CAPAS (AnimatePresence) */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isMobileMenuOpenBoolean && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: '100vh' }}
             exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
             className="fixed inset-0 top-[60px] bg-white z-[90] p-6 flex flex-col lg:hidden overflow-hidden"
           >
             <nav className="flex flex-col gap-8 text-2xl font-bold text-navy-900 mt-8">
-              <a href="/identidad" className="flex justify-between items-center border-b pb-4 border-slate-100">
+              <a
+                href="/identidad"
+                className="flex justify-between items-center border-b pb-4 border-slate-100"
+              >
                 {translationDictionary.navigationPaths.identity}
               </a>
-              <a href="/transparencia" className="flex justify-between items-center border-b pb-4 border-slate-100">
+              <a
+                href="/transparencia"
+                className="flex justify-between items-center border-b pb-4 border-slate-100"
+              >
                 {translationDictionary.navigationPaths.transparency}
               </a>
-              <a href="/prensa" className="flex justify-between items-center border-b pb-4 border-slate-100">
+              <a
+                href="/prensa"
+                className="flex justify-between items-center border-b pb-4 border-slate-100"
+              >
                 {translationDictionary.navigationPaths.press}
               </a>
             </nav>
@@ -158,7 +204,10 @@ export const GlobalMainNavigationHeader: React.FC<IGlobalMainNavigationHeaderPro
               <GlobalActionButton visualIntentConfiguration="CONVERSION" className="w-full text-lg py-4">
                 {translationDictionary.actions.donateCallToAction}
               </GlobalActionButton>
-              <GlobalActionButton visualIntentConfiguration="OUTLINE" className="w-full text-red-600 border-red-200 bg-red-50/30">
+              <GlobalActionButton
+                visualIntentConfiguration="OUTLINE"
+                className="w-full text-red-600 border-red-200 bg-red-50/30"
+              >
                 <ShieldAlert className="w-5 h-5" />
                 <span>{translationDictionary.navigationPaths.complaint}</span>
               </GlobalActionButton>

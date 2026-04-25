@@ -1,0 +1,35 @@
+{
+  "name": "@floripa-dignidade/whatsapp-communication-service",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/modules/whatsapp/communication-service/src",
+  "projectType": "library",
+  "tags": [
+    "scope:modules",
+    "type:data",
+    "platform:node"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/modules/whatsapp/communication-service",
+        "main": "libs/modules/whatsapp/communication-service/src/index.ts",
+        "tsConfig": "libs/modules/whatsapp/communication-service/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p libs/modules/whatsapp/communication-service/tsconfig.lib.json --noEmit"
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    }
+  }
+}

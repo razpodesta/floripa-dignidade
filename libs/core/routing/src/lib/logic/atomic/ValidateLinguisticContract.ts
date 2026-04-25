@@ -1,36 +1,41 @@
 /**
- * @section Routing Logic - Linguistic Contract Guardian
+ * @section Routing Logic - Linguistic Contract Guardian Apparatus
  * @description Aparato de auditoría estructural que garantiza que los diccionarios
  * JSON cumplan estrictamente con el ADN (Zod Schema) definido en el búnker.
  *
- * Protocolo OEDP-V13.0 - Structural Integrity.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V15.0 - Structural Integrity, Type Resilience & Standard Exceptions.
+ * @author Dirección de Ingeniería - Floripa Dignidade
  */
 
-import { z } from 'zod';
 import {
   EmitTelemetrySignal,
-  GenerateCorrelationIdentifier
+  GenerateCorrelationIdentifier,
 } from '@floripa-dignidade/telemetry';
+
+import { InternalSystemException } from '@floripa-dignidade/exceptions';
+
+/** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN estructural */
+import type { ZodTypeAny } from 'zod';
 
 /**
  * Valida la integridad de un aparato lingüístico contra su esquema soberano.
  *
- * @param apparatusIdentifierLiteral - Nombre técnico del búnker (ej: "SHARED_UI").
- * @param contractSchema - Esquema de Zod que define la estructura obligatoria.
- * @param jsonDictionaryObject - Contenido crudo del archivo JSON de traducción.
- * @param targetLocaleLiteral - Idioma que se está auditando (pt-BR, es-ES, etc).
+ * @param apparatusIdentifierLiteral - Nombre técnico del búnker auditado.
+ * @param contractSovereignSchema - Esquema de Zod (ZodTypeAny para soportar Readonly/Object).
+ * @param jsonDictionaryPayload - Contenido crudo del archivo JSON de traducción.
+ * @param targetLocaleIdentifier - Idioma que se está auditando.
+ * @throws {InternalSystemException} Si el contrato JSON no coincide con el ADN esperado.
  */
 export const ValidateLinguisticContract = (
   apparatusIdentifierLiteral: string,
-  contractSchema: z.ZodObject<any>,
-  jsonDictionaryObject: unknown,
-  targetLocaleLiteral: string
+  contractSovereignSchema: ZodTypeAny, // SANEADO: Uso directo del tipo sin instanciar 'z'
+  jsonDictionaryPayload: unknown,
+  targetLocaleIdentifier: string
 ): void => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
   // 1. Auditoría de ADN (Safe Parsing)
-  const validationResult = contractSchema.safeParse(jsonDictionaryObject);
+  const validationResult = contractSovereignSchema.safeParse(jsonDictionaryPayload);
 
   if (!validationResult.success) {
     const errorMetadata = validationResult.error.format();
@@ -40,24 +45,28 @@ export const ValidateLinguisticContract = (
       moduleIdentifier: 'INTEGRITY_GUARDIAN',
       operationCode: 'LINGUISTIC_CONTRACT_VIOLATION',
       correlationIdentifier,
-      message: `Integridad de Aparato Fallida: [${apparatusIdentifierLiteral}] en [${targetLocaleLiteral}]`,
+      message: `Integridad de Aparato Fallida: [${apparatusIdentifierLiteral}] en [${targetLocaleIdentifier}]`,
       contextMetadata: {
         apparatus: apparatusIdentifierLiteral,
-        locale: targetLocaleLiteral,
-        missingFields: errorMetadata
-      }
+        locale: targetLocaleIdentifier,
+        missingFields: errorMetadata,
+      },
     });
 
-    // Lanzamos error crítico para detener el proceso (fail-fast en build/runtime)
-    throw new Error(`[INTEGRITY_VIOLATION]: El diccionario del aparato ${apparatusIdentifierLiteral} está incompleto para el idioma ${targetLocaleLiteral}.`);
+    // 2. Colapso Controlado (Standard Exception Engine)
+    throw new InternalSystemException('VIOLACION_DE_CONTRATO_LINGUISTICO', {
+      apparatusIdentifierLiteral,
+      targetLocaleIdentifier,
+      validationIssues: errorMetadata
+    });
   }
 
-  // 2. Reporte de Salud Estructural
+  // 3. Reporte de Salud Estructural
   EmitTelemetrySignal({
     severityLevel: 'INFO',
     moduleIdentifier: 'INTEGRITY_GUARDIAN',
     operationCode: 'APPARATUS_CONTRACT_VERIFIED',
     correlationIdentifier,
-    message: `Aparato íntegro: ${apparatusIdentifierLiteral} (${targetLocaleLiteral})`
+    message: `Aparato íntegro: ${apparatusIdentifierLiteral} (${targetLocaleIdentifier})`,
   });
 };

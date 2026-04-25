@@ -1,11 +1,9 @@
 /**
- * @section Identity Logic - Sovereignty Validation
- * @description Valida si un ciudadano posee la autoridad necesaria para una operación.
- * Actúa como el Juez de Paz del sistema, bloqueando accesos no autorizados
- * y reportando anomalías al flujo sanguíneo digital.
+ * @section Identity Logic - Authority Validation
+ * @description Valida si una identidad cumple con los requisitos de rango para una operación.
  *
- * Protocolo OEDP-V13.0 - Atomic Security & Zero Abbreviations.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V14.0 - Verbatim Module Syntax.
+ * @author Dirección de Ingeniería - Floripa Dignidade
  */
 
 import { ValidationException } from '@floripa-dignidade/exceptions';
@@ -13,20 +11,20 @@ import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier
 } from '@floripa-dignidade/telemetry';
-import { UserAccessRole } from '../schemas/UserAccessRole.schema';
-import { IUserIdentity, UserIdentitySchema } from '../schemas/UserIdentity.schema';
 
-/** Identificador técnico del búnker de identidad para el Neural Sentinel. */
+/** 🛡️ SANEAMIENTO Zenith: Importación de ADN como tipo puro */
+import type { UserAccessRole } from '../schemas/UserAccessRole.schema';
+import type { IUserIdentity } from '../schemas/UserIdentity.schema';
+import { UserIdentitySchema } from '../schemas/UserIdentity.schema';
+
 const IDENTITY_MODULE_IDENTIFIER = 'IDENTITY_ACCESS_SENTRY';
 
 /**
- * Verifica si la identidad proporcionada cumple con el ADN soberano y posee el rol requerido.
- * Emite señales de telemetría y dispara excepciones ante fallos de integridad.
+ * Verifica si la identidad proporcionada posee el rol requerido.
  *
- * @param {unknown} rawUserIdentityData - Datos de identidad capturados en la frontera.
- * @param {UserAccessRole} requiredAccessRole - Nivel de autoridad mínimo solicitado.
- * @returns {IUserIdentity} Identidad purificada y validada con autoridad confirmada.
- * @throws {ValidationException} Si el ADN es corrupto o la autoridad es insuficiente.
+ * @param rawUserIdentityData - Datos de identidad pendientes de validación.
+ * @param requiredAccessRole - Nivel de autoridad mínimo solicitado.
+ * @returns Identidad validada y purificada.
  */
 export const ValidateUserAccess = (
   rawUserIdentityData: unknown,
@@ -34,69 +32,53 @@ export const ValidateUserAccess = (
 ): IUserIdentity => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
-  // 1. ADUANA DE ADN (Data Integrity Check)
-  // Purificamos el objeto de identidad contra el esquema soberano de Zod.
   const validationResult = UserIdentitySchema.safeParse(rawUserIdentityData);
 
   if (!validationResult.success) {
-    const identityCorruptionErrorMessage = 'ADN_IDENTIDAD_CORRUPTO';
+    const errorCodeLiteral = 'ADN_IDENTIDAD_CORRUPTO';
 
     EmitTelemetrySignal({
       severityLevel: 'CRITICAL',
       moduleIdentifier: IDENTITY_MODULE_IDENTIFIER,
       operationCode: 'IDENTITY_SCHEMA_VIOLATION',
       correlationIdentifier,
-      message: `${identityCorruptionErrorMessage}: Los datos de identidad no cumplen el contrato soberano.`,
+      message: 'Los datos de identidad no cumplen el contrato técnico.',
       contextMetadata: {
-        validationErrors: validationResult.error.flatten(),
-        receivedDataSnapshot: rawUserIdentityData
+        validationErrors: validationResult.error.flatten()
       },
     });
 
-    throw new ValidationException(identityCorruptionErrorMessage, {
+    throw new ValidationException(errorCodeLiteral, {
       identityValidationIssues: validationResult.error.flatten(),
     });
   }
 
   const authenticatedIdentity = validationResult.data;
 
-  // 2. VALIDACIÓN DE AUTORIDAD (RBAC Enforcement)
-  // Un SYSTEM_ADMINISTRATOR tiene bypass automático por soberanía técnica.
   const hasRequiredAuthority =
     authenticatedIdentity.assignedAccessRole === requiredAccessRole ||
     authenticatedIdentity.assignedAccessRole === 'SYSTEM_ADMINISTRATOR';
 
   if (!hasRequiredAuthority) {
-    const authorizationFailureErrorMessage = 'ACCESO_NO_AUTORIZADO';
+    const errorCodeLiteral = 'ACCESO_NO_AUTORIZADO';
 
     EmitTelemetrySignal({
       severityLevel: 'WARNING',
       moduleIdentifier: IDENTITY_MODULE_IDENTIFIER,
       operationCode: 'UNAUTHORIZED_AUTHORITY_ATTEMPT',
       correlationIdentifier,
-      message: `${authorizationFailureErrorMessage}: El ciudadano ${authenticatedIdentity.identifier} intentó acceder a un recurso de nivel ${requiredAccessRole}.`,
+      message: `Intento de acceso no autorizado por el ciudadano: ${authenticatedIdentity.identifier}`,
       contextMetadata: {
         requiredAccessRole,
-        currentCitizenRole: authenticatedIdentity.assignedAccessRole,
-        citizenIdentifier: authenticatedIdentity.identifier
+        currentCitizenRole: authenticatedIdentity.assignedAccessRole
       },
     });
 
-    throw new ValidationException(authorizationFailureErrorMessage, {
+    throw new ValidationException(errorCodeLiteral, {
       requiredAccessRole,
-      citizenAssignedRole: authenticatedIdentity.assignedAccessRole,
       citizenIdentifier: authenticatedIdentity.identifier,
     });
   }
-
-  // 3. REPORTE DE ÉXITO (Forensic Trace)
-  EmitTelemetrySignal({
-    severityLevel: 'INFO',
-    moduleIdentifier: IDENTITY_MODULE_IDENTIFIER,
-    operationCode: 'AUTHORITY_VALIDATION_SUCCESS',
-    correlationIdentifier,
-    message: `Acceso concedido para el ciudadano: ${authenticatedIdentity.identifier}`,
-  });
 
   return authenticatedIdentity;
 };

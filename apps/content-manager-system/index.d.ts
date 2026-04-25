@@ -1,34 +1,38 @@
-import React from 'react';
-
 /**
- * @section Declaraciones de Tipos Globales - CMS Context
- * Protocolo OEDP-V13.0 - Tipado Estricto de Activos
+ * @section CMS DNA - Global Asset Declarations
+ * @description Define el mapa de tipos para activos estáticos dentro del Content Manager System.
+ * Garantiza que el compilador resuelva correctamente estilos e imágenes en el panel administrativo.
+ *
+ * Protocolo OEDP-V15.0 - Verbatim Module Syntax & Type Isolation.
+ * Saneamiento: Soporte para importaciones CSS y purificación de tipos React.
+ *
+ * @author Raz Podestá - MetaShark Tech
  */
 
+import type React from 'react';
+
 /**
- * Definición de módulo para archivos SVG.
- * Permite que el CMS trate a los vectores como componentes funcionales de React
- * con soporte total para propiedades nativas del DOM y accesibilidad.
+ * @section Soporte de Estilos
+ * Permite la importación de hojas de estilo globales y módulos CSS.
+ */
+declare module '*.css' {
+  const content: Record<string, string>;
+  export default content;
+}
+
+/**
+ * @section Soporte Vectorial (SVG)
  */
 declare module '*.svg' {
-  /**
-   * Componente funcional React para inyectar SVGs directamente en el árbol de renderizado.
-   * Soporta props estándar de SVG y títulos opcionales para SEO/Accesibilidad.
-   */
   export const ReactComponent: React.FunctionComponent<
     React.SVGProps<SVGSVGElement> & { title?: string }
   >;
-
-  /**
-   * Ruta de recurso estático para el uso del SVG como fuente de imagen (src).
-   */
   const content: string;
   export default content;
 }
 
 /**
- * Declaraciones para activos binarios de imagen.
- * Garantiza que las importaciones de imágenes retornen una cadena de texto (URL/Base64).
+ * @section Soporte Multimedia (Imágenes)
  */
 declare module '*.png' {
   const content: string;
@@ -40,7 +44,17 @@ declare module '*.jpg' {
   export default content;
 }
 
+declare module '*.jpeg' {
+  const content: string;
+  export default content;
+}
+
 declare module '*.webp' {
+  const content: string;
+  export default content;
+}
+
+declare module '*.avif' {
   const content: string;
   export default content;
 }

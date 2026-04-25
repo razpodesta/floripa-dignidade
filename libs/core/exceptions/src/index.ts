@@ -1,29 +1,42 @@
 /**
- * ⚠️ Global Exceptions - Sovereign Entry Point
- * Protocolo OEDP-V13.0 - Arquitectura de Resiliencia y Auditoría Forense
+ * @section Core Exceptions - Package Entry Point
+ * @description Centro de orquestación para la gestión unificada de anomalías.
+ * Expone los contratos de ADN para códigos de error e implementa el motor
+ * de excepciones especializado para el ecosistema Floripa Dignidade.
  *
- * Este búnker centraliza la gestión de fallos del ecosistema Floripa Dignidade.
- * Proporciona las herramientas necesarias para transformar errores técnicos
- * en excepciones semánticas con capacidad de captura inmutable (Runtime Snapshot),
- * permitiendo al Neural Sentinel la toma de decisiones de auto-sanación.
+ * Protocolo OEDP-V16.0 - Single Source Resolution & Verbatim Module Syntax.
+ * @author Raz Podestá - MetaShark Tech
  */
 
 /**
- * @section ADN Estructural
- * Exportación de esquemas Zod y tipos de datos soberanos.
+ * @section ADN Estructural (Schemas & Types)
+ * Exportación de contratos inmutables para la validación de errores.
  */
-export * from './lib/schemas/Exception.schema';
+export type {
+  ErrorCode,
+  IRuntimeSnapshot
+} from './lib/schemas/Exception.schema';
+
+export {
+  ErrorCodeSchema,
+  RuntimeSnapshotSchema
+} from './lib/schemas/Exception.schema';
 
 /**
- * @section Arquitectura de Excepciones
- * Exportación de la clase base abstracta y las especializaciones de dominio.
+ * @section Almas Lingüísticas (i18n)
  */
-export * from './lib/codes/GlobalBaseException';
-export * from './lib/codes/InternalSystemException';
-export * from './lib/codes/ValidationException';
+export type { IExceptionsI18n } from './lib/i18n/ExceptionsI18n.schema';
+export { ExceptionsI18nSchema } from './lib/i18n/ExceptionsI18n.schema';
 
 /**
- * @section Lógica de Frontera
- * Exportación de orquestadores de mapeo para la conversión de errores externos.
+ * @section Motores de Excepción (Logic & Classes)
+ * Clases base y especializadas para el reporte de fallos.
  */
-export * from './lib/mappers/mapHttpErrorToException';
+export { GlobalBaseException } from './lib/codes/GlobalBaseException';
+export { InternalSystemException } from './lib/codes/InternalSystemException';
+export { ValidationException } from './lib/codes/ValidationException';
+
+/**
+ * @section Adaptadores de Protocolo (Mappers)
+ */
+export { mapHttpErrorToException } from './lib/mappers/mapHttpErrorToException';

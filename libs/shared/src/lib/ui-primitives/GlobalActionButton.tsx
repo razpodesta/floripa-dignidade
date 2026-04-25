@@ -10,7 +10,7 @@ import { GlobalStyleClassMerger } from '../utility/GlobalStyleMerger';
  * y accesibilidad de alto nivel (WAI-ARIA).
  *
  * Protocolo OEDP-V13.0 - Zero Abbreviations & Atomic Logic.
- * @author Staff Software Engineer - Floripa Dignidade
+ * @author Raz  Podestá - MetaShark Tech
  */
 
 /**

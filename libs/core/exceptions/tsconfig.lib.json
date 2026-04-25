@@ -1,41 +1,32 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
-
-    /* 🛡️ SANACIÓN DE RUTAS (Alignment OEDP-V13.0)
-       Sincronizamos la salida con la raíz del monorepo para caché distribuida. */
     "outDir": "../../../dist/out-tsc/libs/core/exceptions",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/exceptions/tsconfig.lib.tsbuildinfo",
 
-    /* Protocolo de Proyecto Compuesto (Project References) */
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true, /* Habilita navegación al código fuente desde otros búnkeres */
-    "emitDeclarationOnly": true,
-
-    /* Estándar TypeScript 6.0+ / Next.js 15+ */
+    /**
+     * @section Resolución de Próxima Generación
+     * SANEADO: Alineación con 'module: Preserve' y 'moduleResolution: bundler'.
+     * Esta es la clave definitiva para sanar el error TS2307 en la App.
+     */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
+
+    /**
+     * Garantiza que cada archivo sea transpilado de forma independiente,
+     * optimizando el rendimiento de SWC en el monorepo.
+     */
+    "isolatedModules": true,
 
     "types": [],
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ES2022"
-    ]
+    "lib": ["DOM", "DOM.Iterable", "ES2022"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.json"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
-    "jest.config.ts"
+    "jest.config.ts",
+    "dist",
+    "out-tsc"
   ]
 }

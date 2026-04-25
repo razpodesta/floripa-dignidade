@@ -1,35 +1,17 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
-
-    /* 🛡️ SANACIÓN DE CACHÉ (Zero Local Artifacts)
-       Redirección de metadatos de compilación hacia la raíz del monorepo.
-       Evita la polución visual de carpetas 'dist' dentro de la lógica de negocio. */
     "outDir": "../../../dist/out-tsc/libs/core/telemetry",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/telemetry/tsconfig.lib.tsbuildinfo",
-
-    /* Protocolo de Proyecto Compuesto (Project References) */
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
-
-    /* Estándar de Alto Rendimiento Next.js 15+ / Turbopack */
-    "module": "Preserve",
-    "moduleResolution": "bundler",
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-
     "types": [],
     "lib": ["DOM", "DOM.Iterable", "ES2022"]
   },
   "include": ["src/**/*.ts", "src/**/*.json"],
-  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts", "jest.config.ts"],
-  "references": [
-    {
-      "path": "../exceptions/tsconfig.lib.json"
-    }
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "jest.config.ts",
+    "dist",
+    "out-tsc"
   ]
 }

@@ -11,9 +11,7 @@
   "targets": {
     "build": {
       "executor": "@nx/js:swc",
-      "outputs": [
-        "{workspaceRoot}/dist/libs/core/analytics"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/core/analytics",
         "main": "libs/core/analytics/src/index.ts",
@@ -22,15 +20,15 @@
       },
       "cache": true
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "cache": true
-    },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc -b libs/core/analytics/tsconfig.lib.json"
+        "command": "tsc -p libs/core/analytics/tsconfig.lib.json --noEmit"
       },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
       "cache": true
     }
   }

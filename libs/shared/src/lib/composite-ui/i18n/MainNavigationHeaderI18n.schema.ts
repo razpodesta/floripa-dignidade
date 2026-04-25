@@ -6,7 +6,7 @@
  * en todos los idiomas soportados.
  *
  * Protocolo OEDP-V13.0 - Linguistic Sovereignty & Zero Abbreviations.
- * @author Staff Software Engineer - Floripa Dignidade
+ * @author Raz  Podestá - MetaShark Tech
  */
 
 import { z } from 'zod';

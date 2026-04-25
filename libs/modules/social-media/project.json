@@ -5,13 +5,13 @@
   "projectType": "library",
   "tags": [
     "scope:modules",
-    "type:data",
-    "platform:node"
+    "type:logic",
+    "platform:isomorphic"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:swc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": ["{workspaceRoot}/dist/libs/modules/social-media"],
       "options": {
         "outputPath": "dist/libs/modules/social-media",
         "main": "libs/modules/social-media/src/index.ts",
@@ -20,15 +20,15 @@
       },
       "cache": true
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "cache": true
-    },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc --noEmit -p libs/modules/social-media/tsconfig.lib.json"
+        "command": "tsc -p libs/modules/social-media/tsconfig.lib.json --noEmit"
       },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
       "cache": true
     }
   }

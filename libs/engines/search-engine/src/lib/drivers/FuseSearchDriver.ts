@@ -1,60 +1,50 @@
-import Fuse, { IFuseOptions } from 'fuse.js';
-import { ISearchableEntity } from '../schemas/SearchEngine.schema';
-
 /**
  * @section Discovery Drivers - Fuse.js Implementation
- * Protocolo OEDP-V13.0 - Resiliencia Técnica e Inmutabilidad.
- * Cumplimiento ISO/IEC 11179 - Nomenclatura Profesional.
+ * @description Ejecuta el algoritmo de búsqueda difusa utilizando el motor Fuse.js.
+ *
+ * Protocolo OEDP-V14.0 - Verbatim Module Syntax.
+ * @author Dirección de Ingeniería - Floripa Dignidade
  */
 
-/**
- * Configuración técnica inmutable para el algoritmo de búsqueda difusa.
- * Los pesos (weights) están alineados con la estrategia SEO y de conversión social.
- */
+import Fuse from 'fuse.js';
+import type { IFuseOptions } from 'fuse.js';
+
+/** 🛡️ SANEAMIENTO Zenith: Importación de ADN estructural como tipo */
+import type { ISearchableEntity } from '../schemas/SearchEngine.schema';
+
 const GlobalFuseConfigurationOptions: IFuseOptions<ISearchableEntity> = {
   keys: [
-    { name: 'title', weight: 1.0 },           // Máxima prioridad para el título.
-    { name: 'keywords', weight: 0.8 },        // Clave para el sistema Contextual Interlinking.
-    { name: 'contentSnippet', weight: 0.5 }   // Contexto descriptivo para refinamiento.
+    { name: 'title', weight: 1.0 },
+    { name: 'keywords', weight: 0.8 },
+    { name: 'contentSnippet', weight: 0.5 }
   ],
-  threshold: 0.35,            // Equilibrio entre precisión y tolerancia a errores tipográficos.
-  includeScore: true,         // Vital para la auditoría de relevancia del Neural Sentinel.
-  ignoreLocation: true,       // Optimiza la búsqueda en cualquier posición del texto.
-  minMatchCharLength: 2,      // Permite búsquedas cortas (ej: "S.O.S").
+  threshold: 0.35,
+  includeScore: true,
+  ignoreLocation: true,
+  minMatchCharLength: 2,
 };
 
 /**
- * Ejecuta la búsqueda técnica purificada utilizando el motor Fuse.js.
+ * Ejecuta la búsqueda técnica purificada.
  *
- * @param searchQueryLiteral - El término de búsqueda ingresado por el ciudadano.
- * @param searchableEntityCollection - El universo de datos previamente filtrado por RBAC.
- * @returns Una colección de entidades validadas y ordenadas por relevancia técnica.
+ * @param searchQueryLiteral - Término de búsqueda.
+ * @param searchableEntityCollection - Universo de datos autorizado.
+ * @returns Colección de entidades ordenadas por relevancia.
  */
 export const executeTechnicalFuzzySearch = (
   searchQueryLiteral: string,
   searchableEntityCollection: ISearchableEntity[]
 ): ISearchableEntity[] => {
-  // 1. Validación de guardia (Performance First)
-  const isSearchQueryEmpty = !searchQueryLiteral.trim();
-  if (isSearchQueryEmpty) {
+  if (!searchQueryLiteral.trim()) {
     return [];
   }
 
-  // 2. Instanciación del Motor Atómico
-  // Nota: En futuras fases de optimización, este objeto podrá ser memoizado
-  // si la colección de entidades permanece inmutable durante la sesión.
   const discoveryEngineInstance = new Fuse(
     searchableEntityCollection,
     GlobalFuseConfigurationOptions
   );
 
-  // 3. Ejecución de la Inferencia de Búsqueda
   const technicalSearchResults = discoveryEngineInstance.search(searchQueryLiteral);
 
-  /**
-   * 4. Transformación y Limpieza (Data Integrity)
-   * Extraemos únicamente el ítem que cumple con el ADN de ISearchableEntity,
-   * descartando los metadatos internos del motor Fuse para no polucionar la UI.
-   */
   return technicalSearchResults.map((discoveryResult) => discoveryResult.item);
 };

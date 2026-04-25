@@ -1,83 +1,99 @@
 /**
  * @section Telemetry Engine - Performance Metrics Apparatus
  * @description Orquestador de rendimiento cognitivo y trazabilidad de latencia.
- * Mide con precisión de microsegundos la ejecución de acciones asíncronas
- * y despacha los resultados al flujo sanguíneo digital.
+ * Mide con precisión de microsegundos la ejecución de acciones asíncronas,
+ * gestiona el rastro lingüístico soberano y despacha los resultados al
+ * flujo sanguíneo digital.
  *
- * Protocolo OEDP-V13.0 - Atomic Functional & Zero Abbreviations.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V16.0 - Atomic Functional & Zero Abbreviations.
+ * @author Raz Podestá - MetaShark Tech
  */
 
 import { EmitTelemetrySignal } from './EmitTelemetrySignal';
 
-/** Identificador técnico para reportes de métricas internas. */
+/**
+ * Identificador técnico para reportes de métricas internas del sistema nervioso central.
+ * SANEADO: Nomenclatura ISO descriptiva.
+ */
 const PERFORMANCE_MONITOR_IDENTIFIER = 'TELEMETRY_PERFORMANCE_MONITOR';
 
 /**
  * Ejecuta una acción atómica asíncrona, midiendo su tiempo de ejecución
- * y reportando el resultado automáticamente al sistema de telemetría.
+ * y reportando el resultado automáticamente al sistema de telemetría
+ * mediante señales internacionalizadas.
  *
- * @template TResult - Tipo de retorno esperado de la acción ejecutada.
- * @param {string} moduleIdentifier - Identificador del aparato que invoca la acción.
- * @param {string} operationCode - Código semántico de la operación (ej: FETCH_NEWS_DATA).
- * @param {string} correlationIdentifier - UUID forense para trazabilidad cross-module.
- * @param {() => Promise<TResult>} asynchronousAction - Lógica de negocio encapsulada.
- * @returns {Promise<TResult>} El resultado inalterado de la función proporcionada.
- * @throws Relanza cualquier error capturado para preservar la burbuja original.
+ * @template TExecutionResult - Tipo de retorno esperado de la acción encapsulada.
+ * @param moduleIdentifierLiteral - Nombre técnico del aparato emisor.
+ * @param operationCodeLiteral - Código semántico de la operación (ej: PERSIST_USER_DATA).
+ * @param correlationIdentifier - UUID v4 para trazabilidad forense cross-module.
+ * @param asynchronousActionFunction - Lógica de negocio a ser envuelta y medida.
+ * @returns {Promise<TExecutionResult>} El resultado inalterado de la función proporcionada.
+ * @throws Relanza cualquier excepción capturada para preservar la burbuja original del llamante.
  */
-export const TraceExecutionTime = async <TResult>(
-  moduleIdentifier: string,
-  operationCode: string,
+export const TraceExecutionTime = async <TExecutionResult>(
+  moduleIdentifierLiteral: string,
+  operationCodeLiteral: string,
   correlationIdentifier: string,
-  asynchronousAction: () => Promise<TResult>,
-): Promise<TResult> => {
+  asynchronousActionFunction: () => Promise<TExecutionResult>,
+): Promise<TExecutionResult> => {
 
-  // 1. Captura de Marca Temporal Inicial (Precisión ISO)
-  const startTimeInMilliseconds = performance.now();
+  // 1. CAPTURA DE MARCA TEMPORAL INICIAL (Alta Precisión ISO)
+  const executionStartTimestampInMilliseconds = performance.now();
 
   try {
-    // 2. Ejecución de la lógica de negocio
-    const executionResult = await asynchronousAction();
+    // 2. EJECUCIÓN DE LA LÓGICA DE NEGOCIO (Wrapper Pattern)
+    const resultingExecutionData = await asynchronousActionFunction();
 
-    // 3. Cálculo de Latencia de Éxito
-    const endTimeInMilliseconds = performance.now();
-    const totalExecutionLatencyInMilliseconds = endTimeInMilliseconds - startTimeInMilliseconds;
+    // 3. CÁLCULO DE LATENCIA NOMINAL
+    const executionEndTimestampInMilliseconds = performance.now();
+    const totalExecutionLatencyInMilliseconds =
+      executionEndTimestampInMilliseconds - executionStartTimestampInMilliseconds;
 
-    // 4. Emisión de Señal de Rendimiento Positivo
+    // 4. EMISIÓN DE SEÑAL DE RENDIMIENTO POSITIVO (SANEADO: i18n Key Usage)
     EmitTelemetrySignal({
       severityLevel: 'INFO',
       moduleIdentifier: PERFORMANCE_MONITOR_IDENTIFIER,
-      operationCode: `${operationCode}_PERFORMANCE_SUCCESS`,
+      operationCode: `${operationCodeLiteral}_PERFORMANCE_SUCCESS`,
       correlationIdentifier,
-      message: `Métrica de rendimiento: Ejecución exitosa de [${operationCode}] en el módulo [${moduleIdentifier}].`,
+      /** 🛡️ SANEADO: Uso de la clave de diccionario 'signals.LATENCY_REPORT' */
+      message: 'TELEMETRY.SIGNALS.LATENCY_REPORT',
       executionLatencyInMilliseconds: totalExecutionLatencyInMilliseconds,
       contextMetadata: {
-        targetModule: moduleIdentifier,
-        targetOperation: operationCode
+        targetModuleLiteral: moduleIdentifierLiteral,
+        targetOperationLiteral: operationCodeLiteral,
+        statusLiteral: 'SUCCESS'
       }
     });
 
-    return executionResult;
+    return resultingExecutionData;
 
-  } catch (caughtError) {
-    // 5. Gestión de Fallo con Medición de Latencia (Forensic Analysis)
-    const endTimeInMilliseconds = performance.now();
-    const totalExecutionLatencyInMilliseconds = endTimeInMilliseconds - startTimeInMilliseconds;
+  } catch (caughtError: unknown) {
+    // 5. GESTIÓN FORENSE DE FALLO CON MEDICIÓN DE LATENCIA
+    const executionEndTimestampInMilliseconds = performance.now();
+    const totalExecutionLatencyInMilliseconds =
+      executionEndTimestampInMilliseconds - executionStartTimestampInMilliseconds;
+
+    /** 🛡️ SANEADO: Extracción segura de mensaje de error de tipo 'unknown' */
+    const errorDescriptionLiteral = caughtError instanceof Error
+      ? caughtError.message
+      : String(caughtError);
 
     EmitTelemetrySignal({
       severityLevel: 'ERROR',
       moduleIdentifier: PERFORMANCE_MONITOR_IDENTIFIER,
-      operationCode: `${operationCode}_PERFORMANCE_FAILURE`,
+      operationCode: `${operationCodeLiteral}_PERFORMANCE_FAILURE`,
       correlationIdentifier,
-      message: `Métrica de rendimiento: Fallo detectado en [${operationCode}] tras ${totalExecutionLatencyInMilliseconds.toFixed(2)}ms.`,
+      message: 'TELEMETRY.SIGNALS.LATENCY_REPORT',
       executionLatencyInMilliseconds: totalExecutionLatencyInMilliseconds,
       contextMetadata: {
-        errorTrace: caughtError instanceof Error ? caughtError.message : String(caughtError),
-        targetModule: moduleIdentifier
+        errorTraceLiteral: errorDescriptionLiteral,
+        targetModuleLiteral: moduleIdentifierLiteral,
+        targetOperationLiteral: operationCodeLiteral,
+        statusLiteral: 'FAILURE'
       }
     });
 
-    // 6. Preservar la integridad del flujo de la aplicación
+    // 6. PROPAGACIÓN DE BURBUJA DE ERROR
     throw caughtError;
   }
 };

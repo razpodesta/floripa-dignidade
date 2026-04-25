@@ -1,11 +1,10 @@
 /**
- * 🌐 Social Media Module - Sovereign Entry Point
- * Protocolo OEDP-V13.0 - Multi-Platform Kernel
+ * @section Social Media Module - Package Entry Point
+ * @description Centraliza las capacidades de orquestación para la difusión
+ * y escucha en redes sociales externas (Facebook, Instagram, Threads).
  *
- * Este búnker orquesta la comunicación con redes sociales externas,
- * permitiendo la difusión de noticias y la recepción de señales sociales
- * de forma desacoplada y atómica.
+ * Protocolo OEDP-V14.0 - Single Source Resolution.
+ * @author Dirección de Ingeniería - Floripa Dignidade
  */
 
-// Exportación de constantes de plataforma y tipos base
 export * from './lib/social-media-kernel';

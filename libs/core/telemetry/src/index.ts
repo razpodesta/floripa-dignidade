@@ -1,39 +1,40 @@
 /**
- * 📡 Core Telemetry - Sovereign Entry Point
- * Protocolo OEDP-V13.0 - Atomic Architecture
+ * @section Core Telemetry - Package Entry Point
+ * @description Orquestador del Sistema Nervioso Central del ecosistema.
+ * Centraliza las capacidades de observabilidad, emisión de señales de estado,
+ * trazabilidad forense mediante identificadores de correlación y medición
+ * de rendimiento de grado industrial.
  *
- * Este búnker centraliza la exportación de capacidades de observabilidad,
- * trazabilidad forense y medición de rendimiento para todo el ecosistema.
- *
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V16.0 - Single Source Resolution & Verbatim Module Syntax.
+ * @author Raz Podestá - MetaShark Tech
  */
 
 /**
- * @section Trazabilidad Operativa
- * Elevación a versión de estabilización de rutas (Symmetry Patch).
+ * @section ADN Estructural (Schemas & Types)
+ * Exportación de contratos inmutables para la validación de señales telemétricas.
  */
-export const CORE_TELEMETRY_VERSION = '1.3.5';
+export type {
+  ITelemetrySignal,
+  SeverityLevel
+} from './lib/schemas/TelemetrySignal.schema';
+
+export {
+  SeverityLevelSchema,
+  TelemetrySignalSchema
+} from './lib/schemas/TelemetrySignal.schema';
 
 /**
- * @section ADN Estructural (Sovereign Contracts)
- * Exportación de contratos de señales, esquemas Zod e interfaces de telemetría.
+ * @section Almas Lingüísticas (i18n)
+ * Expone los esquemas de traducción para la auditoría de diccionarios de logs.
  */
-export * from './lib/schemas/TelemetrySignal.schema';
+export type { ITelemetryI18n } from './lib/i18n/TelemetryI18n.schema';
+export { TelemetryI18nSchema } from './lib/i18n/TelemetryI18n.schema';
 
 /**
- * @section Lógica Atómica (Apparatus)
- * Exportación de la lógica soberana de emisión, identificación y medición.
- *
- * Protocolo de Nomenclatura: Se utiliza PascalCase para funciones que
- * representan aparatos lógicos atómicos independientes.
+ * @section Lógica Atómica (Aparatos de Observabilidad)
+ * Funciones puras e independientes para el flujo sanguíneo digital.
  */
 export { EmitTelemetrySignal } from './lib/logic/atomic/EmitTelemetrySignal';
 export { GenerateCorrelationIdentifier } from './lib/logic/atomic/GenerateCorrelationIdentifier';
 export { ReportForensicException } from './lib/logic/atomic/ReportForensicException';
-
-/**
- * @important Resolución de Conflicto de Identidad (TS1261 - Forensic Fix)
- * Forzamos la exportación mediante la ruta física exacta en PascalCase.
- * Esta línea sincroniza el grafo de tipos con el aparato TraceExecutionTime.
- */
 export { TraceExecutionTime } from './lib/logic/atomic/TraceExecutionTime';

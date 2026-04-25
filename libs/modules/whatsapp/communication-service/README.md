@@ -1,16 +1,21 @@
-# 📱 PROMPT DE CONSTRUCCIÓN: WhatsApp AI Gateway
-**Rol:** Motor de recepción y procesamiento de denuncias de Derechos Humanos.
-**Ruta Jerárquica:** `libs/modules/whatsapp/communication-service`
+# 📱 WhatsApp AI Gateway (The Human Rights Sensor)
+**Rol:** Receptor soberano de denuncias y puente conversacional con el ciudadano.
+**Estatus:** God Tier / Security-First Implementation.
+**Tags:** `scope:modules`, `type:logic`, `platform:isomorphic`
 
-## 🎯 Objetivo para la IA
-Eres el puente entre el ciudadano y la ONG. Este búnker maneja Webhooks de alta sensibilidad. La seguridad y la integridad del dato son prioridad suprema.
+## 🎯 Misión Ontológica
+Actuar como el sistema sensorial de la ONG en el territorio digital. Este búnker procesa flujos de datos no estructurados (mensajes de voz, texto, fotos) y los transforma en **Evidencia Forense** mediante IA, garantizando la integridad criptográfica en cada paso.
 
-## 🏗️ Instrucciones de Arquitectura
-1. **Subrutas de Lógica:**
-   - `lib/processors/`: Extracción de entidades vía IA (nombres, lugares).
-   - `lib/validators/`: Validación de firmas de seguridad de la API de Meta.
-2. **Zero Abbreviations:** Usa `incomingMessagePayload` en lugar de `msg`.
-3. **Integración Core:** Todo mensaje entrante debe generar un rastro en `@floripa-dignidade/telemetry`.
+## 🏗️ Arquitectura de Enjambre (Next-Gen)
+1.  **Capa de Integridad (`/logic/atomic`):** Validación de firmas SHA256 HMAC para asegurar que la señal proviene exclusivamente de los servidores de Meta.
+2.  **Capa Cognitiva (`/logic/processors`):** Motores que analizan la intención del mensaje para detectar si es una denuncia de Derechos Humanos o una consulta administrativa.
+3.  **Capa de Persistencia Cloud (`/adapters`):** Registro stateless en Supabase siguiendo el protocolo **ADR 0015**.
 
-## 🧬 ADN Estructural
-El esquema `WhatsAppMessageSchema` es la única fuente de verdad. Si el mensaje no cumple el ADN, se rechaza en la frontera antes de tocar la base de datos.
+## 🛡️ Estándares de Oro
+- **Zero Privacy Leak:** Queda prohibido registrar el número telefónico del ciudadano en logs de nivel `INFO`. Solo se usará el `subscriberIdentifier` anonimizado.
+- **Fail-Fast Security:** Si la firma `X-Hub-Signature-256` es inválida, el enjambre aborta el proceso en el milisegundo cero.
+- **Linguistic Sovereignty:** Respuestas automatizadas entregadas según el idioma detectado en el perfil de WhatsApp del ciudadano.
+
+## 🚀 Funcionalidades Futuras
+- **Media Encryption:** Cifrado de fotos y videos antes del almacenamiento en Cloud Buckets.
+- **Location Pinning:** Extracción de coordenadas geográficas para mapeo de vulnerabilidades sociales.

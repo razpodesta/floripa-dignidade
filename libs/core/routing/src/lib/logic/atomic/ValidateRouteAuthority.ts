@@ -1,80 +1,94 @@
 /**
- * @section Routing Logic - Route Authority Guardian
+ * @section Routing Logic - Route Authority Guardian Apparatus
  * @description Aparato de vigilancia que valida la simetría entre la ruta solicitada
- * y el nivel de autoridad del ciudadano (RBAC).
+ * y el rango de autoridad institucional de la identidad (RBAC).
  *
- * Protocolo OEDP-V13.0 - Atomic Security & Zero Abbreviations.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V13.0 - Atomic Architecture & Zero Abbreviations.
+ * Saneamiento: Resolución de error '@typescript-eslint/no-inferrable-types'.
+ *
+ * @author Raz  Podestá - MetaShark Tech
  */
 
 import { ValidationException } from '@floripa-dignidade/exceptions';
 import {
   EmitTelemetrySignal,
-  GenerateCorrelationIdentifier
+  GenerateCorrelationIdentifier,
 } from '@floripa-dignidade/telemetry';
-import { UserAccessRole } from '@floripa-dignidade/identity';
+import { ROUTE_PROTECTION_MANIFESTO } from '../../constants/RouteAuthorityManifesto';
 
 /** Identificador técnico del guardián para trazabilidad forense. */
-const AUTHORITY_SENTINEL_IDENTIFIER = 'ROUTE_AUTHORITY_SENTINEL';
+const ROUTE_AUTHORITY_SENTINEL_IDENTIFIER = 'ROUTE_AUTHORITY_SENTINEL';
 
 /**
- * Mapeo Soberano de Rutas Protegidas.
- * Define el nivel de autoridad mínimo requerido para cada segmento.
- */
-const ROUTE_PROTECTION_MANIFESTO: Record<string, UserAccessRole> = {
-  '/administracion': 'SYSTEM_ADMINISTRATOR',
-  '/auditoria': 'LEGAL_AUDITOR',
-  '/gestion': 'CONTENT_MANAGER',
-  '/perfil': 'REGISTERED_CITIZEN',
-};
-
-/**
- * Evalúa si el ciudadano posee la autoridad necesaria para transitar por la ruta.
+ * Evalúa si la identidad posee el rango de autoridad necesario para transitar
+ * por la ruta solicitada basándose en el manifiesto soberano.
  *
- * @param requestedPathnameLiteral - Ruta de destino capturada en el middleware.
- * @param citizenAccessRole - Nivel de autoridad actual del usuario.
- * @returns {boolean} Verdadero si el acceso es legítimo.
+ * @param requestedPathnameLiteral - Ruta de destino capturada en la intercepción de frontera.
+ * @param activeCitizenAuthorityRoleLiteral - Rango de autoridad (Inferencia automática del valor por defecto).
+ * @returns {boolean} Verdadero si la autoridad es suficiente para el acceso.
  * @throws {ValidationException} Si se detecta un intento de acceso no autorizado.
  */
 export const ValidateRouteAuthority = (
   requestedPathnameLiteral: string,
-  citizenAccessRole: UserAccessRole = 'ANONYMOUS_USER'
+  activeCitizenAuthorityRoleLiteral = 'CITIZEN_ANONYMOUS' // SANEADO: Eliminada anotación redundante ': string'
 ): boolean => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
-  // 1. Identificación de restricciones (Path Matching)
-  const matchingRuleKey = Object.keys(ROUTE_PROTECTION_MANIFESTO).find(path =>
-    requestedPathnameLiteral.startsWith(path)
+  /**
+   * 1. IDENTIFICACIÓN DE REGLAS APLICABLES
+   * Buscamos en el manifiesto externo si existe una restricción para el prefijo de la ruta.
+   */
+  const matchingManifestoPathLiteral = Object.keys(ROUTE_PROTECTION_MANIFESTO).find((pathPrefix) =>
+    requestedPathnameLiteral.startsWith(pathPrefix)
   );
 
-  if (!matchingRuleKey) return true; // Ruta pública nominal.
+  // Si la ruta no está en el manifiesto, se clasifica como 'Acceso Público Nominal'.
+  if (!matchingManifestoPathLiteral) {
+    return true;
+  }
 
-  const requiredAuthorityRole = ROUTE_PROTECTION_MANIFESTO[matchingRuleKey];
+  const minimumRequiredAuthorityRoleLiteral =
+    ROUTE_PROTECTION_MANIFESTO[matchingManifestoPathLiteral];
 
-  // 2. Validación de Jerarquía y Permisos
-  const hasAuthorityBoolean =
-    citizenAccessRole === 'SYSTEM_ADMINISTRATOR' ||
-    citizenAccessRole === requiredAuthorityRole;
+  /**
+   * 2. EVALUACIÓN DE JERARQUÍA TÉCNICA (Authority Enforcement)
+   * Los roles de nivel 'Auditor' y 'Manager Global' poseen bypass automático sobre niveles inferiores.
+   */
+  const isAuthoritySufficientBoolean =
+    activeCitizenAuthorityRoleLiteral === 'INFRASTRUCTURE_SOVEREIGN_AUDITOR' ||
+    activeCitizenAuthorityRoleLiteral === 'PLATFORM_GLOBAL_MANAGER' ||
+    activeCitizenAuthorityRoleLiteral === minimumRequiredAuthorityRoleLiteral;
 
-  if (!hasAuthorityBoolean) {
+  if (!isAuthoritySufficientBoolean) {
+    const authorityViolationErrorCodeLiteral = 'AUTORIDAD_INSUFICIENTE_PARA_RUTA';
+
     EmitTelemetrySignal({
       severityLevel: 'WARNING',
-      moduleIdentifier: AUTHORITY_SENTINEL_IDENTIFIER,
-      operationCode: 'UNAUTHORIZED_ROUTE_ACCESS_ATTEMPT',
+      moduleIdentifier: ROUTE_AUTHORITY_SENTINEL_IDENTIFIER,
+      operationCode: 'UNAUTHORIZED_ACCESS_ATTEMPT_DETECTED',
       correlationIdentifier,
-      message: `Bloqueo de seguridad: [${citizenAccessRole}] intentó acceder a [${requestedPathnameLiteral}]`,
+      message: `Bloqueo de seguridad en ruteo: La identidad [${activeCitizenAuthorityRoleLiteral}] intentó acceder a [${requestedPathnameLiteral}].`,
       contextMetadata: {
-        requestedPath: requestedPathnameLiteral,
-        requiredRole: requiredAuthorityRole,
-        activeRole: citizenAccessRole
-      }
+        requestedPathLiteral: requestedPathnameLiteral,
+        requiredAuthorityRoleLiteral: minimumRequiredAuthorityRoleLiteral,
+        activeAuthorityRoleLiteral: activeCitizenAuthorityRoleLiteral,
+      },
     });
 
-    throw new ValidationException('AUTORIDAD_INSUFICIENTE_PARA_RUTA', {
-      requiredAuthorityRole,
-      activeCitizenRole: citizenAccessRole
+    throw new ValidationException(authorityViolationErrorCodeLiteral, {
+      requiredAuthorityRoleLiteral: minimumRequiredAuthorityRoleLiteral,
+      activeCitizenAuthorityRoleLiteral: activeCitizenAuthorityRoleLiteral,
     });
   }
+
+  // 3. REPORTE DE TRÁNSITO LEGÍTIMO (SRE Visibility)
+  EmitTelemetrySignal({
+    severityLevel: 'INFO',
+    moduleIdentifier: ROUTE_AUTHORITY_SENTINEL_IDENTIFIER,
+    operationCode: 'ROUTE_ACCESS_AUTHORIZED',
+    correlationIdentifier,
+    message: `Acceso autorizado para ruta protegida: [${requestedPathnameLiteral}]`,
+  });
 
   return true;
 };

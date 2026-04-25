@@ -1,0 +1,29 @@
+{
+  "name": "@floripa-dignidade/qa-mirror",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "tests/src",
+  "projectType": "library",
+  "tags": ["scope:qa", "type:tool", "platform:isomorphic"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/tests"],
+      "options": {
+        "jestConfig": "tests/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p tests/tsconfig.lib.json --noEmit"
+      },
+      "cache": true
+    }
+  }
+}

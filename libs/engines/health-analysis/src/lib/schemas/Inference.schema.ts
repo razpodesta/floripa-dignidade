@@ -1,44 +1,53 @@
+/**
+ * @section Health Analysis DNA - Cognitive Inference Schema
+ * @description Define el contrato soberano para la comunicación con modelos de IA
+ * y la estructura de las directivas de auto-sanación.
+ *
+ * Protocolo OEDP-V15.0 - Sovereign Data & ReadOnly Integrity.
+ * Saneamiento: Exportación de tipos nominales para soporte de Verbatim Syntax (TS2305 Fix).
+ *
+ * @author Dirección de Ingeniería - Floripa Dignidade
+ */
+
 import { z } from 'zod';
 
 /**
- * @section Aduana de ADN - Inteligencia Artificial
- */
-
-/**
- * Esquema de Proveedores de IA.
+ * @section Esquema de Proveedores
  * Define el ecosistema multi-modelo soportado por el motor de análisis.
- * - OPENAI/ANTHROPIC: Tier superior para razonamiento complejo.
- * - HUGGING_FACE: Tier privado para análisis de datos sensibles.
- * - LOCAL_SLM: Modelos de lenguaje pequeños para ejecución en el Edge.
  */
 export const AIProviderSchema = z.enum(['OPENAI', 'ANTHROPIC', 'HUGGING_FACE', 'LOCAL_SLM'])
-  .describe('Ecosistema de proveedores de inferencia cognitiva');
+  .describe('Identificadores de proveedores de inferencia cognitiva autorizados.');
 
 /**
- * Esquema Soberano de Respuesta de Inferencia.
- * Define el contrato inmutable que transforma datos técnicos en sabiduría operativa.
+ * 🛡️ ADN Tipado: Representación literal del proveedor.
+ * Utilizado por el orquestador para garantizar el desacoplamiento de tipos.
+ */
+export type TAIProvider = z.infer<typeof AIProviderSchema>;
+
+/**
+ * @name InferenceResponseSchema
+ * @description Contrato maestro de respuesta cognitiva.
+ * Transforma datos crudos de IA en directivas de acción para el sistema.
  */
 export const InferenceResponseSchema = z.object({
   analysisId: z.string().uuid()
-    .describe('Identificador único forense de la inferencia'),
+    .describe('Identificador único inalterable de la operación de inferencia.'),
 
   confidenceScore: z.number().min(0).max(1)
-    .describe('Nivel de certeza del modelo sobre el análisis realizado (0.0 a 1.0)'),
+    .describe('Nivel de certeza probabilística del modelo sobre el análisis (0.0 a 1.0).'),
 
   observation: z.string()
-    .describe('Razonamiento lógico detallado generado por la IA'),
+    .describe('Razonamiento lógico detallado generado por la entidad cognitiva.'),
 
   suggestedAction: z.enum(['NONE', 'RESTART_MODULE', 'CACHE_PURGE', 'CODE_REFACTOR_REQUIRED'])
-    .describe('Directiva de sanación recomendada para el ecosistema'),
+    .describe('Directiva técnica de sanación recomendada para el ecosistema.'),
 
   detectedAnomalies: z.array(z.string())
-    .describe('Lista de patrones de falla o desviaciones lógicas detectadas'),
+    .describe('Colección de patrones de fallo o desviaciones lógicas identificadas.'),
 
   metadata: z.record(z.string(), z.unknown())
-    .describe('Metadatos técnicos del modelo (tokens usados, versión del modelo, etc.)')
+    .describe('Metadatos técnicos del proveedor (tokens, latencia interna, versión del modelo).')
 }).readonly();
 
-/**
- * Interfaz inmutable de la respuesta cognitiva.
- */
+/** 🛡️ ADN Tipado: Interfaz inmutable de la respuesta de inferencia. */
 export type IInferenceResponse = z.infer<typeof InferenceResponseSchema>;

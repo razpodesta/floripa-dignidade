@@ -1,18 +1,21 @@
 /**
  * @section Application Root Layout
- * @description Carcasa soberana de la aplicación.
- * Este layout es el ancestro de todas las rutas, incluyendo las localizadas.
+ * @description Carcasa estructural de la aplicación. Actúa como el ancestro
+ * común para todas las rutas del portal, gestionando fuentes y SEO base.
  *
- * Protocolo OEDP-V13.0 - Structural Integrity.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V15.0 - Single Source Resolution.
+ * @author Raz Podestá - MetaShark Tech
  */
 
 import './global.css';
-import { Metadata } from 'next';
+import React from 'react';
+
+/** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN como tipo */
+import type { Metadata } from 'next';
 
 /**
- * @section SEO Strategy: Metadata Foundation
- * Definición de metadatos base para el rastro de los motores de búsqueda.
+ * @section SEO Strategy - Metadata Foundation
+ * Configuración soberana para el rastro de motores de búsqueda.
  */
 export const metadata: Metadata = {
   title: {
@@ -20,10 +23,6 @@ export const metadata: Metadata = {
     default: 'Floripa Dignidade - Defensa de los Derechos Humanos',
   },
   description: 'Plataforma tecnológica para la transparencia y acción social en Florianópolis.',
-  /**
-   * Canonical & Alternates: Clave para el Pilar Técnico del Manifiesto SEO.
-   * Evita penalizaciones por contenido duplicado en rutas multilingües.
-   */
   alternates: {
     canonical: '/',
     languages: {
@@ -32,12 +31,20 @@ export const metadata: Metadata = {
       'en-US': '/en-US',
     },
   },
+  robots: {
+    index: true,
+    follow: true,
+  }
 };
 
 interface IRootLayoutProperties {
   readonly children: React.ReactNode;
 }
 
+/**
+ * Componente raíz inmutable.
+ * Implementa 'suppressHydrationWarning' para permitir extensiones de navegador (DarkReader, etc).
+ */
 export default function RootLayout({ children }: IRootLayoutProperties) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>

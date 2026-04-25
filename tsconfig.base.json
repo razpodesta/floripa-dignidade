@@ -1,14 +1,57 @@
 {
   "compilerOptions": {
-    "rootDir": ".",
-    "baseUrl": ".",
+    /**
+     * @section Gobernanza de Entorno - ISO Technical Rigor
+     * Configuración base para entornos isomórficos (Node.js + Edge + Browser).
+     * Alineado con los estándares de misión crítica de Floripa Dignidade.
+     */
     "target": "ES2022",
-    /* Protocolo de Módulos de Alto Rendimiento (Next.js 15+ Optimized) */
-    "module": "Preserve",
-    "moduleResolution": "bundler",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
 
-    /* Rigor Técnico y Seguridad de ADN */
+    /**
+     * @section Supresión de Deprecaciones (Next-Gen Ready)
+     * SANEADO: Se eleva el rango de supresión para silenciar los avisos de 'baseUrl'
+     * en versiones de TypeScript 5.5+ hasta la transición total a TS 7.0.
+     */
+    "ignoreDeprecations": "5.0",
+    "baseUrl": ".",
+    "rootDir": ".",
+
+    /**
+     * @section Resolución de Próxima Generación
+     * Optimizado para Next.js 15+, Turbopack y el motor de construcción SWC.
+     */
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /**
+     * @section Soporte UI Global
+     * Habilita el reconocimiento de gramática JSX en todo el monorepo.
+     */
+    "jsx": "react-jsx",
+
+    /**
+     * @section Protocolo de Validación Pura (Zero Emission)
+     * TSC actúa exclusivamente como motor de auditoría forense en memoria.
+     * La generación de binarios queda delegada al enjambre de SWC.
+     */
+    "noEmit": true,
+    "declaration": false,
+    "emitDeclarationOnly": false,
+    "composite": false,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "incremental": true,
+
+    /**
+     * @section Integridad de Datos y Prosa de Código (ISO 25010)
+     * Máximo nivel de estrictez para garantizar software libre de ambigüedad.
+     */
     "strict": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -16,38 +59,44 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noPropertyAccessFromIndexSignature": true,
-
-    /* Configuración Isomórfica y Bundling */
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
+    "isolatedModules": true,
 
-    /* Gestión de Rutas Soberanas (Alias del Workspace) */
+    /**
+     * @section Gestión de Rutas Institucionales (Swiss-Watch Mapping)
+     * Definición simétrica de los puntos de entrada para cada búnker lógico.
+     * Garantiza que el IDE resuelva la lógica fuente en lugar de los dist/.
+     */
     "paths": {
-      /* CAPA CORE: Infraestructura Transversal */
+      /* --- Capa de Infraestructura (Core) --- */
       "@floripa-dignidade/analytics": ["libs/core/analytics/src/index.ts"],
+      "@floripa-dignidade/environment-validator": ["libs/core/environment-validator/src/index.ts"],
       "@floripa-dignidade/exceptions": ["libs/core/exceptions/src/index.ts"],
       "@floripa-dignidade/routing": ["libs/core/routing/src/index.ts"],
       "@floripa-dignidade/telemetry": ["libs/core/telemetry/src/index.ts"],
+      "@floripa-dignidade/resend-provider": ["libs/core/communication-providers/resend/src/index.ts"],
 
-      /* CAPA ENGINES: Inteligencia y Auditoría */
-      "@floripa-dignidade/health-analysis-engine": ["libs/engines/health-analysis/src/index.ts"],
+      /* --- Capa de Motores (Engines) --- */
+      "@floripa-dignidade/health-analysis": ["libs/engines/health-analysis/src/index.ts"],
       "@floripa-dignidade/health-monitor": ["libs/engines/health-monitor/src/index.ts"],
       "@floripa-dignidade/search-engine": ["libs/engines/search-engine/src/index.ts"],
 
-      /* CAPA MODULES: Dominios de Negocio */
+      /* --- Capa de Dominios (Modules) --- */
       "@floripa-dignidade/identity": ["libs/modules/identity/src/index.ts"],
       "@floripa-dignidade/newsletter": ["libs/modules/newsletter/src/index.ts"],
       "@floripa-dignidade/social-media": ["libs/modules/social-media/src/index.ts"],
       "@floripa-dignidade/whatsapp-communication-service": ["libs/modules/whatsapp/communication-service/src/index.ts"],
 
-      /* CAPA SHARED: Fundición Visual y Utilidades */
-      "@floripa-dignidade/shared": ["libs/shared/src/index.ts"]
+      /* --- Capa Visual (Shared Deep Exports) --- */
+      "@floripa-dignidade/shared": ["libs/shared/src/index.ts"],
+      "@floripa-dignidade/shared/design-system": ["libs/shared/src/lib/design-system/index.ts"],
+      "@floripa-dignidade/shared/ui-primitives": ["libs/shared/src/lib/ui-primitives/index.ts"],
+      "@floripa-dignidade/shared/composite-ui": ["libs/shared/src/lib/composite-ui/index.ts"],
+
+      /* --- Capa de Calidad y Sistema (QA/Tools) --- */
+      "@floripa-dignidade/qa-mirror": ["tests/src/index.ts"],
+      "@floripa-dignidade/tools": ["libs/tools/src/index.ts"],
+      "@floripa-dignidade/scripts": ["scripts/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp", "dist"]

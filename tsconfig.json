@@ -1,6 +1,22 @@
 {
   "extends": "./tsconfig.base.json",
-  "compileOnSave": false,
+  "compilerOptions": {
+    /**
+     * @section Gobernanza de Emisión
+     * La raíz actúa exclusivamente como mediador de configuración.
+     */
+    "noEmit": true,
+
+    /* 🛡️ SUPRESIÓN DE ENTROPÍA (TS 6.0/7.0 Ready) */
+    "ignoreDeprecations": "5.0"
+  },
+  /**
+   * @section Estrategia de Aislamiento Total (Zero-Leak)
+   * Al dejar 'files', 'include' y 'references' vacíos, obligamos a Next.js
+   * y a los búnkeres individuales a usar sus propios ámbitos, 
+   * previniendo colisiones de memoria en el servidor de lenguaje.
+   */
   "files": [],
-  "references": []
+  "include": [],
+  "exclude": ["node_modules", "tmp", "dist"]
 }

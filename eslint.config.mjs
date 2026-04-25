@@ -1,42 +1,47 @@
 /**
- * @section Technical Constitution - Global Governance
- * @description Orquestador soberano de integridad de código y límites modulares.
- * Garantiza el desacoplamiento absoluto del Sistema Lego y el cumplimiento de
- * estándares ISO de mantenibilidad.
+ * @section Technical Constitution - Global Infrastructure Governance
+ * @description Orquestador de integridad de código, límites modulares y cumplimiento
+ * de estándares internacionales. Garantiza el desacoplamiento de búnkeres lógicos
+ * y la inmutabilidad de las fronteras de dominio.
  *
- * Protocolo OEDP-V13.0 - Structural Integrity & Zero Abbreviations.
- * @author Staff Software Engineer - Floripa Dignidade
+ * Protocolo OEDP-V15.0 - Structural Integrity & Build Readiness.
+ * Saneamiento: Autorización de importaciones relativas para orquestadores de construcción.
+ *
+ * @author Raz Podestá - MetaShark Tech
  */
 
-import nx from '@nx/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
+import nxEslintPlugin from '@nx/eslint-plugin';
+import typescriptParser from '@typescript-eslint/parser';
 
 export default [
-  ...nx.configs['flat/base'],
-  ...nx.configs['flat/typescript'],
-  ...nx.configs['flat/javascript'],
+  // 1. Integración de Configuraciones Base de Nx
+  ...nxEslintPlugin.configs['flat/base'],
+  ...nxEslintPlugin.configs['flat/typescript'],
+  ...nxEslintPlugin.configs['flat/javascript'],
 
   {
     /**
-     * SECCIÓN: EXCLUSIÓN DE ENTROPÍA
-     * Ignora artefactos de construcción y carpetas temporales para optimizar
-     * el rendimiento del Neural Sentinel.
+     * @section Exclusión de Entropía Visual
+     * Optimiza el rendimiento ignorando artefactos de construcción y memorias volátiles.
      */
     ignores: [
       '**/dist',
       '**/out-tsc',
       '**/test-output',
       '**/tmp',
+      '**/coverage',
+      '**/.nx',
+      '**/.cache',
       '.next/**/*',
-      'pnpm-lock.yaml'
+      'pnpm-lock.yaml',
+      'node_modules'
     ],
   },
 
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     languageOptions: {
-      parser: tsParser,
-      /** Configuración de tipado estricto para análisis estático profundo. */
+      parser: typescriptParser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
@@ -44,38 +49,41 @@ export default [
     },
     rules: {
       /**
-       * 🛡️ REGLAS DE BOUNDARIES (Nx Enforce Module Boundaries)
-       * El sistema inmunitario del monorepo. Impide dependencias circulares
-       * y garantiza que el flujo de datos sea unidireccional.
+       * @section Matriz de Fronteras (Module Boundaries)
+       * Implementa la jerarquía de dependencias para asegurar la modularidad atómica.
        */
       '@nx/enforce-module-boundaries': [
         'error',
         {
           enforceBuildableLibDependency: true,
-          allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$'],
+          /**
+           * @section Autorización de Orquestadores
+           * SANEADO: Se añaden los archivos de configuración de Next.js y PostCSS
+           * a la lista blanca para permitir importaciones físicas durante el build.
+           */
+          allow: [
+            '^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$',
+            '^.*/next\\.config\\.[cm]?js$',
+            '^.*/postcss\\.config\\.[cm]?js$'
+          ],
           depConstraints: [
             {
-              /** CORE: Cimientos inalterables. Solo pueden depender de otros bloques core. */
+              /** Capa de Infraestructura (Core): Independencia absoluta. */
               sourceTag: 'scope:core',
               onlyDependOnLibsWithTags: ['scope:core'],
             },
             {
-              /** SHARED: Kit visual y utilidades puras. Solo dependen de infraestructura base. */
+              /** Capa Visual (Shared): Depende únicamente de infraestructura base. */
               sourceTag: 'scope:shared',
-              onlyDependOnLibsWithTags: ['scope:core'],
+              onlyDependOnLibsWithTags: ['scope:core', 'scope:shared'],
             },
             {
-              /** ENGINES: Motores de inteligencia. Consumen infraestructura y contratos de dominio. */
+              /** Capa de Motores (Engines): Inteligencia agnóstica al negocio. */
               sourceTag: 'scope:engines',
-              onlyDependOnLibsWithTags: [
-                'scope:core',
-                'scope:shared',
-                'scope:engines',
-                'scope:modules'
-              ],
+              onlyDependOnLibsWithTags: ['scope:core', 'scope:shared', 'scope:engines'],
             },
             {
-              /** MODULES: Dominios de negocio. Ensamblan lógica y UI específica. */
+              /** Capa de Dominios (Modules): Ensambla inteligencia e infraestructura. */
               sourceTag: 'scope:modules',
               onlyDependOnLibsWithTags: [
                 'scope:core',
@@ -85,22 +93,37 @@ export default [
               ],
             },
             {
-              /** APPS: Orquestadores finales. Consumen todo el ecosistema. */
+              /** Capa de Calidad (QA): Capacidad de observación total del sistema. */
+              sourceTag: 'scope:qa',
+              onlyDependOnLibsWithTags: [
+                'scope:core',
+                'scope:shared',
+                'scope:engines',
+                'scope:modules'
+              ],
+            },
+            {
+              /** Capa de Soporte (Tools/Scripts). */
+              sourceTag: 'scope:tools',
+              onlyDependOnLibsWithTags: ['scope:core', 'scope:tools'],
+            },
+            {
+              /** Aplicaciones Finales: Consumidores de todo el ecosistema. */
               sourceTag: 'scope:app',
               onlyDependOnLibsWithTags: ['scope:*'],
             },
             {
-              /** TYPE DATA: Prohibido importar lógica de UI para evitar fugas de renderizado. */
+              /** Restricción de Tipo: Prohibida la lógica visual en capas de datos. */
               sourceTag: 'type:data',
               notDependOnLibsWithTags: ['type:ui'],
             },
             {
-              /** TYPE UI: Presentación pura. No debe poseer lógica de acceso a datos directa. */
+              /** Restricción de Tipo: La UI solo consume contratos y bases. */
               sourceTag: 'type:ui',
               onlyDependOnLibsWithTags: ['type:ui', 'type:schema', 'type:core', 'type:shared'],
             },
             {
-              /** TYPE SCHEMA: Nodos hoja. No tienen permiso de importación externa (Pure ADN). */
+              /** Los esquemas actúan como Nodos Hoja inalterables. */
               sourceTag: 'type:schema',
               onlyDependOnLibsWithTags: [],
             }
@@ -109,62 +132,59 @@ export default [
       ],
 
       /**
-       * 👨‍💻 REGLAS DE RIGOR TÉCNICO (OEDP Standard)
+       * @section Rigor Técnico y Mantenibilidad (ISO 25010)
        */
       'no-console': ['error', { allow: ['warn', 'error'] }],
       'eqeqeq': ['error', 'always'],
 
-      /** Forzar accesibilidad explícita en miembros de clase (ISO Mantenibilidad). */
+      /** Forzar el uso de 'import type' para optimizar Turbopack y resolver TS1484. */
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { prefer: 'type-imports', fixStyle: 'separate-type-imports' }
+      ],
+
+      /** Garantiza la visibilidad explícita de miembros de clase. */
       '@typescript-eslint/explicit-member-accessibility': [
         'error',
         { accessibility: 'explicit' }
       ],
 
-      /** Prohibición de 'any' para garantizar integridad de tipos en la aduana Zod. */
+      /** Prevención de ambigüedad técnica. */
       '@typescript-eslint/no-explicit-any': 'error',
 
       /**
-       * 🏷️ CONVENCIÓN DE NOMENCLATURA ISO (ISO/IEC 11179)
-       * Obliga a que el código se lea como literatura técnica.
+       * @section Convención de Nomenclatura Profesional (ISO/IEC 11179)
        */
       '@typescript-eslint/naming-convention': [
         'error',
-        /** Tipos, Interfaces y Enums: Siempre PascalCase. */
+        {
+          selector: 'interface',
+          format: ['PascalCase'],
+          prefix: ['I']
+        },
         { selector: 'typeLike', format: ['PascalCase'] },
-        /**
-         * Aparatos Atómicos y Constantes: PascalCase (para funciones exportadas)
-         * o camelCase (para lógica interna).
-         */
         {
           selector: 'variable',
           format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
           leadingUnderscore: 'allow'
         },
-        /** Parámetros: Siempre camelCase sin abreviaturas. */
         {
           selector: 'parameter',
           format: ['camelCase'],
           leadingUnderscore: 'allow'
-        },
-        /** Interfaces: Prefijo 'I' obligatorio según OEDP-V13.0. */
-        {
-          selector: 'interface',
-          format: ['PascalCase'],
-          prefix: ['I']
         }
       ],
 
-      /** Prevención de código muerto y polución visual. */
+      'sort-imports': ['error', {
+        ignoreCase: true,
+        ignoreDeclarationSort: true,
+        allowSeparatedGroups: true
+      }],
+
       '@typescript-eslint/no-unused-vars': ['error', {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
         caughtErrorsIgnorePattern: '^_'
-      }],
-
-      /** Organización de importaciones para reducir conflictos de merge. */
-      'sort-imports': ['error', {
-        ignoreCase: true,
-        ignoreDeclarationSort: true,
       }],
     },
   },

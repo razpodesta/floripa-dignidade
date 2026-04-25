@@ -1,0 +1,36 @@
+{
+  "name": "@floripa-dignidade/identity",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/modules/identity/src",
+  "projectType": "library",
+  "tags": [
+    "scope:modules",
+    "type:logic",
+    "platform:isomorphic"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/modules/identity",
+        "main": "libs/modules/identity/src/index.ts",
+        "tsConfig": "libs/modules/identity/tsconfig.lib.json",
+        "swcrc": ".swcrc",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p libs/modules/identity/tsconfig.lib.json --noEmit"
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    }
+  }
+}

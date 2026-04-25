@@ -20,15 +20,15 @@
       },
       "cache": true
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "cache": true
-    },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc --noEmit -p libs/shared/tsconfig.lib.json"
+        "command": "tsc -p libs/shared/tsconfig.lib.json --noEmit"
       },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
       "cache": true
     }
   }

@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // "rootDir": "src",
+    "outDir": "../dist/out-tsc/tests",
+    "tsBuildInfoFile": "../dist/out-tsc/tests/tsconfig.tsbuildinfo",
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "types": ["jest", "node"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

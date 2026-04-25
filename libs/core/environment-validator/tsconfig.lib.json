@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc/libs/core/environment-validator",
+    "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/environment-validator/tsconfig.lib.tsbuildinfo",
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+
+    "lib": ["ES2022"],
+    "isolatedModules": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "jest.config.ts",
+    "dist",
+    "out-tsc"
+  ]
+}

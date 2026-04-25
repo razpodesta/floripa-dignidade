@@ -1,54 +1,57 @@
 /**
- * 🏛️ Shared UI Bunker - Sovereign Entry Point
- * Protocolo OEDP-V13.0 - Atomic Visual Consistency & Unified Access
+ * @section Shared UI - Package Entry Point
+ * @description Centraliza la exportación de utilidades, tokens de diseño,
+ * primitivos atómicos y orquestadores de interfaz para todo el ecosistema.
  *
- * Este es el orquestador maestro de la capa visual de Floripa Dignidade.
- * Centraliza utilidades de estilo, tokens de diseño, primitivos atómicos
- * y ensambles compuestos para todo el ecosistema.
+ * Protocolo OEDP-V15.0 - Single Source Resolution & Build Readiness.
+ * Saneamiento: Integración de Newsletter Form y Artefactos de Seguridad Universal.
  *
- * @author Staff Software Engineer - Floripa Dignidade
+ * @author Raz Podestá - MetaShark Tech
  */
 
 /**
- * @section Trazabilidad Operativa
- * Elevación a versión Zenith de integración visual.
+ * @version 1.4.0
+ * Evolución: Inclusión de capacidades de conversión social y blindaje de frontera.
  */
-export const GLOBAL_SHARED_UI_VERSION = '1.3.0';
+export const GLOBAL_SHARED_UI_VERSION = '1.4.0';
 
 /**
- * @section 0. Utilidades de Infraestructura Visual
- * Herramientas base para la gestión de estilos y lógica de renderizado.
+ * @section Infraestructura y Utilidades
+ * Herramientas transversales para la gestión de estilos y seguridad.
  */
 export { GlobalStyleClassMerger } from './lib/utility/GlobalStyleMerger';
+export { GLOBAL_SECURITY_HEADERS_COLLECTION } from './lib/utility/GlobalSecurityHeaders';
+export type { ISecurityHeader } from './lib/utility/GlobalSecurityHeaders';
 
 /**
- * @section 1. Design System DNA
- * Tokens inmutables, paleta cromática y escalas tipográficas ISO.
+ * @section Sistema de Diseño (DNA Cromático)
+ * Tokens inmutables y configuración de temas.
  */
 export * from './lib/design-system/schemas/DesignSystem.schema';
 export { GlobalThemeConfiguration } from './lib/design-system/index';
 
 /**
- * @section 2. UI Primitives (Ladrillos Atómicos)
- * Componentes de bajo nivel y sus contratos estructurales de ADN.
+ * @section Componentes Atómicos (UI Primitives)
+ * Ladrillos visuales con responsabilidad única y accesibilidad ISO.
  */
-// ADN Primitivo
+
+// 1. ADN de Primitivos (Esquemas)
 export * from './lib/ui-primitives/schemas/UiPrimitives.schema';
 export * from './lib/ui-primitives/schemas/GlobalSearchWidget.schema';
+export * from './lib/ui-primitives/schemas/NewsletterSubscriptionForm.schema';
+export * from './lib/ui-primitives/i18n/NewsletterSubscriptionFormI18n.schema';
 
-// Aparatos Primitivos
+// 2. Aparatos Visuales
 export { GlobalActionButton } from './lib/ui-primitives/GlobalActionButton';
 export { GlobalBrandLogo } from './lib/ui-primitives/GlobalBrandLogo';
 export { GlobalSearchWidget } from './lib/ui-primitives/GlobalSearchWidget';
+export { NewsletterSubscriptionForm } from './lib/ui-primitives/NewsletterSubscriptionForm';
 
 /**
- * @section 3. Composite UI (Ensambles / Organismos)
- * Orquestadores de alto nivel que integran lógica, i18n y primitivos.
+ * @section Orquestadores de Interfaz (Composite UI)
+ * Ensambles complejos de alta jerarquía (Organismos).
  */
-// ADN Compuesto e i18n
 export * from './lib/composite-ui/schemas/CompositeUi.schema';
 export * from './lib/composite-ui/schemas/MainNavigationHeader.schema';
 export * from './lib/composite-ui/i18n/MainNavigationHeaderI18n.schema';
-
-// Aparatos Compuestos
 export { GlobalMainNavigationHeader } from './lib/composite-ui/MainNavigationHeader';

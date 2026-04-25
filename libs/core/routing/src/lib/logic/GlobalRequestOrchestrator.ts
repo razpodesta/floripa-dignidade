@@ -1,90 +1,92 @@
 /**
- * @section Routing Logic - Global Request Orchestrator
- * @description Punto de entrada soberano para la intercepción de solicitudes.
- * Coordina handlers de idioma, seguridad y metadatos con trazabilidad total.
+ * @section Routing Logic - Global Request Swarm Orchestrator
+ * @description Orquestador superior de sensores de frontera. Ejecuta una tubería
+ * de handlers cognitivos para procesar y enriquecer la solicitud en el Edge.
  *
- * Protocolo OEDP-V13.0 - Higher Order Apparatus.
+ * Protocolo OEDP-V15.0 - Swarm Intelligence Pattern & Zero Noise.
+ * Saneamiento: Eliminación de importaciones huérfanas tras atomización.
+ *
+ * @author Dirección de Ingeniería - Floripa Dignidade
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import {
-  EmitTelemetrySignal,
-  GenerateCorrelationIdentifier
+  GenerateCorrelationIdentifier,
+  TraceExecutionTime
 } from '@floripa-dignidade/telemetry';
-import { IRoutingContext } from '../schemas/RoutingContext.schema';
+
+/** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN estructural */
+import type { IRoutingContext } from '../schemas/RoutingContext.schema';
+
 import { DetermineDeviceLocale } from './atomic/DetermineDeviceLocale';
-import { AnalyzeRequestMetadata } from './atomic/AnalyzeRequestMetadata';
+import { ApplyLinguisticRedirection } from './handlers/ApplyLinguisticRedirection';
 
-const ROUTING_MODULE_IDENTIFIER = 'GLOBAL_REQUEST_ORCHESTRATOR';
+const ROUTING_MODULE_IDENTIFIER = 'GLOBAL_SWARM_ORCHESTRATOR';
 
+/**
+ * Ejecuta el enjambre de sensores sobre la petición entrante.
+ * Orquesta la secuencia de handlers y gestiona el cortocircuito de respuestas.
+ *
+ * @param incomingRequest - Objeto de solicitud nativa capturado en el middleware.
+ * @returns {Promise<NextResponse>} Respuesta final procesada y autorizada.
+ */
 export const GlobalRequestOrchestrator = async (
-  request: NextRequest
+  incomingRequest: NextRequest
 ): Promise<NextResponse> => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
-  // 1. INICIALIZACIÓN DEL CONTEXTO SOBERANO
-  let routingContext: IRoutingContext = {
+  return await TraceExecutionTime(
+    ROUTING_MODULE_IDENTIFIER,
+    'EDGE_SWARM_EXECUTION',
     correlationIdentifier,
-    detectedLocale: 'pt-BR', // Default inicial
-    clientMetadata: {
-      ipAddressLiteral: 'unknown',
-      userAgentLiteral: 'unknown',
-    },
-    isRequestAuthorizedBoolean: true,
-  };
+    async () => {
 
-  try {
-    // 2. EJECUCIÓN DE HANDLERS ATÓMICOS (Pipeline)
+      // 1. INFERENCIA DE CONTEXTO INICIAL
+      // Se delega la lógica de fallback de idioma al átomo especializado.
+      const routingContext: IRoutingContext = {
+        correlationIdentifier,
+        detectedLocale: DetermineDeviceLocale(incomingRequest.headers.get('accept-language')),
+        clientMetadata: {
+          ipAddressLiteral: 'unknown',
+          userAgentLiteral: 'unknown'
+        },
+        isRequestAuthorizedBoolean: true,
+      };
 
-    // A. Captura de metadatos técnicos
-    routingContext = AnalyzeRequestMetadata(request.headers, routingContext);
+      // 2. DEFINICIÓN DE LA TUBERÍA (Pipeline) PLUG-AND-PLAY
+      // El orden de los sensores define la prioridad de ejecución.
+      const swarmSensorsCollection = [
+        ApplyLinguisticRedirection,
+        /**
+         * @future_sensors
+         * - EnforceSecurityHeaders (Protección XSS/CSP)
+         * - ValidateRouteAuthority (RBAC en frontera)
+         * - DetectBehavioralAnomaly (IA Anti-Bot)
+         */
+      ];
 
-    // B. Detección de localización
-    const acceptLanguageHeader = request.headers.get('accept-language');
-    routingContext = {
-      ...routingContext,
-      detectedLocale: DetermineDeviceLocale(acceptLanguageHeader)
-    };
+      // 3. EJECUCIÓN SERIAL DE SENSORES COGNITIVOS
+      for (const executeSensorAction of swarmSensorsCollection) {
+        const sensorResponseSignal = await executeSensorAction(incomingRequest, routingContext);
 
-    // 3. TELEMETRÍA FORENSE DE LA SOLICITUD
-    EmitTelemetrySignal({
-      severityLevel: 'INFO',
-      moduleIdentifier: ROUTING_MODULE_IDENTIFIER,
-      operationCode: 'REQUEST_INTERCEPTION_SUCCESS',
-      correlationIdentifier,
-      message: `Solicitud procesada para locale: ${routingContext.detectedLocale}`,
-      contextMetadata: {
-        ...routingContext.clientMetadata,
-        path: request.nextUrl.pathname
+        /**
+         * Lógica de Cortocircuito (Short-circuit):
+         * Si un sensor genera una respuesta (ej. redirección), se aborta el enjambre.
+         */
+        if (sensorResponseSignal) {
+          return sensorResponseSignal;
+        }
       }
-    });
 
-    // 4. LÓGICA DE REDIRECCIÓN (i18n Routing)
-    const { pathname } = request.nextUrl;
-    const pathnameIsMissingLocale = ['/pt-BR', '/es-ES', '/en-US'].every(
-      (locale) => !pathname.startsWith(locale) && pathname !== locale
-    );
+      // 4. RESPUESTA NOMINAL (Si ningún sensor solicitó interrupción)
+      const nominalOutgoingResponse = NextResponse.next();
 
-    if (pathnameIsMissingLocale) {
-      const localizedUrl = new URL(
-        `/${routingContext.detectedLocale}${pathname}`,
-        request.url
-      );
-      return NextResponse.redirect(localizedUrl);
+      // Inyección de cabeceras de trazabilidad forense
+      nominalOutgoingResponse.headers.set('X-Floripa-Correlation-ID', correlationIdentifier);
+      nominalOutgoingResponse.headers.set('X-Floripa-Detected-Locale', routingContext.detectedLocale);
+
+      return nominalOutgoingResponse;
     }
-
-    return NextResponse.next();
-
-  } catch (caughtError) {
-    EmitTelemetrySignal({
-      severityLevel: 'CRITICAL',
-      moduleIdentifier: ROUTING_MODULE_IDENTIFIER,
-      operationCode: 'REQUEST_INTERCEPTION_CRITICAL_FAILURE',
-      correlationIdentifier,
-      message: 'Fallo catastrófico en el orquestador de rutas.',
-      contextMetadata: { error: String(caughtError) }
-    });
-
-    return NextResponse.next(); // Fallback de resiliencia: no bloquear al usuario
-  }
+  );
 };

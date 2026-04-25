@@ -6,7 +6,7 @@
  * ecosistema Floripa Dignidade. Cada componente exportado aquí ha pasado
  * por la aduana de ADN y cumple con los estándares ISO de accesibilidad.
  *
- * @author Staff Software Engineer - Floripa Dignidade
+ * @author Raz  Podestá - MetaShark Tech
  */
 
 /**

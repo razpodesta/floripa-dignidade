@@ -1,0 +1,21 @@
+{
+  "name": "@floripa-dignidade/qa-mirror",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "description": "Búnker Espejo de Calidad: Centralización de Pruebas Unitarias y de Integración",
+  "nx": {
+    "tags": ["scope:qa", "type:tool", "platform:isomorphic"]
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "16.3.0",
+    "@testing-library/dom": "10.4.0",
+    "jest": "^30.0.2",
+    "jest-environment-jsdom": "^30.0.2",
+    "@swc/jest": "~0.2.38"
+  }
+}

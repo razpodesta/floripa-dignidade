@@ -1,0 +1,31 @@
+{
+  "name": "@floripa-dignidade/newsletter",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/modules/newsletter/src",
+  "projectType": "library",
+  "tags": ["scope:modules", "type:logic", "platform:node"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{workspaceRoot}/dist/libs/modules/newsletter"],
+      "options": {
+        "outputPath": "dist/libs/modules/newsletter",
+        "main": "libs/modules/newsletter/src/index.ts",
+        "tsConfig": "libs/modules/newsletter/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p libs/modules/newsletter/tsconfig.lib.json --noEmit"
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    }
+  }
+}

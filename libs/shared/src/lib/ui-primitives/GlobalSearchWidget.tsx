@@ -1,7 +1,29 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Search, Command, Loader2 } from 'lucide-react';
+/**
+ * @section Component: GlobalSearchWidget
+ * @description Orquestador visual de descubrimiento instantáneo para el ecosistema.
+ * Implementa acceso rápido vía teclado (CMD+K), gestión de estados de enfoque,
+ * animaciones de alta fidelidad y validación de ADN mediante Zod.
+ *
+ * Protocolo OEDP-V13.0 - Atomic Visual Consistency & Zero Abbreviations.
+ * Saneamiento: Alineación definitiva de miembros de importación (sort-imports).
+ *
+ * @author Raz  Podestá - MetaShark Tech
+ */
+
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react'; // SANEADO: Orden Alfabético (c < e < r < s)
+
+import {
+  Command,
+  Loader2,
+  Search
+} from 'lucide-react'; // SANEADO: Orden Alfabético (C < L < S)
 
 /* 1. Infraestructura de Telemetría (Standard PascalCase) */
 import {
@@ -11,34 +33,30 @@ import {
 
 /* 2. ADN Estructural y Utilidades Sincronizadas */
 import { GlobalStyleClassMerger } from '../utility/GlobalStyleMerger';
-import {
-  GlobalSearchWidgetPropertiesSchema,
-  IGlobalSearchWidgetProperties
-} from './schemas/GlobalSearchWidget.schema';
+
+/** 🛡️ SANEAMIENTO Zenith: Separación de ADN y Lógica */
+import type { IGlobalSearchWidgetProperties } from './schemas/GlobalSearchWidget.schema';
+import { GlobalSearchWidgetPropertiesSchema } from './schemas/GlobalSearchWidget.schema';
 
 /**
- * @section Component: GlobalSearchWidget
- * @description Orquestador visual de descubrimiento instantáneo para el ecosistema.
- * Implementa acceso rápido vía teclado (CMD+K), gestión de estados de enfoque,
- * animaciones de alta fidelidad y validación de ADN mediante Zod.
- *
- * Protocolo OEDP-V13.0 - Atomic Visual Consistency & Zero Abbreviations.
- * @author Staff Software Engineer - Floripa Dignidade
+ * @interface IGlobalSearchWidgetExtendedProperties
+ * @description Contrato de propiedades extendido para el widget de búsqueda.
  */
-
 interface IGlobalSearchWidgetExtendedProperties extends Partial<IGlobalSearchWidgetProperties> {
   /** Diccionario de etiquetas para soporte multi-idioma (i18n). */
   readonly labels?: {
-    readonly inputPlaceholder: string;
-    readonly searchingStatus: string;
-    readonly keyboardShortcutHint: string;
-    readonly accessibilityLabel: string;
+    readonly inputPlaceholderLiteral: string;
+    readonly searchingStatusLiteral: string;
+    readonly keyboardShortcutHintLiteral: string;
+    readonly accessibilityLabelLiteral: string;
   };
   /** Clase externa para ajustes de posicionamiento en el layout superior. */
   readonly externalClassName?: string;
 }
 
-export const GlobalSearchWidget: React.FC<IGlobalSearchWidgetExtendedProperties> = (rawUserProperties) => {
+export const GlobalSearchWidget: React.FC<IGlobalSearchWidgetExtendedProperties> = (
+  rawUserProperties
+) => {
   // 1. ADUANA DE ADN (Contract Validation)
   const componentConfiguration = GlobalSearchWidgetPropertiesSchema.parse(rawUserProperties);
   const inputReference = useRef<HTMLInputElement>(null);
@@ -85,7 +103,7 @@ export const GlobalSearchWidget: React.FC<IGlobalSearchWidgetExtendedProperties>
   );
 
   return (
-    <div className="flex flex-col w-full group">
+    <div className="flex flex-col w-full group relative" role="search">
       <div className={containerStyleLiteral}>
 
         {/* ICONOGRAFÍA DE INTENCIÓN */}
@@ -103,16 +121,22 @@ export const GlobalSearchWidget: React.FC<IGlobalSearchWidgetExtendedProperties>
           type="text"
           autoComplete="off"
           className="w-full py-3 px-4 bg-transparent outline-none text-slate-800 font-medium placeholder:text-slate-400 text-sm"
-          placeholder={rawUserProperties.labels?.inputPlaceholder ?? componentConfiguration.placeholderTextLiteral}
+          placeholder={rawUserProperties.labels?.inputPlaceholderLiteral ?? componentConfiguration.placeholderTextLiteral}
           value={activeSearchQueryLiteral}
           onFocus={() => setIsInputFocusedBoolean(true)}
+          /**
+           * El delay de 200ms permite que los eventos de clic en los resultados
+           * se disparen antes de que el panel sea removido del árbol de renderizado.
+           */
           onBlur={() => setTimeout(() => setIsInputFocusedBoolean(false), 200)}
           onChange={(event) => {
             setActiveSearchQueryLiteral(event.target.value);
             // Simulación de activación del motor (A ser conectado con @floripa-dignidade/search-engine)
             setIsAlgorithmExecutingBoolean(event.target.value.length > 0);
           }}
-          aria-label={rawUserProperties.labels?.accessibilityLabel ?? "Campo de búsqueda universal"}
+          aria-label={rawUserProperties.labels?.accessibilityLabelLiteral ?? "Campo de búsqueda universal"}
+          aria-haspopup="listbox"
+          aria-expanded={isInputFocusedBoolean}
         />
 
         {/* INDICADOR DE ATAJO (ISO: Eficiencia de Usuario) */}
@@ -126,10 +150,13 @@ export const GlobalSearchWidget: React.FC<IGlobalSearchWidgetExtendedProperties>
 
       {/* PANEL DE RESULTADOS (Atomic Overlay) */}
       {isInputFocusedBoolean && activeSearchQueryLiteral.length >= componentConfiguration.minimumCharacterQuantityToSearch && (
-        <div className="absolute top-full left-0 right-0 mt-3 bg-white rounded-2xl shadow-2xl border border-slate-100 z-[110] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div
+          className="absolute top-full left-0 right-0 mt-3 bg-white rounded-2xl shadow-2xl border border-slate-100 z-[110] overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+          role="listbox"
+        >
           <div className="p-4 bg-slate-50/80 border-b border-slate-100 flex justify-between items-center">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-              {rawUserProperties.labels?.searchingStatus ?? "Explorando Ecosistema"}
+              {rawUserProperties.labels?.searchingStatusLiteral ?? "Explorando Ecosistema"}
             </span>
             <span className="text-[10px] text-amber-600 font-mono font-bold">
               "{activeSearchQueryLiteral}"
@@ -144,8 +171,8 @@ export const GlobalSearchWidget: React.FC<IGlobalSearchWidgetExtendedProperties>
                <p className="text-slate-600 text-sm font-medium">
                  Iniciando motor de búsqueda difusa...
                </p>
-               <p className="text-slate-400 text-xs mt-1">
-                 Consultando registros de transparencia y artículos de prensa.
+               <p className="text-slate-400 text-xs mt-1 leading-relaxed">
+                 Consultando registros de transparencia y artículos de prensa institucional.
                </p>
              </div>
           </div>

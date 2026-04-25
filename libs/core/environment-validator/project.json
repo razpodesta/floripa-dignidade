@@ -1,0 +1,28 @@
+{
+  "name": "@floripa-dignidade/environment-validator",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/core/environment-validator/src",
+  "projectType": "library",
+  "tags": ["scope:core", "type:logic", "platform:isomorphic"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/core/environment-validator",
+        "main": "libs/core/environment-validator/src/index.ts",
+        "tsConfig": "libs/core/environment-validator/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p libs/core/environment-validator/tsconfig.lib.json --noEmit"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

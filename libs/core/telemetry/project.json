@@ -3,7 +3,7 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/core/telemetry/src",
   "projectType": "library",
-  "tags":[
+  "tags": [
     "scope:core",
     "type:core",
     "platform:isomorphic"
@@ -11,26 +11,25 @@
   "targets": {
     "build": {
       "executor": "@nx/js:swc",
-      "outputs":[
-        "{workspaceRoot}/dist/libs/core/telemetry"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/core/telemetry",
         "main": "libs/core/telemetry/src/index.ts",
         "tsConfig": "libs/core/telemetry/tsconfig.lib.json",
+        "swcrc": ".swcrc",
         "stripLeadingPaths": true
       },
-      "cache": true
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
       "cache": true
     },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc -b libs/core/telemetry/tsconfig.lib.json"
+        "command": "tsc -p libs/core/telemetry/tsconfig.lib.json --noEmit"
       },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
       "cache": true
     }
   }
