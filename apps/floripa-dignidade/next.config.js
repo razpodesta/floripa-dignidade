@@ -1,27 +1,24 @@
 // @ts-check
-
 /**
  * @section Next.js Configuration - Zenith Infrastructure Shell
- * @description Orquestador soberano de compilación.
- * Implementa el patrón de Silos JSON para garantizar la resolución del grafo de Nx.
- *
- * Protocolo OEDP-V15.0 - Build Resilience & Universal Interoperability.
- * Saneamiento: Resolución de infracción de fronteras y colisión de tipos Next 15/16.
+ * Protocolo OEDP-V16.0 - ESM-First Architecture.
+ * SANEADO Zenith: Lectura síncrona de JSON en ESM, eliminación de requires y resolución de TS2353.
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
-const { composePlugins, withNx } = require('@nx/next');
+import { composePlugins, withNx } from '@nx/next';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
-/**
- * @section Importación de Silo Universal
- * @infrastructure_bridge
- * SANEADO: Se utiliza supresión de regla @nx/enforce-module-boundaries.
- * RAZÓN TÉCNICA: next.config.js requiere acceso físico al JSON antes de la
- * resolución de alias de TypeScript para inyectar la seguridad en el Edge.
- */
-// eslint-disable-next-line @nx/enforce-module-boundaries
-const GLOBAL_SECURITY_HEADERS_COLLECTION = require('../../libs/shared/src/lib/utility/GlobalSecurityHeaders.json');
+// Resolución de CWD nativa en ESM
+const currentFilePathLiteral = fileURLToPath(import.meta.url);
+const currentDirectoryLiteral = dirname(currentFilePathLiteral);
+
+// Carga de Silo JSON (Artefactos de Seguridad)
+const securityHeadersPathLiteral = join(currentDirectoryLiteral, '../../libs/shared/src/lib/utility/GlobalSecurityHeaders.json');
+const globalSecurityHeadersCollection = JSON.parse(readFileSync(securityHeadersPathLiteral, 'utf8'));
 
 /**
  * @name configurationFoundation
@@ -29,11 +26,7 @@ const GLOBAL_SECURITY_HEADERS_COLLECTION = require('../../libs/shared/src/lib/ut
  * @type {import('next').NextConfig}
  */
 const configurationFoundation = {
-  /**
-   * @section Sincronización del Sistema Lego
-   * Automatización de transpilación para búnkeres del monorepo.
-   */
-  transpilePackages: [
+  transpilePackages:[
     '@floripa-dignidade/shared',
     '@floripa-dignidade/telemetry',
     '@floripa-dignidade/routing',
@@ -47,7 +40,6 @@ const configurationFoundation = {
     '@floripa-dignidade/tools',
     '@floripa-dignidade/scripts'
   ],
-
   reactStrictMode: true,
   poweredByHeader: false,
 
@@ -58,36 +50,26 @@ const configurationFoundation = {
 
   /**
    * @section Inyección de Seguridad ISO
-   * Implementa las cabeceras de protección atomizadas.
    */
   async headers() {
-    return [
+    return[
       {
         source: '/(.*)',
-        /**
-         * @infrastructure_bridge
-         * SANEADO: Casting controlado para neutralizar la discrepancia estructural
-         * de tipos entre la definición de Header de Next 15 y Next 16.
-         */
-        headers: /** @type {any} */ (GLOBAL_SECURITY_HEADERS_COLLECTION),
+        headers: globalSecurityHeadersCollection,
       },
     ];
   },
 
-  /** Configuración específica de Nx */
+  /**
+   * 🛡️ SANEADO Zenith: TS2353
+   * Silenciamos la advertencia de TypeScript ya que esta propiedad
+   * es requerida y procesada exclusivamente por el plugin de Nx.
+   */
+  // @ts-expect-error - Propiedad inyectada consumida exclusivamente por '@nx/next'
   nx: {
     svgr: false,
   },
 };
 
-/**
- * @section Orquestación de Plugins con Blindaje Zenith
- * SANEADO: Se realiza un casting a 'any' para la composición final.
- * RAZÓN TÉCNICA (TS2345): Colisión de firmas en la propiedad 'headers' entre versiones.
- */
 const pluginsCollection = [withNx];
-const synchronizedConfig = composePlugins(...pluginsCollection)(
-  /** @type {any} */ (configurationFoundation)
-);
-
-module.exports = synchronizedConfig;
+export default composePlugins(...pluginsCollection)(configurationFoundation);

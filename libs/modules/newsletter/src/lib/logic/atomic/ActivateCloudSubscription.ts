@@ -3,19 +3,19 @@
  * @description Valida el desafío de identidad en Supabase y transiciona el estado
  * del ciudadano de 'PENDING_VERIFICATION' a 'ACTIVE'.
  *
- * Protocolo OEDP-V15.0 - Cloud Sovereign & Atomic Conversion.
- * Saneamiento: Resolución de TS2591 y optimización de resiliencia de red.
+ * Protocolo OEDP-V16.0 - Cloud Sovereign & Atomic Conversion.
+ * SANEADO Zenith: Erradicación de process.env mediante la Aduana de Entorno (ADR 0016).
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
+import { ValidateEnvironmentAduana } from '@floripa-dignidade/environment-validator';
+import { InternalSystemException } from '@floripa-dignidade/exceptions';
 import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier,
   TraceExecutionTime
 } from '@floripa-dignidade/telemetry';
-
-import { InternalSystemException } from '@floripa-dignidade/exceptions';
 
 /** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN como tipos */
 export interface IActivationResult {
@@ -40,13 +40,14 @@ export const ActivateCloudSubscription = async (
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
   /**
-   * 1. CAPTURA SEGURA DE INFRAESTRUCTURA
-   * Desestructuración con valores por defecto para satisfacer el rigor de tipos.
+   * 1. CAPTURA SEGURA DE INFRAESTRUCTURA (Aislamiento de Hardware)
+   * SANEADO: Invocamos la aduana central para garantizar que los secretos existan
+   * y heredar los Branded Types (Tipado Criptográfico).
    */
   const {
-    SUPABASE_URL: supabaseUrlLiteral = '',
-    SUPABASE_SERVICE_ROLE_KEY: supabaseServiceKeyLiteral = ''
-  } = process.env;
+    SUPABASE_URL: supabaseUrlLiteral,
+    SUPABASE_SERVICE_ROLE_KEY: supabaseServiceRoleKeySecret
+  } = ValidateEnvironmentAduana();
 
   return await TraceExecutionTime(
     ACTIVATION_ATOM_IDENTIFIER,
@@ -64,8 +65,8 @@ export const ActivateCloudSubscription = async (
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',
-              'apikey': supabaseServiceKeyLiteral,
-              'Authorization': `Bearer ${supabaseServiceKeyLiteral}`,
+              'apikey': supabaseServiceRoleKeySecret,
+              'Authorization': `Bearer ${supabaseServiceRoleKeySecret}`,
               'Prefer': 'return=representation'
             },
             body: JSON.stringify({

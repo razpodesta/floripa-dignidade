@@ -1,93 +1,194 @@
 /**
- * @section CMS Shell - Default Landing Page
- * @description Punto de entrada visual para el Content Manager System.
- * Actúa como la carcasa administrativa para la gestión de la ONG.
+ * @section CMS Shell - Administrative Landing Page
+ * @description Punto de entrada visual para el Content Manager System. Proporciona 
+ * la carcasa de bienvenida y el rastro de herramientas para la gestión de la ONG.
  *
- * Protocolo OEDP-V16.0 - Build Resilience & Type Safety.
- * Saneamiento: Resolución de error de acceso por firma de índice (styles['page']).
+ * Protocolo OEDP-V16.0 - Build Resilience, Type Safety & i18n Sovereignty.
+ * Saneamiento: Resolución de error de iconos Lucide y sincronización telemétrica.
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
 import React from 'react';
+import { 
+  BookOpen, 
+  ExternalLink, 
+  LayoutDashboard, 
+  PlayCircle, // 🛡️ SANEADO: Sustitución de Youtube por PlayCircle para evitar TS2305
+  Terminal
+} from 'lucide-react';
+
+/* 1. Infraestructura Core (Atmos PascalCase) */
+import { 
+  EmitTelemetrySignal, 
+  GenerateCorrelationIdentifier 
+} from '@floripa-dignidade/telemetry';
+
+/* 2. ADN Visual Local */
 import styles from './page.module.css';
 
 /**
- * Componente principal de la interfaz administrativa.
- * Proporciona acceso a la documentación y el rastro de construcción de Nx.
- *
- * @returns {React.ReactElement} Estructura visual de bienvenida al CMS.
+ * @section ADN Lingüístico Local (Sovereign Dictionary)
+ * Preparado para el motor de compilación i18n.
  */
-export default function Index(): React.ReactElement {
+const CMS_LANDING_DICTIONARY = {
+  welcome: {
+    greetingLiteral: 'Hello there,',
+    titleLiteral: 'Welcome @floripa-dignidade/content-manager-system 👋',
+  },
+  hero: {
+    statusLiteral: "You're up and running",
+    ctaLabelLiteral: "What's next?",
+  },
+  learning: {
+    sectionHeadingLiteral: 'Learning materials',
+    documentation: {
+      labelLiteral: 'Documentation',
+      descriptionLiteral: 'Everything is in there',
+      url: 'https://nx.dev/getting-started/intro',
+    },
+    interactive: {
+      labelLiteral: 'Interactive tutorials',
+      descriptionLiteral: 'Create an app, step-by-step',
+      url: 'https://nx.dev/react-tutorial/1-code-generation',
+    }
+  },
+  nextSteps: {
+    headingLiteral: 'Strategic Roadmap',
+    descriptionLiteral: 'Inicia la arquitectura de colecciones de Payload CMS para habilitar la Soberanía de Datos en el portal de Floripa Dignidade.'
+  }
+} as const;
+
+/**
+ * Componente principal de la interfaz administrativa.
+ * Implementa telemetría forense y cumplimiento de rigor técnico ISO.
+ */
+export default async function IndexPage() {
+  const correlationIdentifier = GenerateCorrelationIdentifier();
+
+  // EMISIÓN DE SEÑAL: Trazabilidad de acceso al búnker administrativo
+  EmitTelemetrySignal({
+    severityLevel: 'INFO',
+    moduleIdentifier: 'CMS_ADMIN_SHELL',
+    operationCode: 'ADMIN_PORTAL_ACCESSED',
+    correlationIdentifier,
+    message: 'Se ha cargado la interfaz base del sistema de gestión de contenidos.'
+  });
+
   return (
     /**
      * 🛡️ SANEADO Zenith: Acceso mediante corchetes para cumplir con
      * 'noPropertyAccessFromIndexSignature'.
      */
     <div className={styles['page']}>
-      <div className="wrapper">
-        <div className="container">
-          <header id="welcome">
-            <h1>
-              <span className="block text-3xl font-light mb-2"> Hello there, </span>
-              Welcome @floripa-dignidade/content-manager-system 👋
+      <div className="w-full">
+        <div className="container mx-auto max-w-4xl px-4">
+          
+          <header id="welcome" className="py-12">
+            <h1 className="text-slate-900 tracking-tighter">
+              <span className="block text-3xl font-light text-slate-500 mb-2">
+                {CMS_LANDING_DICTIONARY.welcome.greetingLiteral}
+              </span>
+              <span className="text-5xl font-black">
+                {CMS_LANDING_DICTIONARY.welcome.titleLiteral}
+              </span>
             </h1>
           </header>
 
-          <section id="hero" className="rounded">
-            <div className="text-container">
-              <h2>
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="inline-block w-8 h-8 mr-2 text-green-400"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-                  />
-                </svg>
-                <span>You&apos;re up and running</span>
+          {/* SECCIÓN HERO: Estado del Sistema */}
+          <section id="hero" className="rounded-[2.5rem] bg-slate-900 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center border border-slate-800">
+            <div className="p-12 flex-grow text-white">
+              <h2 className="text-3xl font-bold flex items-center gap-4">
+                <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center">
+                  <LayoutDashboard className="text-amber-500" size={28} />
+                </div>
+                <span>{CMS_LANDING_DICTIONARY.hero.statusLiteral}</span>
               </h2>
-              <a href="#commands" className="inline-block mt-4 px-8 py-4 bg-white text-slate-800 rounded-xl font-bold">
-                What&apos;s next?
+              <a 
+                href="#commands" 
+                className="inline-block mt-10 px-10 py-5 bg-amber-500 text-white rounded-2xl font-black hover:bg-amber-600 transition-all duration-500 shadow-xl shadow-amber-500/20"
+              >
+                {CMS_LANDING_DICTIONARY.hero.ctaLabelLiteral}
               </a>
             </div>
-            <div className="logo-container">
-              <svg
-                fill="currentColor"
-                role="img"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                className="text-white opacity-80"
-              >
-                <path d="M11.987 14.138l-3.132 4.923-5.193-8.427-.012 8.822H0V4.544h3.691l5.247 8.833.005-3.998 3.044 4.759zm.601-5.761c.024-.048 0-3.784.008-3.833h-3.65c.002.059-.005 3.776-.003 3.833h3.645zm5.634 4.134a2.061 2.061 0 0 0-1.969 1.336 1.963 1.963 0 0 1 2.343-.739c.396.161.917.422 1.33.283a2.1 2.1 0 0 0-1.704-.88zm3.39 1.061c-.375-.13-.8-.277-1.109-.681-.06-.08-.116-.17-.176-.265a2.143 2.143 0 0 0-.533-.642c-.294-.216-.68-.322-1.18-.322a2.482 2.482 0 0 0-2.294 1.536 2.325 2.325 0 0 1 4.002.388.75.75 0 0 0 .836.334c.493-.105.46.36 1.203.518v-.133c-.003-.446-.246-.55-.75-.733zm2.024 1.266a.723.723 0 0 0 .347-.638c-.01-2.957-2.41-5.487-5.37-5.487a5.364 5.364 0 0 0-4.487 2.418c-.01-.026-1.522-2.39-1.538-2.418H8.943l3.463 5.423-3.379 5.32h3.54l1.54-2.366 1.568 2.366h3.541l-3.21-5.052a.7.7 0 0 1-.084-.32 2.69 2.69 0 0 1 2.69-2.691h.001c1.488 0 1.736.89 2.057 1.308.634.826 1.9.464 1.9 1.541a.707.707 0 0 0 1.066.596zm.35.133c-.173.372-.56.338-.755.639-.176.271.114.412.114.412s.337.156.538-.311c.104-.231.14-.488.103-.74z" />
-              </svg>
+            
+            <div className="p-12 bg-white/5 h-full self-stretch flex items-center justify-center hidden md:flex">
+               <Terminal size={140} className="text-white opacity-10" />
             </div>
           </section>
 
-          <main id="middle-content">
-             {/* SANEADO: Se conserva la lógica estructural original para no perder
-                 puntos de acceso a la documentación durante esta fase de transición. */}
-            <nav id="learning-materials" className="rounded shadow">
-              <h2 className="px-4 text-xl font-bold">Learning materials</h2>
-              <a
-                href="https://nx.dev"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="list-item-link"
-              >
-                <span>Documentation<span>Everything is in there</span></span>
-              </a>
-              {/* ... resto de enlaces ... */}
-            </nav>
+          {/* CONTENIDO PRINCIPAL: Recursos Técnicos */}
+          <main id="middle-content" className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 mb-20">
+            
+            <div id="learning-materials" className="rounded-[2rem] bg-white p-8 shadow-sm border border-slate-100">
+              <h2 className="text-xl font-black text-slate-900 mb-8 flex items-center gap-3">
+                <BookOpen className="text-amber-500" size={22} />
+                {CMS_LANDING_DICTIONARY.learning.sectionHeadingLiteral}
+              </h2>
+              
+              <div className="flex flex-col gap-2">
+                <CmsResourceLink 
+                  href={CMS_LANDING_DICTIONARY.learning.documentation.url}
+                  label={CMS_LANDING_DICTIONARY.learning.documentation.labelLiteral}
+                  description={CMS_LANDING_DICTIONARY.learning.documentation.descriptionLiteral}
+                  icon={<BookOpen size={20} />}
+                />
+                <CmsResourceLink 
+                  href={CMS_LANDING_DICTIONARY.learning.interactive.url}
+                  label={CMS_LANDING_DICTIONARY.learning.interactive.labelLiteral}
+                  description={CMS_LANDING_DICTIONARY.learning.interactive.descriptionLiteral}
+                  icon={<Terminal size={20} />}
+                />
+              </div>
+            </div>
+
+            {/* SECCIÓN DE PRÓXIMOS PASOS (Next-Gen Roadmap) */}
+            <div className="flex flex-col gap-6">
+               <article className="p-10 bg-amber-50/50 rounded-[2rem] border border-amber-100/50 group hover:bg-amber-50 transition-colors duration-500">
+                  <div className="w-12 h-12 bg-amber-500 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-amber-500/20 transition-transform group-hover:scale-110">
+                    <PlayCircle size={24} />
+                  </div>
+                  <h3 className="text-xl font-bold text-amber-900 mb-3">
+                    {CMS_LANDING_DICTIONARY.nextSteps.headingLiteral}
+                  </h3>
+                  <p className="text-sm text-amber-800/80 leading-relaxed font-medium">
+                    {CMS_LANDING_DICTIONARY.nextSteps.descriptionLiteral}
+                  </p>
+               </article>
+            </div>
+
           </main>
         </div>
       </div>
     </div>
   );
 }
+
+/**
+ * @private Component: CmsResourceLink
+ * @description Sub-aparato atómico para la renderización de enlaces técnicos.
+ */
+interface ICmsResourceLinkProperties {
+  readonly href: string;
+  readonly label: string;
+  readonly description: string;
+  readonly icon: React.ReactNode;
+}
+
+const CmsResourceLink: React.FC<ICmsResourceLinkProperties> = ({ href, label, description, icon }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="group flex items-start gap-4 p-5 rounded-2xl hover:bg-slate-50 transition-all duration-300 border border-transparent hover:border-slate-100"
+  >
+    <div className="mt-1 text-slate-400 group-hover:text-amber-600 transition-colors">
+      {icon}
+    </div>
+    <div className="flex-grow">
+      <span className="block font-bold text-slate-900 group-hover:text-amber-700 transition-colors">{label}</span>
+      <span className="block text-xs text-slate-500 font-medium mt-0.5">{description}</span>
+    </div>
+    <ExternalLink size={14} className="text-slate-300 mt-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+  </a>
+);

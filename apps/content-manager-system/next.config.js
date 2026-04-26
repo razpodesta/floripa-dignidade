@@ -1,38 +1,56 @@
 // @ts-check
-
 /**
- * @section Next.js Configuration - CMS Shell
- * Protocolo OEDP-V13.0 - Enterprise Optimization
+ * @section Next.js Configuration - CMS Shell (Payload 3.0)
+ * Protocolo OEDP-V16.0 - ESM-First Architecture & Type Parity.
+ * SANEADO Zenith: Resolución de TS2353 (Nx Override) y TS7006 (Implicit Any).
+ *
+ * @author Raz Podestá - MetaShark Tech
  */
 
-const { composePlugins, withNx } = require('@nx/next');
+import { composePlugins, withNx } from '@nx/next';
+import { withPayload } from '@payloadcms/next/withPayload';
 
 /**
- * Configuración soberana para el Content Manager System (CMS).
- * Gestiona la integración con Nx y optimizaciones específicas del servidor.
- *
- * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
- **/
-const nextConfig = {
+ * @name nextConfigurationFoundation
+ * @description ADN base de la aplicación.
+ * @type {import('next').NextConfig}
+ */
+const nextConfigurationFoundation = {
+  reactStrictMode: true,
+  poweredByHeader: false,
+
   /**
-   * Opciones específicas de Nx.
-   * @see https://nx.dev/recipes/next/next-config-setup
+   * 🛡️ SANEADO Zenith: TS2353
+   * Utilizamos ts-expect-error porque esta propiedad muta el tipo original
+   * de NextConfig, pero es un requerimiento vital para el motor de Nx.
    */
+  // @ts-expect-error - Propiedad inyectada consumida exclusivamente por '@nx/next'
   nx: {
-    // Configuración de Svgr o plugins adicionales aquí
+    svgr: false,
   },
 
-  // Forzar el cumplimiento de encabezados de seguridad básicos
-  poweredByHeader: false,
-  reactStrictMode: true,
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns:[
+      { protocol: 'https', hostname: '**' },
+    ],
+  },
 };
 
 /**
- * Orquestación de plugins de Next.js.
- * Se utiliza composePlugins para permitir una extensibilidad modular (Lego System).
+ * Colección de orquestadores de compilación (Plugins).
  */
-const plugins = [
+const pluginsCollection =[
   withNx,
+  /**
+   * 🛡️ SANEADO Zenith: TS7006
+   * Inyección de JSDoc para declarar la firma de entrada de la función flecha,
+   * erradicando el 'any' implícito.
+   *
+   * @param {import('next').NextConfig} config
+   * @returns {import('next').NextConfig}
+   */
+  (config) => withPayload(config),
 ];
 
-module.exports = composePlugins(...plugins)(nextConfig);
+export default composePlugins(...pluginsCollection)(nextConfigurationFoundation);

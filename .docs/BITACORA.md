@@ -370,5 +370,37 @@ ESTADO FINAL: SISTEMA NOMINAL. LISTO PARA CAPTURA DE IMPACTO SOCIAL. 🛡️🕊
 
 ---
 
+📜 BLOQUE 1: Bitácora de Estado Zenith (Session Summary)
+Fecha: 26 de Abril, 2026
+Estatus del Grafo: 100% NOMINAL (Green Build: Lint & Typecheck Pass)
+Hito Alcanzado: Activación del Motor de Soberanía de Datos (Payload CMS 3.0).
+Resumen de Operaciones Forenses:
+Erradicación de la Ceguera de Tipos: Se sanaron los archivos tsconfig.json de las aplicaciones eliminando la falsa relatividad. Se implementó el Mapeo de Rutas Maestro relativo a la raíz del monorepo, permitiendo la resolución instantánea de @floripa-dignidade/*.
+Sincronización Next.js 15 (Async Contract): Se refactorizó la página administrativa [[...segments]]/page.tsx para cumplir con el contrato de Promesas de Parámetros de Next.js 15, eliminando colisiones de tipo TS2739.
+Aislamiento de ADN (index.d.ts): Se materializó el manifiesto de declaraciones globales para el CMS, resolviendo el error TS2882 y autorizando importaciones de efectos secundarios (CSS) y activos binarios.
+Sanación de la Capa Core: Se blindaron los búnkeres exceptions y telemetry mediante rootDir: "src" y emitDeclarationOnly: true. Esto impide que los archivos de dist contaminen el proceso de compilación en Vercel.
+Materialización de Colecciones Atómicas:
+CitizenUsers: Identidad basada en roles ISO con acceso por signatura de índice (user['role']).
+Organizations: Motor de multi-tenancy para anidación de entidades aliadas.
+MediaVault: Bóveda de evidencia forense con optimización AVIF/WebP nativa.
+🏛️ BLOQUE 2: Manifiesto de Configuración Lógica (App CMS)
+Establezco el siguiente estándar de integración para el búnker content-manager-system. Este diseño es la Constitución de Datos del proyecto:
+1. Arquitectura de Rutas (The Payload Tunnel)
+Encapsulamiento (payload): Todas las rutas del CMS residen en un grupo de rutas administrativas para evitar colisiones con el Middleware del portal ciudadano.
+Async-Safe Headers: El túnel de la API (api/[...payload]/route.ts) opera bajo el estándar de Payload 3.0 estable, inyectando la configuración validada por la aduana de entorno.
+2. Gobernanza de Colecciones (Ejes de Valor)
+Aislamiento por Responsabilidad: Las colecciones se dividen físicamente en carpetas por dominio (identity, governance, infrastructure).
+Sincronización de Roles: Los roles de usuario en el CMS son un espejo exacto de los roles definidos en libs/modules/identity, garantizando que la autoridad sea una constante universal en todo el monorepo.
+3. Persistencia Cloud-Sovereign
+Adapter Zenith: Se utiliza el adaptador @payloadcms/db-postgres con Connection Pooling configurado para eficiencia en capas gratuitas (Stateless Architecture).
+🧠 BLOQUE 3: Justificación de la Arquitectura (Algorithmic Logic)
+¿Por qué esta es la mejor forma para nuestro algoritmo?
+Inducción de Resiliencia (Self-Healing Readiness): Al aislar los rootDir y usar emitDeclarationOnly, permitimos que el Neural Sentinel identifique errores de forma aislada. Si un búnker falla, la hemorragia de tipos no se propaga al resto del sistema.
+Eficiencia de Inferencia (Tree-Shaking Pro): El uso estricto de Verbatim Module Syntax (import type) reduce el peso de los paquetes en el Edge de Vercel. Esto significa que nuestra IA de análisis de denuncias podrá ejecutarse con menor latencia al no cargar metadatos innecesarios.
+Seguridad por Signatura de Índice: Forzar el acceso user['assignedAuthorityRoleLiteral'] (en lugar de .) blinda el sistema contra ataques de polución de prototipos y garantiza que el compilador de TypeScript 5.5+ audite cada acceso dinámico a la base de datos.
+Soberanía Lingüística Unificada: El uso de diccionarios oficiales (pt, es, en) integrados en el payload.config.ts asegura que la administración de la ONG sea accesible para interventores de cualquier territorio sin romper el sistema de tipos.
+
+---
+
 
 

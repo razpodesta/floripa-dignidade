@@ -1,58 +1,56 @@
 /**
  * @section Newsletter Logic - Subscription Request Orchestrator
- * @description Orquestador superior que coordina la validación, persistencia en Supabase
- * y el despacho del desafío de identidad (Double Opt-In).
+ * @description Orquestador superior de negocio. Coordina la secuencia de
+ * validación, persistencia en nube y despacho de desafío de identidad.
  *
- * Protocolo OEDP-V15.0 - Swarm Intelligence & Cloud Native.
- * Saneamiento: Resolución de TS2591 y optimización de captura de secretos.
+ * Protocolo OEDP-V16.0 - Swarm Intelligence & Clean Orchestration.
+ * SANEADO Zenith: Atomización completa. Delegación de notificación al átomo dispatcher.
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
+import { ValidateEnvironmentAduana } from '@floripa-dignidade/environment-validator';
 import { ValidationException } from '@floripa-dignidade/exceptions';
 import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier,
   TraceExecutionTime,
 } from '@floripa-dignidade/telemetry';
-import { SendTransactionalEmail } from '@floripa-dignidade/resend-provider';
 
-/** 🛡️ SANEAMIENTO Zenith: Importación de ADN como tipos */
-import type { INewsletterSubscriptionRequest } from '../../schemas/NewsletterSubscriptionRequest.schema';
+/* 1. ADN Estructural (Verbatim Module Syntax) */
 import { NewsletterSubscriptionRequestSchema } from '../../schemas/NewsletterSubscriptionRequest.schema';
-import { GenerateDoubleOptInEmailHtml } from './GenerateDoubleOptInEmailHtml';
-import { SavePendingSubscriptionToSupabase } from './SavePendingSubscriptionToSupabase';
-import { LoadNewsletterLinguisticDictionary } from './LoadNewsletterLinguisticDictionary';
+import type { INewsletterSubscriptionRequest } from '../../schemas/NewsletterSubscriptionRequest.schema';
 
-/** Identificador soberano del módulo para el Neural Sentinel. */
-const NEWSLETTER_ENGINE_IDENTIFIER = 'NEWSLETTER_SUBSCRIPTION_ENGINE';
+/* 2. Enjambre Atómico de Soporte */
+import { DispatchNewsletterVerification } from './DispatchNewsletterVerification';
+import { LoadNewsletterLinguisticDictionary } from './LoadNewsletterLinguisticDictionary';
+import { SavePendingSubscriptionToSupabase } from './SavePendingSubscriptionToSupabase';
+
+/** Identificador técnico del orquestador para el Neural Sentinel. */
+const NEWSLETTER_ORCHESTRATOR_IDENTIFIER = 'NEWSLETTER_SUBSCRIPTION_ORCHESTRATOR';
 
 /**
- * Procesa una solicitud de suscripción integralmente.
- * Valida el ADN del ciudadano, persiste el estado en la nube y orquesta la comunicación.
+ * Procesa integralmente una solicitud de suscripción ciudadana.
  *
- * @param rawSubscriptionData - Datos crudos provenientes del formulario de entrada.
- * @returns {Promise<string>} Identificador forense (Correlation ID) de la transacción.
- * @throws {ValidationException} Si los datos no cumplen el contrato soberano.
+ * @param rawSubscriptionPayload - Datos crudos del formulario.
+ * @returns {Promise<string>} Correlation ID de la transacción exitosa.
  */
 export const ProcessNewsletterSubscriptionRequest = async (
-  rawSubscriptionData: unknown
+  rawSubscriptionPayload: unknown
 ): Promise<string> => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
-  // 1. CAPTURA DE SECRETOS DE INFRAESTRUCTURA
-  const {
-    RESEND_API_KEY: resendApiKeyLiteral,
-    RESEND_FROM_EMAIL: resendFromEmailLiteral
-  } = process.env;
+  // 1. CAPTURA DE INFRAESTRUCTURA SOBERANA
+  const infrastructure = ValidateEnvironmentAduana();
 
   return await TraceExecutionTime(
-    NEWSLETTER_ENGINE_IDENTIFIER,
-    'PROCESS_SUBSCRIPTION_SEQUENCE',
+    NEWSLETTER_ORCHESTRATOR_IDENTIFIER,
+    'EXECUTE_SUBSCRIPTION_FLOW',
     correlationIdentifier,
     async () => {
-      // 2. ADUANA DE ADN: Validación de integridad de entrada
-      const validationResult = NewsletterSubscriptionRequestSchema.safeParse(rawSubscriptionData);
+
+      // 2. ADUANA DE ADN: Validación de entrada
+      const validationResult = NewsletterSubscriptionRequestSchema.safeParse(rawSubscriptionPayload);
 
       if (!validationResult.success) {
         throw new ValidationException('ADN_SUSCRIPCION_CORRUPTO', {
@@ -60,56 +58,45 @@ export const ProcessNewsletterSubscriptionRequest = async (
         });
       }
 
-      const request: INewsletterSubscriptionRequest = validationResult.data;
+      const validatedRequest: INewsletterSubscriptionRequest = validationResult.data;
       const securityVerificationTokenLiteral = crypto.randomUUID();
 
-      // 3. PERSISTENCIA EN LA NUBE (Supabase Tier 0)
-      // Registramos al ciudadano en estado 'PENDING' antes de cualquier envío.
+      // 3. PERSISTENCIA STATELESS (Supabase Cloud)
       await SavePendingSubscriptionToSupabase({
-        emailAddressLiteral: request.communicationIdentifierLiteral,
+        emailAddressLiteral: validatedRequest.communicationIdentifierLiteral,
         verificationTokenLiteral: securityVerificationTokenLiteral,
-        localeIdentifier: request.preferredLinguisticLocaleIdentifier,
+        localeIdentifier: validatedRequest.preferredLinguisticLocaleIdentifier,
         correlationIdentifier,
       });
 
       // 4. CARGA DE ALMA LINGÜÍSTICA
-      const dictionary = await LoadNewsletterLinguisticDictionary(
-        request.preferredLinguisticLocaleIdentifier
+      const linguisticDictionary = await LoadNewsletterLinguisticDictionary(
+        validatedRequest.preferredLinguisticLocaleIdentifier
       );
 
-      // 5. DESPACHO DE COMUNICACIÓN (Estrategia Multi-Canal)
-      if (request.verificationChannelPreference === 'ELECTRONIC_MAIL') {
-        const emailHtmlContentLiteral = GenerateDoubleOptInEmailHtml(
-          dictionary,
-          securityVerificationTokenLiteral,
-          correlationIdentifier
-        );
+      // 5. DESPACHO DE NOTIFICACIÓN (Delegación Atómica)
+      await DispatchNewsletterVerification({
+        targetIdentifierLiteral: validatedRequest.communicationIdentifierLiteral,
+        targetChannelLiteral: validatedRequest.verificationChannelPreference,
+        securityTokenLiteral: securityVerificationTokenLiteral,
+        linguisticDictionary,
+        correlationIdentifier,
+        infrastructureSecrets: {
+          resendApiKeySecret: infrastructure.RESEND_API_KEY,
+          resendFromEmailLiteral: infrastructure.RESEND_FROM_EMAIL
+        }
+      });
 
-        await SendTransactionalEmail(
-          {
-            securityApiKeySecret: resendApiKeyLiteral ?? '',
-            defaultFromAddressLiteral: resendFromEmailLiteral ?? 'no-reply@floripadignidade.org',
-          },
-          {
-            targetRecipientAddressLiteral: request.communicationIdentifierLiteral,
-            emailSubjectLiteral: dictionary.email.confirmationSubjectLiteral,
-            emailHtmlContentLiteral: emailHtmlContentLiteral,
-            trackingCategoryIdentifier: 'NEWSLETTER_VERIFICATION',
-          }
-        );
-      }
-
-      // 6. REPORTE DE ÉXITO OPERACIONAL
+      // 6. CIERRE DE CICLO NOMINAL
       EmitTelemetrySignal({
         severityLevel: 'INFO',
-        moduleIdentifier: NEWSLETTER_ENGINE_IDENTIFIER,
-        operationCode: 'SUBSCRIPTION_SEQUENCE_COMPLETED',
+        moduleIdentifier: NEWSLETTER_ORCHESTRATOR_IDENTIFIER,
+        operationCode: 'CITIZEN_SUBSCRIPTION_REQUESTED',
         correlationIdentifier,
-        message: `Ciclo de vida iniciado: Ciudadano registrado vía [${request.verificationChannelPreference}]`,
+        message: 'Ciclo de vida de suscripción iniciado y notificado.',
         contextMetadata: {
-          channel: request.verificationChannelPreference,
-          locale: request.preferredLinguisticLocaleIdentifier,
-        },
+          preferredLocale: validatedRequest.preferredLinguisticLocaleIdentifier
+        }
       });
 
       return correlationIdentifier;

@@ -3,43 +3,47 @@
   "compilerOptions": {
     /**
      * @section Gobernanza de Emisión - ISO Technical Rigor
-     * Protocolo OEDP-V16.0 - Build Resilience.
+     * Protocolo OEDP-V16.0 - Build Resilience & Forensic Traceability.
      */
     "outDir": "../../../dist/out-tsc/libs/core/exceptions",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/exceptions/tsconfig.lib.tsbuildinfo",
 
     /**
      * @section Aislamiento Soberano (rootDir Enforcement)
-     * SANEADO: Se establece 'src' como la raíz física absoluta.
-     * Esto impide el error TS6059 al garantizar que el compilador no capture
-     * archivos fuera de la frontera de lógica (como los archivos en 'dist').
+     * SANEADO: Se fuerza la raíz en 'src' y se bloquea la emisión de JS.
+     * Esto erradica el error TS6059 al garantizar que TSC solo audite el código fuente.
      */
     "rootDir": "src",
+    "noEmit": false,
+    "emitDeclarationOnly": true,
 
     /**
-     * @section Integridad del Grafo (Project References)
-     * SANEADO: Se activa 'composite' para que Nx y TypeScript puedan
-     * validar el rastro de tipos sin necesidad de recompilar la lógica fuente
-     * en cada búnker consumidor.
+     * @section Integridad del ADN (Project References)
+     * SANEADO: Configuración de Grado Enterprise para la sincronización del grafo.
      */
     "composite": true,
     "declaration": true,
     "declarationMap": true,
+    "inlineSources": true,
 
-    /** Purificación de tipos globales para entornos isomórficos. */
+    /**
+     * @section Resolución Next-Gen
+     * Sincronización absoluta con el motor de construcción de Vercel/Next.js.
+     */
+    "module": "Preserve",
+    "moduleResolution": "bundler",
     "types": [],
-    "lib": ["DOM", "DOM.Iterable", "ES2022"]
+    "lib": ["ES2022"]
   },
 
   /**
-   * @section Alcance de Auditoría
+   * @section Alcance de Auditoría Atómica
    */
   "include": ["src/**/*.ts", "src/**/*.json"],
 
   /**
    * @section Aduana de Exclusión (Anti-Contamination)
-   * SANEADO: Bloqueo físico de carpetas de salida y dependencias externas
-   * para asegurar una compilación atómica y libre de rastro antiguo.
+   * SANEADO: Prohibición física de acceso a memorias volátiles o externas.
    */
   "exclude": [
     "src/**/*.spec.ts",
@@ -47,6 +51,7 @@
     "jest.config.ts",
     "dist",
     "out-tsc",
+    "node_modules",
     "../../../dist",
     "../../../node_modules"
   ]

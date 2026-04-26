@@ -1,57 +1,40 @@
 'use client';
 
 /**
- * @section Component: GlobalMainNavigationHeader
- * @description Orquestador superior de navegación, identidad y descubrimiento.
- * Implementa un sistema de 'Sticky Glassmorphism', gestión de menús móviles
- * mediante Framer Motion y trazabilidad forense.
+ * @section Composite UI - Main Navigation Header (Orchestrator)
+ * @description Punto de ensamblaje soberano para la navegación institucional.
+ * Gestiona estados de scroll, visibilidad del enjambre móvil y trazabilidad.
  *
- * Protocolo OEDP-V13.0 - Atomic Visual Architecture & Zero Abbreviations.
- * Saneamiento: Resolución definitiva de errores 'sort-imports' y optimización de renderizado.
+ * Protocolo OEDP-V16.0 - Swiss-Watch Architecture & ISO Standards.
+ * SANEADO Zenith: Resolución de error 'sort-imports' y validación de rutas.
  *
- * @author Raz  Podestá - MetaShark Tech
+ * @author Raz Podestá - MetaShark Tech
  */
 
-import React, {
-  useCallback,
-  useEffect,
-  useState
-} from 'react';
-
-import {
-  AnimatePresence,
-  motion
-} from 'framer-motion';
-
+import React, { useCallback, useEffect, useState } from 'react';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 
-import {
-  Heart,
-  Menu,
-  ShieldAlert,
-  X
-} from 'lucide-react';
+/**
+ * 🛡️ SANEADO Zenith: Miembros ordenados alfabéticamente (H < M < X)
+ * para cumplimiento estricto de reglas de linter y legibilidad ISO.
+ */
+import { Heart, Menu, X } from 'lucide-react';
 
-/* 1. Infraestructura de Telemetría (Standard PascalCase) */
-import {
-  EmitTelemetrySignal,
-  GenerateCorrelationIdentifier
-} from '@floripa-dignidade/telemetry';
+/* 1. Infraestructura Core (Atmos PascalCase) */
+import { EmitTelemetrySignal, GenerateCorrelationIdentifier } from '@floripa-dignidade/telemetry';
 
 /* 2. Primitivos y Utilidades Sincronizadas */
-import {
-  GlobalActionButton,
-  GlobalBrandLogo,
-  GlobalSearchWidget
-} from '../ui-primitives';
+import { GlobalActionButton, GlobalBrandLogo, GlobalSearchWidget } from '../ui-primitives';
 import { GlobalStyleClassMerger } from '../utility/GlobalStyleMerger';
 
-/** 🛡️ SANEAMIENTO Zenith: Importación de ADN como tipo puro */
+/* 3. Átomos y Moléculas Locales (Enjambre Atomizado) */
+import { NavigationLink } from './navigation-header/atoms/NavigationLink';
+import { MobileNavigationDrawer } from './navigation-header/molecules/MobileNavigationDrawer';
 import type { IMainNavigationHeaderI18n } from './i18n/MainNavigationHeaderI18n.schema';
 
 /**
  * @interface IGlobalMainNavigationHeaderProperties
- * @description Contrato de propiedades para el ensamble de navegación.
+ * @description Contrato de propiedades inmutables para el ensamble de navegación.
  */
 interface IGlobalMainNavigationHeaderProperties {
   /** Diccionario de traducciones inyectado desde el orquestador de página. */
@@ -70,19 +53,17 @@ export const GlobalMainNavigationHeader: React.FC<IGlobalMainNavigationHeaderPro
   const [isMobileMenuOpenBoolean, setIsMobileMenuOpenBoolean] = useState(false);
   const [hasUserScrolledPastThresholdBoolean, setHasUserScrolledPastThresholdBoolean] = useState(false);
 
-  // --- LÓGICA DE OBSERVABILIDAD Y EVENTOS ---
+  // --- ESCUCHA DE SENSORES (Scroll & Lifecycle) ---
   useEffect(() => {
     const correlationIdentifier = GenerateCorrelationIdentifier();
 
     const handleWindowScrollEvent = () => {
+      /** Umbral de activación para el efecto Glassmorphism (30px) */
       const scrollThresholdInPixelsQuantity = 30;
       setHasUserScrolledPastThresholdBoolean(window.scrollY > scrollThresholdInPixelsQuantity);
     };
 
-    /**
-     * Optimización de Rendimiento:
-     * El uso de { passive: true } mejora el FPS del hilo principal durante el scroll.
-     */
+    /** Optimización de Rendimiento: Passive Listener para evitar bloqueo del Main Thread */
     window.addEventListener('scroll', handleWindowScrollEvent, { passive: true });
 
     EmitTelemetrySignal({
@@ -90,17 +71,17 @@ export const GlobalMainNavigationHeader: React.FC<IGlobalMainNavigationHeaderPro
       moduleIdentifier: 'MAIN_NAVIGATION_HEADER',
       operationCode: 'HEADER_INITIALIZED',
       correlationIdentifier,
-      message: 'Encabezado global desplegado y sincronizado con el motor de scroll.'
+      message: 'Encabezado institucional hidratado y sincronizado con sensores físicos.'
     });
 
     return () => window.removeEventListener('scroll', handleWindowScrollEvent);
   }, []);
 
   const toggleMobileMenuAction = useCallback(() => {
-    setIsMobileMenuOpenBoolean((previousState) => !previousState);
+    setIsMobileMenuOpenBoolean((previousStateBoolean) => !previousStateBoolean);
   }, []);
 
-  // --- ARQUITECTURA DE ESTILOS (Sovereign Merger) ---
+  // --- ARQUITECTURA DE ESTILOS SOBERANOS ---
   const headerContainerStylesLiteral = GlobalStyleClassMerger(
     "fixed top-0 w-full z-[100] transition-all duration-500 border-b",
     hasUserScrolledPastThresholdBoolean
@@ -113,54 +94,51 @@ export const GlobalMainNavigationHeader: React.FC<IGlobalMainNavigationHeaderPro
     <header className={headerContainerStylesLiteral} role="banner">
       <div className="container mx-auto px-4 flex items-center justify-between">
 
-        {/* LADO IZQUIERDO: Identidad Forense */}
+        {/* LADO IZQUIERDO: Identidad Institucional */}
         <div className="flex-shrink-0">
           <GlobalBrandLogo
             imageWidthPixelQuantity={hasUserScrolledPastThresholdBoolean ? 130 : 160}
-            isNavigationLinkEnabled={true}
             labels={{
-              logoAlternativeTextLiteral: "Floripa Dignidade Logo",
-              navigationAriaLabelLiteral: "Ir al inicio"
+              logoAlternativeTextLiteral: "Floripa Dignidade",
+              navigationAriaLabelLiteral: "Volver a la página de inicio"
             }}
           />
         </div>
 
-        {/* CENTRO: Navegación Institucional (Desktop) */}
+        {/* CENTRO: Navegación Estratégica (Desktop Only) */}
         <NavigationMenu.Root className="hidden lg:flex relative">
           <NavigationMenu.List className="flex gap-10 items-center">
-            <HeaderNavLink
-              href="/identidad"
-              label={translationDictionary.navigationPaths.identity}
+            <NavigationLink
+              hrefLiteral="/identidad"
+              labelLiteral={translationDictionary.navigationPaths.identity}
             />
-            <HeaderNavLink
-              href="/transparencia"
-              label={translationDictionary.navigationPaths.transparency}
+            <NavigationLink
+              hrefLiteral="/transparencia"
+              labelLiteral={translationDictionary.navigationPaths.transparency}
             />
-            <HeaderNavLink
-              href="/prensa"
-              label={translationDictionary.navigationPaths.press}
+            <NavigationLink
+              hrefLiteral="/prensa"
+              labelLiteral={translationDictionary.navigationPaths.press}
             />
           </NavigationMenu.List>
         </NavigationMenu.Root>
 
-        {/* LADO DERECHO: Descubrimiento y Conversión */}
+        {/* LADO DERECHO: Herramientas de Conversión (Desktop Only) */}
         <div className="hidden lg:flex items-center gap-6">
           <div className="w-72">
             <GlobalSearchWidget
               placeholderTextLiteral={translationDictionary.actions.searchPlaceholder}
-              minimumCharacterQuantityToSearch={3}
             />
           </div>
-
           <GlobalActionButton visualIntentConfiguration="CONVERSION" className="px-8">
-            <Heart className="w-4 h-4 fill-current text-white" />
+            <Heart className="w-4 h-4 fill-current" />
             <span>{translationDictionary.actions.donateCallToAction}</span>
           </GlobalActionButton>
         </div>
 
-        {/* INTERRUPTOR MÓVIL (ISO Accessibility) */}
+        {/* GESTIÓN DE FRONTERA MÓVIL (ISO Accessibility) */}
         <button
-          className="lg:hidden p-2 text-navy-900 focus:outline-none focus:ring-2 focus:ring-amber-500 rounded-lg"
+          className="lg:hidden p-2 text-navy-900 rounded-lg focus:ring-2 focus:ring-amber-500 transition-all"
           onClick={toggleMobileMenuAction}
           aria-expanded={isMobileMenuOpenBoolean}
           aria-label={translationDictionary.actions.mobileMenuToggle}
@@ -169,68 +147,11 @@ export const GlobalMainNavigationHeader: React.FC<IGlobalMainNavigationHeaderPro
         </button>
       </div>
 
-      {/* MENÚ MÓVIL: SISTEMA DE CAPAS (AnimatePresence) */}
-      <AnimatePresence mode="wait">
-        {isMobileMenuOpenBoolean && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: '100vh' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="fixed inset-0 top-[60px] bg-white z-[90] p-6 flex flex-col lg:hidden overflow-hidden"
-          >
-            <nav className="flex flex-col gap-8 text-2xl font-bold text-navy-900 mt-8">
-              <a
-                href="/identidad"
-                className="flex justify-between items-center border-b pb-4 border-slate-100"
-              >
-                {translationDictionary.navigationPaths.identity}
-              </a>
-              <a
-                href="/transparencia"
-                className="flex justify-between items-center border-b pb-4 border-slate-100"
-              >
-                {translationDictionary.navigationPaths.transparency}
-              </a>
-              <a
-                href="/prensa"
-                className="flex justify-between items-center border-b pb-4 border-slate-100"
-              >
-                {translationDictionary.navigationPaths.press}
-              </a>
-            </nav>
-
-            <div className="mt-auto pb-20 flex flex-col gap-4">
-              <GlobalActionButton visualIntentConfiguration="CONVERSION" className="w-full text-lg py-4">
-                {translationDictionary.actions.donateCallToAction}
-              </GlobalActionButton>
-              <GlobalActionButton
-                visualIntentConfiguration="OUTLINE"
-                className="w-full text-red-600 border-red-200 bg-red-50/30"
-              >
-                <ShieldAlert className="w-5 h-5" />
-                <span>{translationDictionary.navigationPaths.complaint}</span>
-              </GlobalActionButton>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* CAJÓN DE NAVEGACIÓN (Drawer) */}
+      <MobileNavigationDrawer
+        isOpenBoolean={isMobileMenuOpenBoolean}
+        translationDictionary={translationDictionary}
+      />
     </header>
   );
 };
-
-/**
- * @private Component: HeaderNavLink
- * @description Sub-aparato atómico para la renderización de enlaces de navegación.
- */
-const HeaderNavLink: React.FC<{ href: string; label: string }> = ({ href, label }) => (
-  <NavigationMenu.Item>
-    <NavigationMenu.Link
-      href={href}
-      className="text-slate-700 hover:text-amber-600 font-bold transition-all duration-300 relative group text-sm uppercase tracking-widest"
-    >
-      {label}
-      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-500 transition-all duration-300 group-hover:w-full" />
-    </NavigationMenu.Link>
-  </NavigationMenu.Item>
-);

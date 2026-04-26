@@ -1,58 +1,65 @@
 /**
- * @section WhatsApp Logic - Individual Message Processor (Atom)
- * @description Clasifica el contenido de una señal ciudadana, protege la
- * privacidad mediante enmascaramiento de identidad (PII) y prepara el
- * despacho hacia los motores cognitivos o bóvedas de evidencia.
+ * @section WhatsApp Logic - Individual Message Processor (Orchestrator)
+ * @description Clasifica el contenido de una señal ciudadana entrante, garantiza
+ * la privacidad de la identidad y dirige el despacho hacia los motores de
+ * análisis de Derechos Humanos o bóvedas de evidencia.
  *
- * Protocolo OEDP-V16.0 - Functional Atomicity & PII Protection.
- * @author Engineering Department - Floripa Dignidade
+ * Protocolo OEDP-V16.0 - Swarm Intelligence & ISO Standard Naming.
+ * SANEADO Zenith: Atomización de privacidad completada. Responsabilidad Única.
+ *
+ * @author Raz Podestá - MetaShark Tech
  */
 
 import { EmitTelemetrySignal } from '@floripa-dignidade/telemetry';
+import { MaskSensitivePhoneIdentifier } from './MaskSensitivePhoneIdentifier';
 
-/** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN mediante Verbatim Syntax */
+/* 1. ADN Estructural (Verbatim Module Syntax) */
 import type { IWhatsAppMessage } from '../../schemas/WhatsAppWebhook.schema';
 
-/** Identificador técnico para el rastro forense. */
-const MESSAGE_PROCESSOR_IDENTIFIER = 'WHATSAPP_MESSAGE_ATOM';
+/** Identificador técnico del procesador para el Neural Sentinel. */
+const MESSAGE_PROCESSOR_IDENTIFIER = 'WHATSAPP_INDIVIDUAL_PROCESSOR';
 
 /**
- * Procesa un mensaje individual, clasificando su intención y anonimizando metadatos.
+ * Procesa una señal individual, delegando la privacidad y el triaje.
  *
- * @param individualMessageSnapshot - ADN del mensaje detectado por el orquestador.
- * @param correlationIdentifier - Identificador para la trazabilidad cross-module.
+ * @param incomingWhatsAppMessageSnapshot - ADN del mensaje detectado por el enjambre.
+ * @param correlationIdentifier - Identificador único de trazabilidad cross-module.
  * @returns {Promise<void>}
  */
 export const HandleIndividualWhatsAppMessage = async (
-  individualMessageSnapshot: IWhatsAppMessage,
+  incomingWhatsAppMessageSnapshot: IWhatsAppMessage,
   correlationIdentifier: string,
 ): Promise<void> => {
-  /**
-   * PROTECCIÓN PII (Personally Identifiable Information)
-   * SANEADO: Enmascaramiento ISO para logs de infraestructura.
-   */
-  const senderPhoneIdentifierLiteral = individualMessageSnapshot.from;
-  const maskedSenderSnapshot = `${senderPhoneIdentifierLiteral.substring(0, 4)}****${senderPhoneIdentifierLiteral.slice(-2)}`;
 
+  // 1. PROTECCIÓN DE IDENTIDAD CIUDADANA (Delegación Atómica)
+  const maskedSenderIdentifierLiteral = MaskSensitivePhoneIdentifier(
+    incomingWhatsAppMessageSnapshot.from
+  );
+
+  // 2. REPORTE DE RECEPCIÓN (Forensic Trace)
   EmitTelemetrySignal({
     severityLevel: 'INFO',
     moduleIdentifier: MESSAGE_PROCESSOR_IDENTIFIER,
-    operationCode: 'TRIAGE_SIGNAL_CLASSIFICATION',
+    operationCode: 'SIGNAL_RECEIVED_FOR_CLASSIFICATION',
     correlationIdentifier,
-    /** Uso de clave soberana para internacionalización de logs */
+    /** Uso de clave soberana internacionalizada */
     message: 'WHATSAPP.LOGS.CLASSIFYING_SIGNAL_TYPE',
     contextMetadata: {
-      messageTypeLiteral: individualMessageSnapshot.type,
-      senderIdentityMask: maskedSenderSnapshot,
-      metaMessageIdentifier: individualMessageSnapshot.id,
+      messageTypeLiteral: incomingWhatsAppMessageSnapshot.type,
+      senderIdentityMask: maskedSenderIdentifierLiteral,
+      metaMessageIdentifier: incomingWhatsAppMessageSnapshot.id,
     },
   });
 
-  switch (individualMessageSnapshot.type) {
+  /**
+   * 3. TRIAJE POR TIPO DE MEDIO (Functional Strategy)
+   * SANEADO: Se prepara el enjambre para los átomos cognitivos.
+   */
+  switch (incomingWhatsAppMessageSnapshot.type) {
     case 'text':
       /**
        * @step_brain: Inferencia Cognitiva de Derechos Humanos
-       * TODO: Invocar AnalyzeHumanRightsIntent.ts
+       * TODO: Invocar AnalyzeHumanRightsIntent.ts (Fase 5.2)
        */
       break;
 
@@ -61,15 +68,15 @@ export const HandleIndividualWhatsAppMessage = async (
     case 'audio':
     case 'voice':
       /**
-       * @step_vault: Bóveda de Evidencia Cloud (ADR 0015)
-       * TODO: Invocar PersistMediaEvidence.ts
+       * @step_vault: Bóveda de Evidencia Cloud-Sovereign (ADR 0015)
+       * TODO: Invocar PersistMultimediaEvidence.ts (Fase 5.3)
        */
       break;
 
     case 'location':
       /**
        * @step_geo: Mapeo de Vulnerabilidad Territorial
-       * TODO: Invocar MapSocialVulnerabilityPoint.ts
+       * TODO: Invocar MapSocialVulnerabilityPoint.ts (Fase 5.4)
        */
       break;
 
@@ -77,10 +84,12 @@ export const HandleIndividualWhatsAppMessage = async (
       EmitTelemetrySignal({
         severityLevel: 'WARNING',
         moduleIdentifier: MESSAGE_PROCESSOR_IDENTIFIER,
-        operationCode: 'UNKNOWN_SIGNAL_TYPE_DETECTION',
+        operationCode: 'UNKNOWN_SIGNAL_TYPE_IGNORED',
         correlationIdentifier,
         message: 'WHATSAPP.LOGS.UNKNOWN_SIGNAL_TYPE_IGNORED',
-        contextMetadata: { unhandledTypeLiteral: individualMessageSnapshot.type },
+        contextMetadata: {
+          unhandledTypeLiteral: incomingWhatsAppMessageSnapshot.type
+        },
       });
   }
 };
