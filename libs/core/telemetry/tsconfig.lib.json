@@ -1,17 +1,52 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    /**
+     * @section Gobernanza de Emisión - ISO Technical Rigor
+     * Protocolo OEDP-V16.0 - Build Resilience.
+     */
     "outDir": "../../../dist/out-tsc/libs/core/telemetry",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/telemetry/tsconfig.lib.tsbuildinfo",
+
+    /**
+     * @section Aislamiento Soberano (rootDir Enforcement)
+     * SANEADO: Se establece 'src' como la raíz física absoluta de la lógica.
+     * Esto erradica el error TS6059 al prohibir que el compilador capture
+     * archivos de la carpeta 'dist' o 'node_modules' como parte del programa.
+     */
+    "rootDir": "src",
+
+    /**
+     * @section Integridad del Grafo (Project References)
+     * SANEADO: Sincronizado con el motor Nx para permitir la resolución
+     * de tipos cross-bunker sin ambigüedad estructural.
+     */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    /** Purificación de tipos globales para evitar colisiones en el Edge. */
     "types": [],
     "lib": ["DOM", "DOM.Iterable", "ES2022"]
   },
+
+  /**
+   * @section Alcance de Auditoría
+   */
   "include": ["src/**/*.ts", "src/**/*.json"],
+
+  /**
+   * @section Aduana de Exclusión (Anti-Contamination)
+   * SANEADO: Se refuerza la exclusión de cualquier rastro de construcción
+   * previo para garantizar una compilación atómica y limpia en Vercel.
+   */
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "jest.config.ts",
     "dist",
-    "out-tsc"
+    "out-tsc",
+    "../../../dist",
+    "../../../node_modules"
   ]
 }

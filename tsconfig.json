@@ -13,10 +13,11 @@
   /**
    * @section Estrategia de Aislamiento Total (Zero-Leak)
    * Al dejar 'files', 'include' y 'references' vacíos, obligamos a Next.js
-   * y a los búnkeres individuales a usar sus propios ámbitos, 
+   * y a los búnkeres individuales a usar sus propios ámbitos,
    * previniendo colisiones de memoria en el servidor de lenguaje.
    */
   "files": [],
   "include": [],
-  "exclude": ["node_modules", "tmp", "dist"]
+  "exclude": ["node_modules", "tmp", "dist"],
+  "references": []
 }
