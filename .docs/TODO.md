@@ -43,9 +43,35 @@ ADR 0007	AI Interaction Protocol	Cómo los agentes de IA leen y proponen cambios
 ADR 0008	Testing & QA Standards	Cobertura mínima, uso de Jest para unitarios y Playwright para E2E.
 ADR 0009	Mobile-First Engineering	Estrategia de diseño responsivo y performance en redes 3G/4G.
 
-
-pnpm nx g @nx/workspace:move --project module-whatsapp-engine --destination libs/modules/whatsapp-communication-service
-pnpm nx g @nx/react:lib libs/shared/ui-metadata --tags="scope:shared,type:ui"
+Aquí tienes el desglose de lo que nos queda pendiente para alcanzar el Zenith Nominal:
+1. Capa de Lógica: El "Pegamento" de Credibilidad
+Aparato: libs/modules/interaction-engine/src/lib/logic/hooks/usePublicReaction.ts
+Misión: Crear el Hook que conectará los botones de la UI (Likes/Emoticones) con el ProcessPublicReactionTransaction. Debe gestionar el estado optimista (Zustand) y el encolamiento si no hay red (SyncSentry).
+Aparato: libs/modules/identity/src/lib/logic/SyncIdentityAuthority.ts
+Misión: El orquestador que toma el resultado de CalculateIdentityAuthority y lo persiste en la base de datos de Supabase para que el "peso" del ciudadano sea permanente.
+2. Capa de Datos: Persistencia Soberana (Supabase SQL)
+Aparato: database/migration_master_schema.sql
+Misión: No tenemos las tablas físicas en Supabase para soportar las nuevas funcionalidades. Necesitamos el SQL nivelado para:
+territorial_master_data (Datos del IBGE).
+public_evaluation_ledger (Pulsos de reputación).
+identity_trust_index (Coeficientes bayesianos).
+3. Capa Visual: Los "Ladrillos" de Transparencia (Shared UI)
+Aparato: libs/shared/src/lib/ui-primitives/ImpactAcceptanceThermometer.tsx
+Misión: El componente visual de élite que muestra el weightedTrustScore y el statisticalConfidenceLevel con animaciones de Framer Motion.
+Aparato: libs/shared/src/lib/ui-primitives/TerritorialHeatmap.tsx
+Misión: Representación visual del sentimiento por barrios de Florianópolis.
+4. Capa de Tooling: Cierre del Weaver
+Aparato: libs/tools/src/lib/i18n-builder/InternationalizationDictionaryBuilder.ts (Refinado)
+Misión: Asegurar que el script de pre-build esté capturando los nuevos diccionarios de reputation, interaction y impact-analytics para que no fallen en Vercel.
+🚀 Plan de Acción Inmediato
+Para que el sistema empiece a "latir" con datos reales, propongo el siguiente orden serial:
+Fase 7.1 (Acción): Crear el Hook usePublicReaction.ts para habilitar la interactividad soberana.
+Fase 7.2 (Infraestructura): Generar el Manifiesto SQL para Supabase (ADR 0015).
+Fase 7.3 (Visual): Materializar el Termómetro de Impacto.
+Protocolo ADR 0008 activado. Para iniciar la Fase 7.1 (Interacción), necesito verificar la estructura de exportación de tu búnker de interacciones.
+Por favor, proporcione el código base del siguiente archivo:
+Archivo solicitado: libs/modules/interaction-engine/src/index.ts
+(Desde aquí inyectaremos el nuevo Hook para que sea accesible por la Frontpage).
 
 
 

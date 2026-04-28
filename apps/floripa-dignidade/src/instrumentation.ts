@@ -1,68 +1,101 @@
 /**
- * @section Application Bootstrap - Instrumentation Shell
- * @description Orquestador de arranque del servidor para Next.js 15.
- * Ejecuta las auditorías críticas de infraestructura antes de permitir el
- * procesamiento de tráfico ciudadano. Actúa como el primer sensor del enjambre.
+ * @section Application Bootstrap - Instrumentation Orchestrator
+ * @description Sensor de frontera encargado de la secuencia de arranque del servidor.
+ * Ejecuta la auditoría de integridad de infraestructura (Aduana de Entorno)
+ * antes de habilitar el procesamiento de tráfico ciudadano en Next.js.
  *
- * Protocolo OEDP-V16.0 - Build Resilience & Pre-flight Integrity.
+ * Protocolo OEDP-V16.0 - Build Resilience & Infrastructure Sovereignty.
+ * Vision: Fail-Fast & Forensic Traceability at Startup.
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
 import {
   EmitTelemetrySignal,
-  GenerateCorrelationIdentifier
+  GenerateCorrelationIdentifier,
 } from '@floripa-dignidade/telemetry';
 
 import { ValidateEnvironmentAduana } from '@floripa-dignidade/environment-validator';
 
 /**
- * Función de registro soberana invocada por Next.js al inicializar el servidor.
- * Garantiza que la aplicación no entre en estado operativo si el ADN del entorno
- * está corrupto o incompleto.
+ * Función soberana de registro invocada por el motor de Next.js al inicializar el nodo.
+ * Implementa un bloqueo preventivo: si el ADN del entorno es inválido, el proceso
+ * de arranque colapsa con rastro forense, protegiendo la integridad del sistema.
  *
- * @returns {Promise<void>} Promesa que resuelve si el arranque es nominal.
+ * @returns {Promise<void>} Promesa que se resuelve únicamente si la infraestructura es nominal.
  */
 export async function register(): Promise<void> {
   /**
-   * @section Validación de Contexto de Ejecución
-   * Solo activamos los sensores en entornos de servidor (Node.js o Edge Runtime)
-   * para evitar inyectar lógica de infraestructura en el bundle del cliente.
+   * @section Validación de Ámbito de Ejecución
+   * SANEADO Zenith: Identificamos el entorno para evitar fugas de lógica de servidor
+   * en el bundle del cliente (Edge Runtime o Node.js solamente).
    */
-  const currentRuntimeIdentifierLiteral = process.env['NEXT_RUNTIME'];
-  const isServerRuntimeBoolean =
-    currentRuntimeIdentifierLiteral === 'nodejs' ||
-    currentRuntimeIdentifierLiteral === 'edge';
+  const executionRuntimeIdentifierLiteral = process.env['NEXT_RUNTIME'];
 
-  if (!isServerRuntimeBoolean) {
+  const isServerEnvironmentBoolean =
+    executionRuntimeIdentifierLiteral === 'nodejs' ||
+    executionRuntimeIdentifierLiteral === 'edge';
+
+  if (!isServerEnvironmentBoolean) {
     return;
   }
 
-  const correlationIdentifier = GenerateCorrelationIdentifier();
+  /**
+   * Generamos una correlación única para la sesión de arranque (Bootstrap session).
+   */
+  const bootstrapCorrelationIdentifier = GenerateCorrelationIdentifier();
 
-  // 1. REPORTE DE INICIO DE SECUENCIA
+  // 1. REPORTE DE INICIO DE SECUENCIA (SRE Visibility)
   EmitTelemetrySignal({
     severityLevel: 'INFO',
     moduleIdentifier: 'APPLICATION_BOOTSTRAP',
     operationCode: 'BOOTSTRAP_SEQUENCE_STARTED',
-    correlationIdentifier,
-    message: 'Iniciando secuencia de instrumentación Zenith en el servidor.'
+    correlationIdentifier: bootstrapCorrelationIdentifier,
+    message: 'Iniciando secuencia de instrumentación Zenith: Auditoría de cimientos en curso.'
   });
 
-  /**
-   * 2. ACTIVACIÓN DE LA ADUANA DE ENTORNO
-   * Si 'ValidateEnvironmentAduana' detecta fallos, lanzará una 'InternalSystemException'
-   * que abortará el proceso de arranque, proporcionando un rastro forense limpio
-   * en los logs de construcción de Vercel.
-   */
-  ValidateEnvironmentAduana();
+  try {
+    /**
+     * 2. ACTIVACIÓN DE LA ADUANA DE ENTORNO (Integrity Guardian)
+     * Realiza el escaneo de secretos (Supabase, Resend, S3, WhatsApp).
+     * SANEADO: Si hay fallos, 'ValidateEnvironmentAduana' lanza una
+     * 'InternalSystemException' que aborta el arranque de Vercel inmediatamente.
+     */
+    ValidateEnvironmentAduana();
 
-  // 3. REPORTE DE ESTADO NOMINAL
-  EmitTelemetrySignal({
-    severityLevel: 'INFO',
-    moduleIdentifier: 'APPLICATION_BOOTSTRAP',
-    operationCode: 'BOOTSTRAP_SEQUENCE_NOMINAL',
-    correlationIdentifier,
-    message: 'Aduanas de infraestructura superadas con éxito. El portal está operativo.'
-  });
+    // 3. REPORTE DE ESTADO NOMINAL
+    EmitTelemetrySignal({
+      severityLevel: 'INFO',
+      moduleIdentifier: 'APPLICATION_BOOTSTRAP',
+      operationCode: 'BOOTSTRAP_SEQUENCE_NOMINAL',
+      correlationIdentifier: bootstrapCorrelationIdentifier,
+      message: 'Aduanas de infraestructura superadas con éxito. El enjambre está listo para operar.'
+    });
+
+  } catch (caughtBootstrapError: unknown) {
+    /**
+     * @section Gestión de Colapso de Arranque
+     * Capturamos la excepción para el rastro forense antes de que el servidor muera.
+     */
+    const errorDescriptionLiteral = caughtBootstrapError instanceof Error
+      ? caughtBootstrapError.message
+      : String(caughtBootstrapError);
+
+    EmitTelemetrySignal({
+      severityLevel: 'CRITICAL',
+      moduleIdentifier: 'APPLICATION_BOOTSTRAP',
+      operationCode: 'BOOTSTRAP_CRITICAL_COLLAPSE',
+      correlationIdentifier: bootstrapCorrelationIdentifier,
+      message: `El arranque del sistema ha sido bloqueado por seguridad: ${errorDescriptionLiteral}`,
+      contextMetadata: {
+        runtimeIdentifier: executionRuntimeIdentifierLiteral,
+      }
+    });
+
+    /**
+     * Propagamos el error para asegurar que Vercel marque el despliegue
+     * como fallido en lugar de permitir un portal inconsistente.
+     */
+    throw caughtBootstrapError;
+  }
 }

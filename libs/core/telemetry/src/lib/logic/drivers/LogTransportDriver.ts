@@ -1,113 +1,94 @@
 /**
  * @section Telemetry Drivers - Cloud Log Transport Orchestrator
- * @description Orquestador soberano que decide la estrategia de despacho de señales.
- * Implementa lógica de persistencia asíncrona para el flujo sanguíneo digital.
+ * @description Orquestador soberano encargado de decidir la estrategia de despacho
+ * de señales forenses. Implementa lógica de persistencia asimétrica y gestión
+ * de concurrencia para el flujo sanguíneo digital.
  *
  * Protocolo OEDP-V16.0 - High Performance SRE & Swarm Intelligence.
- * SANEADO Zenith: Erradicación de 'any' mediante puente de contexto tipado.
+ * SANEADO Zenith: Aislamiento de configuración y control de concurrencia (Locking).
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
 import type { ITelemetrySignal } from '../../schemas/TelemetrySignal.schema';
 import { TransmitSignalsToCloud } from './CloudLogTransport';
+import { ExtractTelemetryInfrastructureConfiguration } from './ExtractTelemetryInfrastructureConfiguration';
 import {
   AddSignalToBuffer,
   FlushBufferSignals,
   GetBufferSizeQuantity
 } from './LogBufferManager';
 
-/**
- * @interface ISystemEnvironmentMetadata
- * @description Contrato inmutable para la captura de secretos de infraestructura.
- */
-interface ISystemEnvironmentMetadata {
-  readonly nodeExecutionEnvironmentLiteral: string | undefined;
-  readonly supabaseUrlLiteral: string | undefined;
-  readonly supabaseSecurityKeySecret: string | undefined;
-}
-
-/**
- * @interface IGlobalEnvironmentContext
- * @description Puente técnico para acceder a variables de entorno sin usar 'any'.
- */
-interface IGlobalEnvironmentContext {
-  readonly process?: {
-    readonly env: Record<string, string | undefined>;
-  };
-}
-
-/** @section Configuración Técnica de SRE */
+/** @section Configuración Técnica de SRE (Frecuencia y Volumen) */
 const MAXIMUM_BUFFER_CAPACITY_QUANTITY = 20;
 const FLUSH_DELAY_MILLISECONDS_QUANTITY = 5000;
 
 let flushTimeoutReference: ReturnType<typeof setTimeout> | null = null;
 
 /**
- * Extrae de forma segura los metadatos del entorno global.
- * SANEADO Zenith: Erradicación de TS-Linter (no-explicit-any).
- *
- * @returns {ISystemEnvironmentMetadata} Colección de variables de sistema.
+ * Semáforo de Sincronización (Concurrency Safeguard).
+ * Evita que múltiples hilos de ejecución intenten vaciar el buffer simultáneamente.
  */
-const getInfrastructureEnvironmentMetadata = (): ISystemEnvironmentMetadata => {
-  /** 🛡️ SANEADO:narrowing de tipos mediante interfaz de contrato global */
-  const globalContextReference = globalThis as unknown as IGlobalEnvironmentContext;
-
-  return {
-    nodeExecutionEnvironmentLiteral: globalContextReference.process?.env['NODE_ENV'],
-    supabaseUrlLiteral: globalContextReference.process?.env['SUPABASE_URL'],
-    supabaseSecurityKeySecret: globalContextReference.process?.env['SUPABASE_SERVICE_ROLE_KEY'],
-  };
-};
+let isSynchronizationActiveBoolean = false;
 
 /**
- * Evalúa si el ecosistema está operando bajo el modo de desarrollo.
+ * Evalúa si el ecosistema está operando bajo el modo de desarrollo local.
  */
 export const isDevelopmentEnvironmentActiveBoolean = (): boolean => {
-  const { nodeExecutionEnvironmentLiteral } = getInfrastructureEnvironmentMetadata();
-  return nodeExecutionEnvironmentLiteral === 'development';
+  const configuration = ExtractTelemetryInfrastructureConfiguration();
+  return configuration.nodeExecutionEnvironmentLiteral === 'development';
 };
 
 /**
- * Orquesta la purga del buffer y su transmisión física basándose en el entorno.
- * SANEADO: Nomenclatura verbosa (ISO Standard).
+ * Orquesta la sincronización del buffer hacia la persistencia física.
+ * SANEADO Zenith: Implementación de patrón 'Lock & Release' para integridad.
  */
-const executeOrchestratedFlushAction = async (): Promise<void> => {
+const synchronizeLogBufferToCloudAction = async (): Promise<void> => {
+  if (isSynchronizationActiveBoolean) {
+    return;
+  }
+
   const signalsToTransmitCollection = FlushBufferSignals();
 
   if (signalsToTransmitCollection.length === 0) {
     return;
   }
 
-  if (isDevelopmentEnvironmentActiveBoolean()) {
-    signalsToTransmitCollection.forEach((signalSnapshot) => {
-      /**
-       * Uso de warn para cumplir con la regla 'no-console' en desarrollo forense.
-       */
-      console.warn(`[TELEMETRY_FORENSIC]: ${signalSnapshot.operationCode}`, signalSnapshot);
-    });
-    return;
-  }
+  isSynchronizationActiveBoolean = true;
 
-  const {
-    supabaseUrlLiteral,
-    supabaseSecurityKeySecret
-  } = getInfrastructureEnvironmentMetadata();
+  try {
+    // CASO A: Entorno de Desarrollo (Forensic console trace)
+    if (isDevelopmentEnvironmentActiveBoolean()) {
+      signalsToTransmitCollection.forEach((signalSnapshot) => {
+        console.warn(`[TELEMETRY_FORENSIC]: ${signalSnapshot.operationCode}`, signalSnapshot);
+      });
+      return;
+    }
 
-  if (supabaseUrlLiteral && supabaseSecurityKeySecret) {
-    await TransmitSignalsToCloud(
-      signalsToTransmitCollection,
-      supabaseUrlLiteral,
-      supabaseSecurityKeySecret
-    );
+    // CASO B: Entorno de Producción (Cloud Sovereign persistence)
+    const {
+      cloudStorageUrlLiteral,
+      cloudStorageSecurityKeySecret
+    } = ExtractTelemetryInfrastructureConfiguration();
+
+    if (cloudStorageUrlLiteral && cloudStorageSecurityKeySecret) {
+      await TransmitSignalsToCloud(
+        signalsToTransmitCollection,
+        cloudStorageUrlLiteral,
+        cloudStorageSecurityKeySecret
+      );
+    }
+  } finally {
+    /** Garantizamos la liberación del semáforo incluso ante colapsos de red */
+    isSynchronizationActiveBoolean = false;
   }
 };
 
 /**
- * Punto de entrada único para el encolamiento inteligente de señales.
- * Implementa despacho inmediato en servidor y agrupado en cliente.
+ * Punto de entrada único para el transporte inteligente de telemetría.
+ * Implementa despacho inmediato en servidores (Stateless) y agrupado en clientes.
  *
- * @param validatedSignalPayload - ADN de telemetría validado.
+ * @param validatedSignalPayload - ADN de telemetría previamente validado.
  */
 export const QueueTelemetrySignalForTransport = (
   validatedSignalPayload: ITelemetrySignal
@@ -116,24 +97,30 @@ export const QueueTelemetrySignalForTransport = (
 
   const isServerRuntimeBoolean = typeof window === 'undefined';
 
-  /** FASE 1: Despacho Inmediato (Servidor/Edge) para evitar pérdida de rastro */
+  /**
+   * FASE 1: Despacho Inmediato (Servidor/Edge/Node)
+   * Vercel congela los procesos al terminar el stream; no podemos esperar.
+   */
   if (isServerRuntimeBoolean) {
-    void executeOrchestratedFlushAction();
+    void synchronizeLogBufferToCloudAction();
     return;
   }
 
-  /** FASE 2: Despacho Agrupado (Browser/Mobile) para optimización de recursos */
+  /**
+   * FASE 2: Despacho Agrupado (Navegador/Mobile)
+   * Optimización de consumo de energía y peticiones HTTP.
+   */
   const currentBufferSizeQuantity = GetBufferSizeQuantity();
 
   if (currentBufferSizeQuantity >= MAXIMUM_BUFFER_CAPACITY_QUANTITY) {
     if (flushTimeoutReference) {
       clearTimeout(flushTimeoutReference);
     }
-    void executeOrchestratedFlushAction();
+    void synchronizeLogBufferToCloudAction();
   } else if (!flushTimeoutReference) {
     flushTimeoutReference = setTimeout(() => {
       flushTimeoutReference = null;
-      void executeOrchestratedFlushAction();
+      void synchronizeLogBufferToCloudAction();
     }, FLUSH_DELAY_MILLISECONDS_QUANTITY);
   }
 };

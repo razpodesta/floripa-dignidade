@@ -1,0 +1,12 @@
+{
+  "logs": {
+    "IBGE_CONNECTION_ERROR": "Connection failure with IBGE open data servers.",
+    "SYNC_NOMINAL": "Territorial synchronization completed successfully.",
+    "DATA_NORMALIZED": "IBGE data converted to the institutional integrity standard."
+  },
+  "errors": {
+    "MUNICIPALITY_NOT_FOUND": "The requested municipality was not identified in the IBGE database.",
+    "PERSISTENCE_FAULT": "Error while attempting to save territorial entities to the cloud database.",
+    "ADN_CORRUPTION": "The data format returned by IBGE is incompatible with the current contract."
+  }
+}

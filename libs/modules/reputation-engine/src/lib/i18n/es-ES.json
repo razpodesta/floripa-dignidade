@@ -1,0 +1,12 @@
+{
+  "logs": {
+    "INVALID_PULSE_STRUCTURE": "Violación de integridad estructural detectada en el pulso de evaluación.",
+    "SUBMISSION_NOMINAL": "Evaluación pública integrada con éxito en la red de confianza.",
+    "ANOMALY_DETECTED": "Anomalía detectada en el comportamiento de evaluación: posible automatización bloqueada."
+  },
+  "errors": {
+    "REPUTATION_PULSE_ADN_CORRUPTO": "El ADN de la evaluación es inválido o está corrompido.",
+    "COMMENTARY_TOO_SHORT": "El comentario argumentativo debe tener al menos 10 caracteres.",
+    "COMMENTARY_EXCEEDS_MAXIMUM_LENGTH": "El comentario excede el límite técnico de 1000 caracteres."
+  }
+}

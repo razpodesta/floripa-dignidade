@@ -1,0 +1,20 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "ignoreDeprecations": "5.0"
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./tsconfig.lib.json" },
+    /**
+     * @section Grafo de Dependencias
+     * SANEADO Zenith: Puentes obligatorios para resolver TS6059/TS6307.
+     */
+    { "path": "../../core/telemetry" },
+    { "path": "../../core/exceptions" },
+    { "path": "../../core/environment-validator" },
+    { "path": "../identity" }
+  ]
+}

@@ -1,8 +1,25 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true
+    /**
+     * @section Gobernanza de Emisión
+     * La raíz del búnker actúa exclusivamente como mediador de configuración.
+     */
+    "noEmit": true,
+
+    /** 🛡️ SANEADO Zenith: Preparación para TS 7.0 */
+    "ignoreDeprecations": "5.0"
   },
-  "include": ["src/**/*.ts", "src/**/*.json"],
-  "exclude": ["dist", "out-tsc", "node_modules"]
+  /* 🛡️ LEY DEL GATEWAY: Vaciado absoluto. Evita la succión de archivos por otros búnkeres */
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./tsconfig.lib.json" },
+    /**
+     * @section Grafo de Dependencias
+     * Este motor de inteligencia consume el sistema nervioso y el gestor de fallos.
+     */
+    { "path": "../../core/telemetry" },
+    { "path": "../../core/exceptions" }
+  ]
 }

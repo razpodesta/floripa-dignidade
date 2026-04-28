@@ -1,0 +1,22 @@
+{
+  "schemas": {
+    "FULL_NAME_DESCRIPTION": "Nome e sobrenome completos de acordo com o registro legal ou provedor de identidade.",
+    "EMAIL_DESCRIPTION": "Endereço de e-mail principal vinculado à conta soberana.",
+    "AVATAR_DESCRIPTION": "Endereço URL da imagem de perfil recuperada do provedor social.",
+    "TRUST_LEVEL_DESCRIPTION": "Coeficiente algorítmico que determina o peso das ações do usuário na rede."
+  },
+  "errors": {
+    "INVALID_AVATAR_URL": "O endereço da fotografia de perfil não atende aos padrões de segurança.",
+    "TRUST_LEVEL_OUT_OF_BOUNDS": "O nível de confiança deve estar entre 0.0 e 1.0.",
+    "IDENTITY_NOT_FOUND": "Nenhuma identidade de cidadão foi encontrada com os critérios fornecidos.",
+    "UNAUTHORIZED_PROVIDER": "O provedor de identidade social solicitado não é autorizado pela ONG."
+  },
+  "roles": {
+    "INFRASTRUCTURE_SOVEREIGN_AUDITOR": "Auditor de Infraestrutura (SRE)",
+    "PLATFORM_GLOBAL_MANAGER": "Gestor Global da Plataforma",
+    "ORGANIZATION_ADMINISTRATOR": "Administrador de Organização",
+    "ORGANIZATION_OPERATOR": "Operador de Impacto Social",
+    "CITIZEN_REGISTERED": "Cidadão Verificado",
+    "CITIZEN_ANONYMOUS": "Identidade Temporária de Sistema"
+  }
+}

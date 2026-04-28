@@ -1,0 +1,12 @@
+{
+  "logs": {
+    "IBGE_CONNECTION_ERROR": "Falha de conexão com os servidores de dados abertos do IBGE.",
+    "SYNC_NOMINAL": "Sincronização territorial finalizada com sucesso.",
+    "DATA_NORMALIZED": "Dados do IBGE convertidos para o padrão de integridade institucional."
+  },
+  "errors": {
+    "MUNICIPALITY_NOT_FOUND": "O município solicitado não foi identificado na base do IBGE.",
+    "PERSISTENCE_FAULT": "Erro ao tentar gravar as entidades territoriais na base de dados cloud.",
+    "ADN_CORRUPTION": "O formato de dados retornado pelo IBGE é incompatível com o contrato atual."
+  }
+}

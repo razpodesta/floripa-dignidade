@@ -1,16 +1,45 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    /**
+     * @section Gobernanza de Emisión - ISO Technical Rigor
+     * Protocolo OEDP-V17.0 - Build Resilience & Forensic Traceability.
+     */
     "outDir": "../../../dist/out-tsc/libs/engines/health-analysis",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/engines/health-analysis/tsconfig.lib.tsbuildinfo",
+    
+    /** 
+     * @section Integridad del Grafo (Project References)
+     * SANEADO Zenith: Este búnker emite exclusivamente ADN tipado (.d.ts).
+     */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+    
+    /**
+     * @section Resolución Next-Gen (Turbopack / Next.js 16+ Compatible)
+     * 🛡️ PURGA DE CRONOLOGÍA: Alineado con React 19 y Next.js 16.
+     * Fuerza la pureza de las importaciones de tipos.
+     */
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    "types": [],
     "lib": ["DOM", "DOM.Iterable", "ES2022"]
   },
   "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    "jest.config.ts",
-    "dist",
-    "out-tsc"
+    "src/**/*.spec.ts", 
+    "src/**/*.test.ts", 
+    "jest.config.ts", 
+    "dist", 
+    "out-tsc",
+    "node_modules",
+    "../../../dist",
+    "../../../node_modules"
   ]
 }

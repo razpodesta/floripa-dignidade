@@ -3,7 +3,7 @@
   "compilerOptions": {
     /**
      * @section Gobernanza de Emisión - ISO Technical Rigor
-     * Protocolo OEDP-V16.0 - Build Resilience & Forensic Traceability.
+     * Protocolo OEDP-V17.0 - Build Resilience & Forensic Traceability.
      */
     "outDir": "../../../dist/out-tsc/libs/core/telemetry",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/telemetry/tsconfig.lib.tsbuildinfo",
@@ -28,25 +28,32 @@
     "inlineSources": true,
 
     /**
-     * @section Resolución Next-Gen
-     * Optimizado para Next.js 15+ y el motor de construcción Vercel.
+     * @section Resolución Next-Gen (Turbopack / Next.js 16+)
+     * 🛡️ PURGA DE CRONOLOGÍA APLICADA.
+     * Activación estricta de Verbatim Syntax para aislamiento lógico.
      */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "types": [],
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    "types":["node"],
     "lib": ["DOM", "DOM.Iterable", "ES2022"]
   },
 
   /**
    * @section Alcance de Auditoría Atómica
    */
-  "include": ["src/**/*.ts", "src/**/*.json"],
+  "include":[
+    "src/**/*.ts",
+    "src/**/*.json"
+  ],
 
   /**
    * @section Aduana de Exclusión (Anti-Contamination)
-   * SANEADO: Bloqueo físico de cualquier rastro antiguo o externo.
+   * SANEADO: Bloqueo físico estricto de cualquier rastro volátil o externo.
    */
-  "exclude": [
+  "exclude":[
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "jest.config.ts",

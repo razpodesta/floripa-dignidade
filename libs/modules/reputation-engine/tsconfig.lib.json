@@ -1,0 +1,41 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc/libs/modules/reputation-engine",
+    "tsBuildInfoFile": "../../../dist/out-tsc/libs/modules/reputation-engine/tsconfig.lib.tsbuildinfo",
+
+    /* 🛡️ SOBERANÍA FÍSICA: Bloquea la succión de archivos externos (Fix TS6059) */
+    "rootDir": "src",
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+
+    /* Integridad del Grafo */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": true,
+
+    /* Resolución Next-Gen */
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    "types": ["node"],
+    "lib":["DOM", "DOM.Iterable", "ES2022"]
+  },
+  "include":[
+    "src/**/*.ts",
+    "src/**/*.json"
+  ],
+  "exclude":[
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "jest.config.ts",
+    "dist",
+    "out-tsc",
+    "node_modules",
+    "../../../dist",
+    "../../../node_modules"
+  ]
+}

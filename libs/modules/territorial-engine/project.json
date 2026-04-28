@@ -1,0 +1,28 @@
+{
+  "name": "@floripa-dignidade/territorial-engine",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/modules/territorial-engine/src",
+  "projectType": "library",
+  "tags": ["scope:modules", "type:data", "platform:isomorphic"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/modules/territorial-engine",
+        "main": "libs/modules/territorial-engine/src/index.ts",
+        "tsConfig": "libs/modules/territorial-engine/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p libs/modules/territorial-engine/tsconfig.lib.json --noEmit"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

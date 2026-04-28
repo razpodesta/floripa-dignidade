@@ -1,0 +1,35 @@
+{
+  "name": "@floripa-dignidade/impact-analytics-engine",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/engines/impact-analytics-engine/src",
+  "projectType": "library",
+  "tags": [
+    "scope:engines",
+    "type:logic",
+    "platform:isomorphic"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/engines/impact-analytics-engine",
+        "main": "libs/engines/impact-analytics-engine/src/index.ts",
+        "tsConfig": "libs/engines/impact-analytics-engine/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p libs/engines/impact-analytics-engine/tsconfig.lib.json --noEmit"
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    }
+  }
+}

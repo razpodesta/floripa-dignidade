@@ -1,13 +1,14 @@
 /**
- * @section Routing Logic - Device Locale Detection Apparatus
- * @description Analiza las cabeceras de solicitud HTTP para determinar el idioma
- * óptimo del ciudadano. Implementa una estrategia de coincidencia exacta y
- * fallback resiliente.
- *
- * Protocolo OEDP-V16.0 - Atomic Functional, Zero Abbreviations & Verbatim Syntax.
- * Saneamiento: Resolución de TS2532 en mapeo de cabeceras.
- *
- * @author Dirección de Ingeniería - Floripa Dignidade
+ * @section Routing Logic - Device Locale Inerence Apparatus
+ * @description Analiza las cabeceras de solicitud HTTP para determinar el idioma 
+ * óptimo del ciudadano basándose en la configuración institucional. Implementa 
+ * una estrategia de coincidencia exacta contra el ADN soberano y proporciona 
+ * un fallback resiliente para garantizar la continuidad del tráfico.
+ * 
+ * Protocolo OEDP-V17.0 - Atomic Functional & Sovereign Type Safety.
+ * SANEADO Zenith: Integración de Branded Types (ISupportedLocale) y Purga de Cronología.
+ * 
+ * @author Raz Podestá - MetaShark Tech
  */
 
 import {
@@ -17,74 +18,71 @@ import {
 
 import { SupportedLocaleSchema } from '../../schemas/RoutingConfiguration.schema';
 
-/** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN estructural */
+/** 🛡️ SANEAMIENTO Zenith: Importación de ADN nominal inmutable */
 import type { ISupportedLocale } from '../../schemas/RoutingConfiguration.schema';
 
-/** Identificador técnico del búnker de ruteo para el Neural Sentinel. */
-const ROUTING_ENGINE_IDENTIFIER = 'CORE_ROUTING_ENGINE';
+/** Identificador técnico del sensor para el Neural Sentinel. */
+const ROUTING_LOCALE_SENSOR_IDENTIFIER = 'CORE_ROUTING_LOCALE_SENSOR';
 
 /**
- * Determina el locale soberano procesando la cabecera 'accept-language'.
- *
+ * Determina el identificador de localización soberano procesando la cabecera 'accept-language'.
+ * 
  * @param acceptLanguageHeaderLiteral - Valor crudo de la cabecera de lenguaje del navegador.
- * @param fallbackLocaleIdentifier - Idioma por defecto definido en la configuración (Default: pt-BR).
- * @returns {ISupportedLocale} El código de localización validado por el esquema soberano.
+ * @param fallbackLocaleIdentifier - Idioma por defecto (Default: pt-BR).
+ * @returns {ISupportedLocale} El código de localización validado y tipado nominalmente.
  */
 export const DetermineDeviceLocale = (
   acceptLanguageHeaderLiteral: string | null,
-  fallbackLocaleIdentifier: ISupportedLocale = 'pt-BR'
+  fallbackLocaleIdentifier: ISupportedLocale = 'pt-BR' as ISupportedLocale
 ): ISupportedLocale => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
-  // 1. TELEMETRÍA DE PROCESAMIENTO (Audit Start)
-  EmitTelemetrySignal({
+  // 1. REPORTE DE INICIO DE INFERENCIA (SRE Visibility)
+  void EmitTelemetrySignal({
     severityLevel: 'INFO',
-    moduleIdentifier: ROUTING_ENGINE_IDENTIFIER,
-    operationCode: 'LOCALE_DETECTION_PROCESS_STARTED',
+    moduleIdentifier: ROUTING_LOCALE_SENSOR_IDENTIFIER,
+    operationCode: 'LOCALE_INFERENCE_STARTED',
     correlationIdentifier,
-    message: 'Iniciando algoritmo de inferencia de lenguaje del dispositivo.'
+    message: 'Iniciando algoritmo de detección de soberanía lingüística del dispositivo.'
   });
 
-  // Guardia de seguridad: Si no hay cabecera, retornamos la soberanía por defecto.
+  // Guardia de seguridad: Si no hay rastro en la cabecera, retornamos el fallback tipado.
   if (!acceptLanguageHeaderLiteral) {
     return fallbackLocaleIdentifier;
   }
 
   try {
     /**
-     * 2. ALGORITMO DE EMPAREJAMIENTO (Matching Logic)
-     * Parseamos la cabecera que suele venir como: "pt-BR,pt;q=0.9,en-US;q=0.8"
+     * 2. ALGORITMO DE EMPAREJAMIENTO (ISO Matching)
+     * Fragmentamos la cabecera (ej: "pt-BR,pt;q=0.9") para extraer los candidatos.
      */
     const preferredLocalesCollection = acceptLanguageHeaderLiteral
       .split(',')
       .map((segmentLiteral) => {
         const segmentPartsCollection = segmentLiteral.split(';');
-        const targetLocalePartLiteral = segmentPartsCollection[0];
+        const targetLocaleCandidate = segmentPartsCollection[0];
 
-        // 🛡️ SANEADO: Validación segura para cumplir con "noUncheckedIndexedAccess"
-        if (targetLocalePartLiteral) {
-          return targetLocalePartLiteral.trim();
-        }
-
-        return '';
+        /** 🛡️ SANEADO: Cumplimiento de "noUncheckedIndexedAccess" */
+        return targetLocaleCandidate ? targetLocaleCandidate.trim() : '';
       })
-      .filter((purifiedLocaleLiteral) => purifiedLocaleLiteral.length > 0);
+      .filter((purifiedLiteral) => purifiedLiteral.length > 0);
 
     /**
-     * Buscamos la primera coincidencia exacta dentro de nuestro ADN de idiomas soportados.
+     * 3. ADUANA DE ADN (Safe Parsing contra Branded Type)
+     * Buscamos el primer candidato que cumpla estrictamente con nuestro esquema.
      */
     for (const localeCandidateLiteral of preferredLocalesCollection) {
       const validationResult = SupportedLocaleSchema.safeParse(localeCandidateLiteral);
 
       if (validationResult.success) {
-        const detectedLocale = validationResult.data;
+        const detectedLocale: ISupportedLocale = validationResult.data;
 
-        EmitTelemetrySignal({
+        void EmitTelemetrySignal({
           severityLevel: 'INFO',
-          moduleIdentifier: ROUTING_ENGINE_IDENTIFIER,
-          operationCode: 'LOCALE_MATCH_FOUND',
+          moduleIdentifier: ROUTING_LOCALE_SENSOR_IDENTIFIER,
+          operationCode: 'LOCALE_MATCH_CONFIRMED',
           correlationIdentifier,
-          message: `Coincidencia detectada exitosamente: ${detectedLocale}`,
+          message: `Coincidencia lingüística detectada: [${detectedLocale}]`,
           contextMetadata: { detectedLocale }
         });
 
@@ -92,22 +90,25 @@ export const DetermineDeviceLocale = (
       }
     }
 
+  } catch (caughtError: unknown) {
     /**
-     * @todo Futura Mejora: Implementar 'Fuzzy Language Matcher'
-     * (ej: si el dispositivo pide 'es-AR' y solo tenemos 'es-ES', retornar 'es-ES').
+     * @section Gestión de Anomalía Sensorial
+     * Reportamos el fallo de parseo sin interrumpir el flujo del ciudadano.
      */
+    const errorDescriptionLiteral = caughtError instanceof Error 
+      ? caughtError.message 
+      : String(caughtError);
 
-  } catch (caughtError) {
-    EmitTelemetrySignal({
+    void EmitTelemetrySignal({
       severityLevel: 'WARNING',
-      moduleIdentifier: ROUTING_ENGINE_IDENTIFIER,
+      moduleIdentifier: ROUTING_LOCALE_SENSOR_IDENTIFIER,
       operationCode: 'LOCALE_PARSING_ANOMALY',
       correlationIdentifier,
-      message: 'Se detectó una anomalía al procesar las cabeceras de lenguaje.',
-      contextMetadata: { errorTrace: String(caughtError) }
+      message: 'Se detectó una irregularidad al procesar las señales de lenguaje del cliente.',
+      contextMetadata: { errorTraceLiteral: errorDescriptionLiteral }
     });
   }
 
-  // 3. RETORNO DE FALLBACK (Resilience)
+  // 4. RETORNO DE SOBERANÍA POR DEFECTO (Resilience)
   return fallbackLocaleIdentifier;
 };

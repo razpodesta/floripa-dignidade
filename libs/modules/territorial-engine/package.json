@@ -1,0 +1,27 @@
+{
+  "name": "@floripa-dignidade/territorial-engine",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Motor de Gestión Territorial basado en estándares oficiales del IBGE para la clasificación de impacto social.",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@floripa-dignidade/exceptions": "workspace:*",
+    "@floripa-dignidade/telemetry": "workspace:*",
+    "zod": "^3.25.76"
+  },
+  "nx": {
+    "tags": [
+      "scope:modules",
+      "type:data",
+      "platform:isomorphic"
+    ]
+  }
+}

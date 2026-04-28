@@ -1,55 +1,30 @@
 /**
- * @section Application Root Layout
- * @description Carcasa estructural de la aplicación. Actúa como el ancestro
- * común para todas las rutas del portal, gestionando fuentes y SEO base.
- *
- * Protocolo OEDP-V15.0 - Single Source Resolution.
- * @author Raz Podestá - MetaShark Tech
+ * @section Application Root Layout - Global Shell
+ * @description Ancestro supremo de la aplicación. Orquesta la inyección de 
+ * estilos globales y el búnker de persistencia de estado.
+ * 
+ * SANEADO Zenith: Resolución de TS2882 y activación del PersistenceGuardian.
  */
 
 import './global.css';
 import React from 'react';
-
-/** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN como tipo */
-import type { Metadata } from 'next';
-
-/**
- * @section SEO Strategy - Metadata Foundation
- * Configuración soberana para el rastro de motores de búsqueda.
- */
-export const metadata: Metadata = {
-  title: {
-    template: '%s | Floripa Dignidade',
-    default: 'Floripa Dignidade - Defensa de los Derechos Humanos',
-  },
-  description: 'Plataforma tecnológica para la transparencia y acción social en Florianópolis.',
-  alternates: {
-    canonical: '/',
-    languages: {
-      'pt-BR': '/pt-BR',
-      'es-ES': '/es-ES',
-      'en-US': '/en-US',
-    },
-  },
-  robots: {
-    index: true,
-    follow: true,
-  }
-};
+import { PersistenceGuardian } from '@floripa-dignidade/shared';
 
 interface IRootLayoutProperties {
   readonly children: React.ReactNode;
 }
 
-/**
- * Componente raíz inmutable.
- * Implementa 'suppressHydrationWarning' para permitir extensiones de navegador (DarkReader, etc).
- */
 export default function RootLayout({ children }: IRootLayoutProperties) {
   return (
+    /** 
+     * SANEADO: suppressHydrationWarning es vital para Zustand/LocalStorage 
+     * para evitar discrepancias de tiempo entre servidor y cliente.
+     */
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className="antialiased font-sans">
-        {children}
+      <body className="antialiased min-h-screen flex flex-col font-sans">
+        <PersistenceGuardian>
+          {children}
+        </PersistenceGuardian>
       </body>
     </html>
   );

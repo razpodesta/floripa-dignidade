@@ -1,0 +1,18 @@
+{
+  "metrics": {
+    "WEIGHTED_TRUST_LABEL": "Weighted Credibility Level",
+    "CONFIDENCE_LEVEL_LABEL": "Statistical Certainty Index",
+    "CONSENSUS_INDEX_LABEL": "Community Consensus Degree",
+    "PARTICIPATION_VOLUME_LABEL": "Active Identified Voices"
+  },
+  "trends": {
+    "RISING_TRUST": "Rising Trust",
+    "STABLE_CONSENSUS": "Stable Consensus",
+    "DECLINING_TRUST": "Declining Credibility",
+    "VOLATILE_RATING": "Volatile Perception"
+  },
+  "explanations": {
+    "BAYESIAN_METHODOLOGY_HINT": "This calculation prioritizes the opinion of citizens with verified identities and a history of ethical participation.",
+    "SAMPLE_SIZE_WARNING": "Current data represents a small sample; accuracy will increase with more participation."
+  }
+}

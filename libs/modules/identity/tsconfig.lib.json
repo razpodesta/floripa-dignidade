@@ -1,17 +1,51 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    /**
+     * @section Gobernanza de Emisión - ISO Technical Rigor
+     * Protocolo OEDP-V17.0 - Build Resilience & Forensic Traceability.
+     */
     "outDir": "../../../dist/out-tsc/libs/modules/identity",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/modules/identity/tsconfig.lib.tsbuildinfo",
+
+    /**
+     * @section Aislamiento Soberano (rootDir Enforcement)
+     * SANEADO Zenith: Bloquea la succión de archivos externos y el error TS6059.
+     * TSC valida los tipos (.d.ts) mientras Turbopack/Next.js 16 gestiona el build.
+     */
+    "rootDir": "src",
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+
+    /**
+     * @section Integridad del Grafo (Project References)
+     */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": true,
+
+    /**
+     * @section Resolución Next-Gen (Next.js 16+ & React 19)
+     * 🛡️ PURGA DE CRONOLOGÍA APLICADA.
+     */
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
     "types": ["node"],
-    "lib": ["ES2022"]
+    "lib": ["DOM", "DOM.Iterable", "ES2022"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "jest.config.ts",
     "dist",
-    "out-tsc"
+    "out-tsc",
+    "node_modules",
+    "../../../dist",
+    "../../../node_modules"
   ]
 }

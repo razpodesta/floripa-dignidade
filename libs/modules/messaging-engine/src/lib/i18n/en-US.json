@@ -1,0 +1,27 @@
+{
+  "interface": {
+    "emptyInboxTitleLiteral": "Your inbox is clear",
+    "emptyInboxDescriptionLiteral": "You have no new notifications at this time. We will alert you when there are updates regarding your reports or territorial alerts.",
+    "markAllAsReadActionLiteral": "Mark all as read",
+    "unreadMessagesCountLiteral": "unread notifications",
+    "replyActionLiteral": "Reply",
+    "presenceStates": {
+      "ONLINE": "Online",
+      "AWAY": "Away",
+      "DO_NOT_DISTURB": "Do not disturb",
+      "OFFLINE": "Offline"
+    }
+  },
+  "logs": {
+    "NOTIFICATION_BROADCAST_SUCCESS": "System alert successfully broadcasted to the citizen network.",
+    "DIRECT_MESSAGE_DISPATCHED": "Direct message successfully encrypted and dispatched.",
+    "THREAD_ARCHIVED_NOMINAL": "Conversation lifecycle ended. Thread logically archived.",
+    "HEARTBEAT_NOMINAL": "Citizen presence heartbeat successfully received."
+  },
+  "errors": {
+    "MAXIMUM_ATTACHMENTS_EXCEEDED": "The maximum limit of attached evidence (10) has been exceeded.",
+    "MESSAGE_EXCEEDS_MAXIMUM_LENGTH": "The message content exceeds the technical limit of 5000 characters.",
+    "UNAUTHORIZED_THREAD_ACCESS": "Your identity does not have the authority to access this communication channel.",
+    "MESSAGE_ADN_CORRUPTED": "The message structure is invalid or corrupted."
+  }
+}

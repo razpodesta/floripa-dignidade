@@ -1,56 +1,65 @@
 /**
- * @section Application Root Layout
- * @description Carcasa estructural de la aplicación. Actúa como el ancestro
- * común para todas las rutas del portal, gestionando fuentes y SEO base.
- *
- * Protocolo OEDP-V15.0 - Single Source Resolution.
- * @author Raz Podestá - MetaShark Tech
+ * @section Localized Application Layout
+ * @description Carcasa estructural para rutas con prefijo de idioma. 
+ * Ensambla el encabezado de navegación global y gestiona el ADN visual local.
+ * 
+ * Protocolo OEDP-V16.0 - High Performance Architecture.
  */
 
-import './global.css';
 import React from 'react';
+import { notFound } from 'next/navigation';
+import { GlobalMainNavigationHeader } from '@floripa-dignidade/shared';
+import { 
+  SupportedLocaleSchema, 
+  ValidateLinguisticContract 
+} from '@floripa-dignidade/routing';
+import { MainNavigationHeaderI18nSchema } from '@floripa-dignidade/shared';
 
-/** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN como tipo */
-import type { Metadata } from 'next';
-
-/**
- * @section SEO Strategy - Metadata Foundation
- * Configuración soberana para el rastro de motores de búsqueda.
- */
-export const metadata: Metadata = {
-  title: {
-    template: '%s | Floripa Dignidade',
-    default: 'Floripa Dignidade - Defensa de los Derechos Humanos',
-  },
-  description: 'Plataforma tecnológica para la transparencia y acción social en Florianópolis.',
-  alternates: {
-    canonical: '/',
-    languages: {
-      'pt-BR': '/pt-BR',
-      'es-ES': '/es-ES',
-      'en-US': '/en-US',
-    },
-  },
-  robots: {
-    index: true,
-    follow: true,
-  }
-};
-
-interface IRootLayoutProperties {
+interface ILocalizedLayoutProperties {
   readonly children: React.ReactNode;
+  readonly params: Promise<{ locale: string }>;
 }
 
-/**
- * Componente raíz inmutable.
- * Implementa 'suppressHydrationWarning' para permitir extensiones de navegador (DarkReader, etc).
- */
-export default function RootLayout({ children }: IRootLayoutProperties) {
+export default async function LocalizedLayout({ 
+  children, 
+  params 
+}: ILocalizedLayoutProperties) {
+  const { locale: rawLocaleIdentifier } = await params;
+
+  // 1. ADUANA DE ADN LINGÜÍSTICO
+  const localeValidation = SupportedLocaleSchema.safeParse(rawLocaleIdentifier);
+  if (!localeValidation.success) {
+    notFound();
+  }
+
+  const validatedLocale = localeValidation.data;
+
+  // 2. CARGA DE DICCIONARIO PARA NAVEGACIÓN
+  let headerDictionary;
+  try {
+    const rawData = await import(
+      `../../../../../libs/shared/src/lib/composite-ui/i18n/${validatedLocale}.json`
+    );
+    
+    ValidateLinguisticContract(
+      'GLOBAL_HEADER', 
+      MainNavigationHeaderI18nSchema, 
+      rawData.default, 
+      validatedLocale
+    );
+    
+    headerDictionary = rawData.default;
+  } catch (_error) {
+    notFound();
+  }
+
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
-      <body className="antialiased font-sans">
+    <>
+      <GlobalMainNavigationHeader translationDictionary={headerDictionary} />
+      <main className="flex-grow pt-20">
         {children}
-      </body>
-    </html>
+      </main>
+      {/* TODO: Inyectar GlobalImpactFooter aquí (Fase 6) */}
+    </>
   );
 }

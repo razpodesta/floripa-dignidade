@@ -1,0 +1,12 @@
+{
+  "logs": {
+    "INVALID_PULSE_STRUCTURE": "Structural integrity violation detected in the evaluation pulse.",
+    "SUBMISSION_NOMINAL": "Public evaluation successfully integrated into the trust network.",
+    "ANOMALY_DETECTED": "Anomaly detected in evaluation behavior: possible automation blocked."
+  },
+  "errors": {
+    "REPUTATION_PULSE_ADN_CORRUPTO": "Evaluation DNA is invalid or contaminated.",
+    "COMMENTARY_TOO_SHORT": "The argumentative commentary must be at least 10 characters long.",
+    "COMMENTARY_EXCEEDS_MAXIMUM_LENGTH": "The commentary exceeds the technical limit of 1000 characters."
+  }
+}

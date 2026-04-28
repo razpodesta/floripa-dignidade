@@ -2,7 +2,7 @@
  * @section Cognitive Logic - Intelligence Provider Factory
  * @description Átomo encargado de la resolución de drivers de inferencia.
  * Desacopla el orquestador de los detalles de implementación de cada proveedor.
- *
+ * 
  * Protocolo OEDP-V16.0 - Functional Atomicity & Factory Pattern.
  */
 
@@ -16,7 +16,7 @@ type TInferenceDriverAction = (payload: unknown) => Promise<unknown>;
 
 /**
  * Determina y retorna el driver de inteligencia correspondiente al proveedor.
- *
+ * 
  * @param providerIdentifierLiteral - Identificador del proveedor solicitado.
  * @returns {TInferenceDriverAction} Función de ejecución del driver.
  */

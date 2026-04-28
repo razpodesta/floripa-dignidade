@@ -1,23 +1,50 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    /**
-     * @section Gobernanza de Emisión
-     * La raíz actúa exclusivamente como mediador de configuración.
-     */
     "noEmit": true,
-
-    /* 🛡️ SUPRESIÓN DE ENTROPÍA (TS 6.0/7.0 Ready) */
     "ignoreDeprecations": "5.0"
   },
-  /**
-   * @section Estrategia de Aislamiento Total (Zero-Leak)
-   * Al dejar 'files', 'include' y 'references' vacíos, obligamos a Next.js
-   * y a los búnkeres individuales a usar sus propios ámbitos,
-   * previniendo colisiones de memoria en el servidor de lenguaje.
-   */
   "files": [],
   "include": [],
   "exclude": ["node_modules", "tmp", "dist"],
-  "references": []
+  
+  /* --- SOVEREIGN GRAPH (Project References) --- */
+  /* Orquesta la compilación en orden topológico para todo el ecosistema */
+  "references":[
+    /* 1. Capa Core */
+    { "path": "./libs/core/analytics" },
+    { "path": "./libs/core/environment-validator" },
+    { "path": "./libs/core/exceptions" },
+    { "path": "./libs/core/routing" },
+    { "path": "./libs/core/telemetry" },
+    { "path": "./libs/core/communication-providers/resend" },
+    
+    /* 2. Capa Motores (Engines) */
+    { "path": "./libs/engines/health-analysis" },
+    { "path": "./libs/engines/health-monitor" },
+    { "path": "./libs/engines/impact-analytics-engine" },
+    { "path": "./libs/engines/search-engine" },
+    
+    /* 3. Capa Dominios (Modules) */
+    { "path": "./libs/modules/identity" },
+    { "path": "./libs/modules/interaction-engine" },
+    { "path": "./libs/modules/messaging-engine" },
+    { "path": "./libs/modules/newsletter" },
+    { "path": "./libs/modules/reputation-engine" },
+    { "path": "./libs/modules/social-media" },
+    { "path": "./libs/modules/territorial-engine" },
+    { "path": "./libs/modules/whatsapp/communication-service" },
+    
+    /* 4. Capa Visual (Shared) */
+    { "path": "./libs/shared" },
+    
+    /* 5. Capa de Infraestructura (Tools, QA & Scripts) */
+    { "path": "./libs/tools" },
+    { "path": "./scripts" },
+    { "path": "./tests" },
+    
+    /* 6. Capa Aplicaciones (Caracas) */
+    { "path": "./apps/floripa-dignidade" },
+    { "path": "./apps/content-manager-system" }
+  ]
 }

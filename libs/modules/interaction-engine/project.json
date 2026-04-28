@@ -1,0 +1,24 @@
+{
+  "name": "@floripa-dignidade/interaction-engine",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/modules/interaction-engine/src",
+  "projectType": "library",
+  "tags": ["scope:modules", "type:logic", "platform:isomorphic"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/modules/interaction-engine",
+        "main": "libs/modules/interaction-engine/src/index.ts",
+        "tsConfig": "libs/modules/interaction-engine/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "tsc -p libs/modules/interaction-engine/tsconfig.lib.json --noEmit" }
+    },
+    "lint": { "executor": "@nx/eslint:lint" }
+  }
+}

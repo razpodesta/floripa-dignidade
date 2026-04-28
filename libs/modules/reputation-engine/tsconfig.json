@@ -1,0 +1,17 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "ignoreDeprecations": "5.0"
+  },
+  /* 🛡️ LEY DEL GATEWAY: La raíz no procesa archivos, solo orquesta */
+  "files": [],
+  "include": [],
+  "references":[
+    { "path": "./tsconfig.lib.json" },
+    /* Puentes físicos exigidos por el código fuente del búnker */
+    { "path": "../../core/exceptions" },
+    { "path": "../../core/telemetry" },
+    { "path": "../../engines/health-analysis" }
+  ]
+}

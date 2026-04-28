@@ -1,9 +1,11 @@
 {
   "name": "@floripa-dignidade/environment-validator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
+  "description": "Búnker soberano de auditoría de infraestructura y validación proactiva de ADN de entorno (Customs Aduana).",
   "type": "module",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -11,16 +13,19 @@
       "default": "./src/index.ts"
     }
   },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@floripa-dignidade/exceptions": "workspace:*",
+    "@floripa-dignidade/telemetry": "workspace:*",
+    "@swc/helpers": "~0.5.18",
+    "zod": "^3.25.76"
+  },
   "nx": {
     "tags": [
       "scope:core",
       "type:logic",
       "platform:isomorphic"
     ]
-  },
-  "dependencies": {
-    "@floripa-dignidade/telemetry": "workspace:*",
-    "@floripa-dignidade/exceptions": "workspace:*",
-    "zod": "^3.25.76"
   }
 }

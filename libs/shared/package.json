@@ -1,15 +1,20 @@
 {
   "name": "@floripa-dignidade/shared",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
-  "description": "Global Visual System: Design Tokens, UI Primitives and Layout Orchestrators",
+  "description": "Global Visual System: Design Tokens, UI Primitives, Layout Orchestrators and Sovereign State Management.",
   "sideEffects": false,
   "exports": {
     ".": {
       "types": "./src/index.ts",
       "import": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./state-store": {
+      "types": "./src/lib/utility/state-store/index.ts",
+      "import": "./src/lib/utility/state-store/index.ts",
+      "default": "./src/lib/utility/state-store/index.ts"
     },
     "./design-system": {
       "types": "./src/lib/design-system/index.ts",
@@ -29,11 +34,16 @@
   },
   "dependencies": {
     "@floripa-dignidade/telemetry": "workspace:*",
+    "@floripa-dignidade/exceptions": "workspace:*",
+    "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-slot": "^1.1.0",
     "@swc/helpers": "~0.5.18",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.8.0",
     "tailwind-merge": "^2.3.0",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "zustand": "^5.0.12"
   },
   "peerDependencies": {
     "react": "^19.0.0",

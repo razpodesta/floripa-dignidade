@@ -1,16 +1,64 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    /**
+     * @section Gobernanza de Emisión - ISO Technical Rigor
+     * Protocolo OEDP-V17.0 - Build Resilience & Forensic Traceability.
+     */
     "outDir": "../../../dist/out-tsc/libs/core/routing",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/routing/tsconfig.lib.tsbuildinfo",
-    "lib": ["DOM", "DOM.Iterable", "ES2022"]
+
+    /**
+     * @section Aislamiento Soberano (rootDir Enforcement)
+     * Al establecer 'src' como raíz y activar 'emitDeclarationOnly',
+     * bloqueamos fugas de compilación. TSC valida el ADN, SWC ejecuta.
+     */
+    "rootDir": "src",
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+
+    /**
+     * @section Integridad del Grafo (Project References)
+     */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": true,
+
+    /**
+     * @section Resolución Next-Gen (Turbopack Compatible / Next.js 16+)
+     * Verbatim Module Syntax fuerza la separación absoluta entre Tipos y Lógica.
+     */
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    /** Tipado de Infraestructura Edge/Node */
+    "types": ["node"],
+    "lib":["DOM", "DOM.Iterable", "ES2022"]
   },
-  "include": ["src/**/*.ts"],
-  "exclude": [
+
+  /**
+   * @section Alcance de Auditoría Atómica
+   */
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.json"
+  ],
+
+  /**
+   * @section Aduana de Exclusión (Anti-Contamination)
+   * Bloqueo físico estricto de artefactos de QA y dependencias superiores.
+   */
+  "exclude":[
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "jest.config.ts",
     "dist",
-    "out-tsc"
+    "out-tsc",
+    "node_modules",
+    "../../../dist",
+    "../../../node_modules"
   ]
 }

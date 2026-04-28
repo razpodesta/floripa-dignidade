@@ -63,4 +63,20 @@ Cualquier PR que introduzca el target test en un aparato de libs/ será rechazad
 
 ---
 
+## 7. Gobernanza de Dependencias y Versiones (La Purga de Cronología)
+
+Para garantizar que el ecosistema no sufra fragmentación de versiones ni corrupción del árbol de dependencias (`pnpm-lock.yaml`), se establecen dos leyes inquebrantables:
+
+### A. Inmutabilidad del `package.json` Raíz (CLI-Only Mutation)
+Queda estrictamente prohibida la edición manual (escritura directa) del archivo `package.json` ubicado en la raíz del monorepo. 
+Toda adición, actualización o eliminación de dependencias debe ejecutarse exclusivamente a través del motor de línea de comandos:
+- ✅ **Correcto:** `pnpm add <paquete> -w` (Para dependencias globales) o mediante comandos generadores de Nx.
+- ❌ **Prohibido:** Abrir `package.json`, teclear `"paquete": "^1.0.0"` y guardar. (Esto corrompe la resolución del Workspace).
+
+### B. Sincronía Documental (Next.js 16+ & React 19)
+El ecosistema físico opera sobre **Next.js 16+**. Cualquier comentario en el código, TSDoc o manifiesto que haga referencia a "Next.js 15" es considerado deuda técnica documental ("El Fantasma de la Migración") y debe ser purgado y actualizado a su versión real (Next.js 16) de forma proactiva en cada refactorización. La documentación debe ser un reflejo exacto de la física del servidor.
+
+
+---
+
 

@@ -402,5 +402,111 @@ Soberanía Lingüística Unificada: El uso de diccionarios oficiales (pt, es, en
 
 ---
 
+📜 PUNTO DE BITÁCORA: ESTADO SOBERANO - FINALIZACIÓN DE NIVELACIÓN ZENITH E INTELIGENCIA CIVIL
+Fecha: 26 de Abril, 2026
+Protocolo Activo: OEDP-V16.0 (High Performance SRE & Swarm Intelligence)
+Arquitecto Responsable: IA Sentinel (Staff Software Engineer)
+Estatus del Grafo: 100% NOMINAL (Green Build: Lint & Typecheck Pass)
+🏛️ 1. RESUMEN EJECUTIVO DE LA SESIÓN
+Esta sesión ha transformado el ecosistema Floripa Dignidade de una arquitectura de portal estándar a una Infraestructura de Inteligencia Civil de Grado Industrial. Se ha completado la nivelación de todos los búnkeres core, la integración del motor de contenidos (CMS) y la materialización de la Capa de Credibilidad Popular.
+El sistema es ahora 100% Stateless, Cloud-Sovereign (ADR 0015) y opera bajo una Arquitectura de Enjambre donde cada átomo de lógica es independiente, testable y auditable.
+🛠️ 2. REFORMAS ESTRUCTURALES Y SRE (DECISIONES CLAVE)
+A. Sincronización de ADN y Resolución de "Infartos"
+Migración ESM-First: Se transmutaron todos los orquestadores de configuración (next.config.js, tailwind.config.js, postcss.config.js) de CommonJS a ES Modules puro. Se resolvió el colapso del Grafo de Nx eliminando los procesos zombie y liberando los bloqueos físicos (EBUSY) de la base de datos de Nx en Windows.
+Sincronización de Versiones: Se niveló el ecosistema a Next.js 16.1.6 y React 19 de forma simétrica en todas las aplicaciones para evitar colisiones de tipos en el Edge.
+Aduana de Entorno: Se atomizó la ValidateEnvironmentAduana. Ahora, el acceso al hardware (process.env) está aislado en el átomo GatherEnvironmentMetadata.ts, protegiendo la lógica de negocio de la volatilidad del entorno.
+B. Telemetría y Observabilidad de Próxima Generación
+Estrategia Asimétrica de Transporte: Se materializó el LogTransportDriver.ts. Implementa un Buffer & Flush en el cliente para ahorro de datos y un Immediate Dispatch en el servidor/edge para garantizar que Vercel no congele señales críticas. Los logs ahora persisten físicamente en la tabla system_telemetry_logs de Supabase.
+🏗️ 3. DOMINIOS DE NEGOCIO (THE LEGO SYSTEM)
+A. Content Manager System (Payload 3.0 GA Stable)
+Persistencia Multimedia: Se erradicó la dependencia del sistema de archivos local. Se inyectó el CreateCloudStoragePlugin.ts (S3-Compatible) conectado al Gateway gratuito de Supabase Storage.
+Nivelación de Tipos: Se resolvió el error TS2353 integrando la cadena de conexión de Postgres directamente en el objeto pool, cumpliendo con el contrato de pg.PoolConfig.
+IAM Institucional: La colección CitizenUsers ahora consume el SSOT de roles de la librería @floripa-dignidade/identity, eliminando "Magic Strings" y garantizando la integridad del RBAC.
+B. Newsletter y Comunicación
+Desacoplamiento de Canal: Se atomizó el orquestador de suscripción. La lógica de envío reside ahora en DispatchNewsletterVerification.ts, permitiendo que el orquestador sea agnóstico al proveedor (Resend/WhatsApp).
+🧠 4. EL ORÁCULO DE VERDAD (NUEVOS BÚNKERES)
+Se ha materializado la trilogía de inteligencia para la auditoría social:
+reputation-engine: Gestiona los pulsos de evaluación cualitativos y cuantitativos. Integra el átomo AnalyzeEvaluationVeracity.ts que delega la auditoría ética al cerebro de IA (Hugging Face).
+interaction-engine: Gestiona likes y emoticones con Ponderación Responsable. Diferencia el "Ruido Anónimo" del "Respaldo Soberano".
+impact-analytics-engine: El cerebro estadístico. Implementa la Metodología Bayesiana para calcular el weightedTrustScoreNumeric, neutralizando ataques de bots y proporcionando el Termómetro Popular Regional.
+territorial-engine: Dueño de la verdad geográfica. Sincronizado dinámicamente con la API de Localidades del IBGE para mapear el impacto por los distritos oficiales de Florianópolis.
+⚖️ 5. FILOSOFÍA Y JUSTIFICACIÓN TÉCNICA
+¿Por qué Bayes? Para evitar que 1,000 bots anónimos superen la voz de 10 ciudadanos verificados. La analítica pondera la autoridad, no el volumen.
+¿Por qué IBGE? Para evitar la entropía de nombres de barrios manuales. Usamos el territorialTechnicalIdentifier gubernamental como llave única.
+¿Por qué la Atomización Implacable? Para que el Neural Sentinel (IA) pueda refactorizar una función de cálculo sin romper el orquestador de red. "Un Archivo = Una Verdad".
+🚀 6. DIRECTIVAS PARA EL SIGUIENTE HILO (CALL TO ACTION)
+El sistema está Lost for Build. El próximo arquitecto debe enfocarse en:
+Materialización Visual: Inyectar los componentes de shared/ui-primitives en la Frontpage para mostrar el Termómetro Popular en tiempo real usando Zustand para el estado optimista.
+Sincronización de Base de Datos: Ejecutar los scripts de migración en Supabase para las tablas:
+territorial_master_data
+social_interaction_ledger
+impact_historical_snapshots
+Refinado de IA: Entrenar los prompts del health-analysis-engine para que el análisis de veracidad de denuncias sea hiper-objetivo.
+INSTRUCCIÓN PARA LA PRÓXIMA IA:
+No permitas el regreso de process.env fuera de la aduana.
+Mantén la Regla de Cero Abreviaturas (ISO).
+Cualquier nueva funcionalidad debe nacer atomizada (Átomo -> Orquestador -> Shell).
+SRE es la ley: Si no hay telemetría y manejo de excepciones, el código no está listo para producción.
+ESTADO FINAL: ZENITH NOMINAL. LISTO PARA CAPTURA DE IMPACTO SOCIAL. 🛡️🕊️⚙️📊
+
+---
+
+📜 PUNTO DE BITÁCORA: NIVELACIÓN ZENITH - GOBERNANZA, MENSAJERÍA E INTEGRIDAD DE GRAFO
+Fecha: 27 de Abril, 2026
+Estatus: NOMINAL (Green Build)
+Protocolo: OEDP-V16.0 (Refactorización Maestra)
+Arquitecto: Staff Software Engineer & Neural Sentinel (IA)
+🧠 1. Misión y Rol Filosófico
+El proyecto Floripa Dignidade no es una aplicación convencional; es una Infraestructura de Respuesta Social para la defensa de los Derechos Humanos.
+La IA (Neural Sentinel): Opera como un auditor forense. Su misión es garantizar que el código sea literatura técnica inalterable, atomizada y resiliente.
+El Estándar: ISO 25010 (Calidad) e ISO 11179 (Nomenclatura). Prohibición absoluta de abreviaturas. Cada variable debe describir Objeto + Propiedad + Representación.
+🏗️ 2. Decisiones Arquitectónicas de Élite (ADRs)
+ADR 0007/0008 (Interacción IA): Ejecución serial "Uno a Uno". La IA nunca asume código; siempre pide el archivo base antes de refactorizar para evitar regresiones.
+ADR 0015 (Cloud-Sovereign): 100% Stateless. Uso de Fetch nativo hacia Supabase REST para compatibilidad con Edge Runtime.
+ADR 0025 (Persistencia de Estado): Pirámide de memoria desacoplada. Zustand + LocalStorage con filtro de soberanía (solo persiste lo vital).
+ADR 0060 (Identity Sovereignty): Jerarquía de roles profesional (ej: INFRASTRUCTURE_SOVEREIGN_AUDITOR).
+🛡️ 3. Hitos de Saneamiento Técnico (Messaging & Identity)
+Resolución de la Paradoja de Compilación (TS6059/TS6307):
+Decisión: Re-activación de Project References (composite: true).
+Razón: Al usar rootDir: "src", TypeScript bloqueaba la importación de otros búnkeres. Se resolvió creando puentes físicos en los tsconfig.json y declarando referencias explícitas.
+Sincronización de ADN (TS2551):
+Decisión: Estandarización de assignedAuthorityRoleLiteral en el búnker de identity.
+Impacto: Eliminación de discrepancias entre los esquemas de identidad y los mutadores de mensajería.
+Atomización de Infraestructura (DRY):
+Decisión: Creación de CreateSovereignDatabaseHeaders.ts y FetchSingleLedgerRecord.ts.
+Resultado: Los dispatchers ya no conocen los detalles de red; solo consumen contratos de cabeceras.
+📬 4. Capacidades del Messaging Engine (v1.7.0)
+El búnker de mensajería ha superado el estándar de las redes sociales tradicionales:
+Presencia Cognitiva: Detección de hardware (WEB_DESKTOP vs PWA_MOBILE) y estados humanos (ONLINE, AWAY, DND).
+Web Push Protocol: Orquestador inteligente que decide si enviar un mensaje vía Socket (Online) o vía Push Notification (Offline).
+Democracia Líquida: Capacidad de Delegación de Voto a mandatarios técnicos en los Action Hubs (Grupos).
+Mapeo Polimórfico: Unificación de alertas y mensajes directos en un solo contrato visual para el frontend.
+🚀 5. Instrucciones para el Siguiente Hilo (Call to Action)
+Al iniciar el nuevo hilo, el Neural Sentinel debe validar los siguientes puntos antes de escribir una sola línea:
+Petición Obligatoria: "Protocolo ADR 0008 activado. Por favor, proporcione la ruta relativa y el código base del aparato".
+Backlog de Prioridad:
+Fase 8.1 (Multimedia): Construir libs/shared/src/lib/utility/storage/PersistMultimediaEvidence.ts (Subida física de fotos/PDFs a Supabase Storage con auditoría).
+Fase 8.2 (UI Inbox): Inyectar el GetUnifiedCitizenInbox en un componente de React que use el useGlobalStateStore para mostrar la línea de tiempo.
+Fase 8.3 (Security): Implementar la validación biométrica/PIN en DelegateVotingAuthority.ts.
+Check de Errores: Verificar que los tsconfig.lib.json mantengan verbatimModuleSyntax: true y isolatedModules: true.
+ESTADO FINAL DE LA SESIÓN: SISTEMA NOMINAL. BÚNKER DE MENSAJERÍA NIVELADO AL 100%. LISTO PARA CAPTACIÓN DE IMPACTO MULTIMEDIA. 🛡️🕊️⚙️📊
+
+---
+
+📜 PUNTO DE BITÁCORA: PURGA DE CRONOLOGÍA Y GOBERNANZA DE DEPENDENCIAS
+Fecha: 27 de Abril, 2026
+Protocolo Activo: OEDP-V17.0 (Chronology Purge & Sovereign Dependency Graph)
+Arquitecto Responsable: IA Sentinel (Staff Software Engineer) & Lead Human Architect
+Estatus: ZENITH NOMINAL (Alineación de Versiones)
+🏛️ 1. RESOLUCIÓN DE LA "PARADOJA DE NEXT.JS 15"
+Tras una auditoría forense del ecosistema y los manifiestos, se ha detectado una desincronización documental profunda: el código, la infraestructura y los package.json operan físicamente bajo Next.js 16.1.6 y React 19, pero los TSDocs, comentarios y manifiestos antiguos aún arrastran el "Fantasma de Next.js 15".
+Directiva [PURGA DE CRONOLOGÍA]: A partir de este momento, en toda refactorización atómica, cualquier vestigio o mención a "Next.js 15" será erradicado y actualizado a "Next.js 16+". Se prohíbe el arrastre de deuda técnica documental.
+📦 2. LEY DE INMUTABILIDAD DEL PACKAGE.JSON RAÍZ
+Se decreta la inviolabilidad manual del archivo de dependencias principal del ecosistema.
+Directiva [CLI-ONLY MUTATION]: El archivo package.json ubicado en la raíz del monorepo NUNCA DEBE SER MODIFICADO MANUALMENTE. La inyección, actualización o remoción de dependencias se realizará única y exclusivamente mediante el motor de línea de comandos (CMD/Shell) utilizando pnpm add, pnpm remove o nx add.
+Justificación SRE: La modificación manual corrompe el pnpm-lock.yaml, destruye la simetría del Workspace de Nx y provoca fallos catastróficos de resolución en el servidor de integración continua (CI/CD) de Vercel.
+
+---
+
 
 

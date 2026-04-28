@@ -1,8 +1,26 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true
+    /**
+     * @section Gobernanza de Emisión
+     * La raíz del búnker actúa como mediador de configuración. 
+     * No emite código físicamente.
+     */
+    "noEmit": true,
+
+    /** 🛡️ SANEADO Zenith: Preparación para Next.js 16+ & TS 7.0 */
+    "ignoreDeprecations": "5.0"
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["dist", "out-tsc", "node_modules"]
+  "include": [],
+  "files": [],
+  "references":[
+    /** 
+     * @section Grafo de Dependencias Soberanas
+     * Declaración obligatoria de referencias para resolver errores TS6307.
+     * Routing importa físicamente de estos dos búnkeres core.
+     */
+    { "path": "./tsconfig.lib.json" },
+    { "path": "../telemetry" },
+    { "path": "../exceptions" }
+  ]
 }

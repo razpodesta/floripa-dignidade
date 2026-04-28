@@ -1,0 +1,27 @@
+{
+  "interface": {
+    "emptyInboxTitleLiteral": "Sua caixa de entrada está limpa",
+    "emptyInboxDescriptionLiteral": "Você não possui novas notificações no momento. Avisaremos quando houver atualizações sobre seus chamados ou alertas territoriais.",
+    "markAllAsReadActionLiteral": "Marcar todas como lidas",
+    "unreadMessagesCountLiteral": "notificações não lidas",
+    "replyActionLiteral": "Responder",
+    "presenceStates": {
+      "ONLINE": "Online",
+      "AWAY": "Ausente",
+      "DO_NOT_DISTURB": "Não perturbe",
+      "OFFLINE": "Desconectado"
+    }
+  },
+  "logs": {
+    "NOTIFICATION_BROADCAST_SUCCESS": "Alerta de sistema emitido com sucesso para a rede de cidadãos.",
+    "DIRECT_MESSAGE_DISPATCHED": "Mensagem direta criptografada e enviada com sucesso.",
+    "THREAD_ARCHIVED_NOMINAL": "Ciclo de vida da conversa encerrado. Thread arquivada logicamente.",
+    "HEARTBEAT_NOMINAL": "Pulso de presença do cidadão recebido com sucesso."
+  },
+  "errors": {
+    "MAXIMUM_ATTACHMENTS_EXCEEDED": "O limite máximo de evidências anexadas (10) foi excedido.",
+    "MESSAGE_EXCEEDS_MAXIMUM_LENGTH": "O conteúdo da mensagem excede o limite técnico de 5000 caracteres.",
+    "UNAUTHORIZED_THREAD_ACCESS": "Sua identidade não possui autoridade para acessar este canal de comunicação.",
+    "MESSAGE_ADN_CORRUPTED": "A estrutura da mensagem está inválida ou corrompida."
+  }
+}

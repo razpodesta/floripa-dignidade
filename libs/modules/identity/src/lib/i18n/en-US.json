@@ -1,0 +1,22 @@
+{
+  "schemas": {
+    "FULL_NAME_DESCRIPTION": "Full name and surname according to the legal registry or identity provider.",
+    "EMAIL_DESCRIPTION": "Primary electronic mail address linked to the sovereign account.",
+    "AVATAR_DESCRIPTION": "URL address of the profile image retrieved from the social provider.",
+    "TRUST_LEVEL_DESCRIPTION": "Algorithmic coefficient that determines the weight of user actions on the network."
+  },
+  "errors": {
+    "INVALID_AVATAR_URL": "The profile photograph address does not meet security standards.",
+    "TRUST_LEVEL_OUT_OF_BOUNDS": "Trust level must be between 0.0 and 1.0.",
+    "IDENTITY_NOT_FOUND": "No citizen identity was found with the provided criteria.",
+    "UNAUTHORIZED_PROVIDER": "The requested social identity provider is not authorized by the NGO."
+  },
+  "roles": {
+    "INFRASTRUCTURE_SOVEREIGN_AUDITOR": "Infrastructure Sovereign Auditor (SRE)",
+    "PLATFORM_GLOBAL_MANAGER": "Global Platform Manager",
+    "ORGANIZATION_ADMINISTRATOR": "Organization Administrator",
+    "ORGANIZATION_OPERATOR": "Social Impact Operator",
+    "CITIZEN_REGISTERED": "Verified Citizen",
+    "CITIZEN_ANONYMOUS": "Temporary System Identity"
+  }
+}
