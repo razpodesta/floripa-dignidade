@@ -1,23 +1,23 @@
 /**
  * @section Impact Analytics - Territorial Sentiment Aggregator
- * @description Átomo de lógica encargado de agrupar y ponderar los pulsos de
- * reputación por contexto territorial. Implementa el triaje de datos para
- * la futura integración con los maestros del IBGE.
+ * @description Átomo de lógica encargado de agrupar y ponderar entradas de
+ * evaluación según su contexto geográfico. Transforma una colección plana
+ * de juicios en clústeres estadísticos por territorio.
  *
- * Protocolo OEDP-V16.0 - High Performance SRE & Pure Logic.
- * SANEADO Zenith: Erradicación de TS6133 (Código Muerto) y atomización de pesos.
+ * Protocolo OEDP-V17.0 - High Performance SRE & Modular Boundary Fix.
+ * SANEADO Zenith: Desacoplamiento total de 'reputation-engine' (ADR 0003).
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
 import { EmitTelemetrySignal, TraceExecutionTime } from '@floripa-dignidade/telemetry';
 
-/* 1. ADN de Reputación (Entrada) */
-import type { IPublicEvaluationPulse } from '@floripa-dignidade/reputation-engine';
+/* 1. ADN Estructural Interno (Contrato Agnóstico) */
+import type { IEvaluationInput } from '../../schemas/EvaluationInput.schema';
 
 /**
  * @interface ITerritorialClusterResult
- * @description Representación estadística de un clúster geográfico.
+ * @description Representación estadística inmutable de un clúster geográfico.
  */
 export interface ITerritorialClusterResult {
   readonly territoryIdentifierLiteral: string;
@@ -27,75 +27,95 @@ export interface ITerritorialClusterResult {
 }
 
 /**
- * Agrupa una colección de pulsos de evaluación según su origen territorial.
+ * @interface ITerritorialAccumulator
+ * @description Estructura de reducción para el cálculo de promedios ponderados.
+ */
+interface ITerritorialAccumulator {
+  weightedTrustScoreSumAccumulator: number;
+  totalAuthorityWeightAccumulator: number;
+  totalInteractionQuantity: number;
+}
+
+/**
+ * Agrupa una colección de entradas de evaluación según su origen territorial.
  *
- * @param evaluationPulsesCollection - Lista de juicios de valor capturados.
+ * @param evaluationInputsCollection - Lista de juicios de valor validados por la aduana.
  * @param correlationIdentifier - Identificador de trazabilidad del hilo superior.
- * @returns {Promise<ITerritorialClusterResult[]>} Colección de métricas por zona.
+ * @returns {Promise<ITerritorialClusterResult[]>} Colección de métricas por zona geográfica.
  */
 export const AggregateTerritorialSentiment = async (
-  evaluationPulsesCollection: IPublicEvaluationPulse[],
-  correlationIdentifier: string
+  evaluationInputsCollection: IEvaluationInput[],
+  correlationIdentifier: string,
 ): Promise<ITerritorialClusterResult[]> => {
-
   return await TraceExecutionTime(
     'TERRITORIAL_SENTIMENT_AGGREGATOR',
-    'EXECUTE_GEOGRAPHIC_CLUSTERING',
+    'EXECUTE_GEOGRAPHIC_CLUSTERING_TRANSACTION',
     correlationIdentifier,
     async () => {
-
       /**
        * @section Mapa de Acumulación Geográfica
        * Clave: Nombre del territorio normalizado.
        */
-      const territorialMap = new Map<string, {
-        weightedSum: number;
-        weightCount: number;
-        interactionCount: number;
-      }>();
+      const territorialAccumulationMap = new Map<string, ITerritorialAccumulator>();
 
-      evaluationPulsesCollection.forEach((evaluationPulse) => {
+      evaluationInputsCollection.forEach((evaluationItem) => {
         /**
          * @future_integration
-         * Aquí se invocará a 'territorial-engine.NormalizeTerritory'
-         * para validar contra los códigos IBGE oficiales.
+         * En la Fase 8, el 'territorial-engine' normalizará estos nombres
+         * contra los códigos oficiales del IBGE.
          */
-        const territoryKeyLiteral = (evaluationPulse.territorialContextLiteral || 'FLORIANOPOLIS_GLOBAL')
+        const territoryKeyLiteral = (evaluationItem.territorialContextLiteral || 'FLORIANOPOLIS_GLOBAL')
           .trim()
           .toUpperCase();
 
-        const currentCluster = territorialMap.get(territoryKeyLiteral) || {
-          weightedSum: 0,
-          weightCount: 0,
-          interactionCount: 0
+        const currentAccumulator = territorialAccumulationMap.get(territoryKeyLiteral) || {
+          weightedTrustScoreSumAccumulator: 0,
+          totalAuthorityWeightAccumulator: 0,
+          totalInteractionQuantity: 0,
         };
 
-        // Ponderación: Ciudadanos Verificados = 1.0, Anónimos = 0.1
-        const interactionWeightNumeric = evaluationPulse.evaluatorIdentityIdentifier ? 1.0 : 0.1;
+        /**
+         * Ponderación SRE:
+         * Identificamos el peso de autoridad (Verified: 1.0 | Anonymous: 0.1).
+         */
+        const interactionAuthorityWeightNumeric = evaluationItem.evaluatorIdentityIdentifier
+          ? 1.0
+          : 0.1;
 
-        currentCluster.weightedSum += (evaluationPulse.quantitativeTrustScoreNumeric * interactionWeightNumeric);
-        currentCluster.weightCount += interactionWeightNumeric;
-        currentCluster.interactionCount += 1;
+        currentAccumulator.weightedTrustScoreSumAccumulator +=
+          evaluationItem.quantitativeTrustScoreNumeric * interactionAuthorityWeightNumeric;
+        currentAccumulator.totalAuthorityWeightAccumulator += interactionAuthorityWeightNumeric;
+        currentAccumulator.totalInteractionQuantity += 1;
 
-        territorialMap.set(territoryKeyLiteral, currentCluster);
+        territorialAccumulationMap.set(territoryKeyLiteral, currentAccumulator);
       });
 
       const territorialResultsCollection: ITerritorialClusterResult[] = [];
 
-      territorialMap.forEach((clusterData, territoryIdentifier) => {
-        const aggregatedTrustScore = clusterData.weightCount > 0
-          ? clusterData.weightedSum / clusterData.weightCount
-          : 0.5;
+      territorialAccumulationMap.forEach((accumulatorSnapshot, territoryIdentifier) => {
+        /**
+         * Cálculo de Confianza Agregada.
+         * Si no hay peso, el sistema asume incertidumbre neutral (0.5).
+         */
+        const aggregatedTrustScoreNumeric =
+          accumulatorSnapshot.totalAuthorityWeightAccumulator > 0
+            ? accumulatorSnapshot.weightedTrustScoreSumAccumulator /
+              accumulatorSnapshot.totalAuthorityWeightAccumulator
+            : 0.5;
 
         territorialResultsCollection.push({
           territoryIdentifierLiteral: territoryIdentifier,
-          aggregatedTrustScoreNumeric: aggregatedTrustScore,
-          totalInteractionQuantity: clusterData.interactionCount,
-          communityConsensusIndexNumeric: 1 - (Math.abs(aggregatedTrustScore - 0.5) * 2)
+          aggregatedTrustScoreNumeric,
+          totalInteractionQuantity: accumulatorSnapshot.totalInteractionQuantity,
+          /**
+           * Índice de Consenso: Determina la cohesión de la opinión local.
+           * 1.0 = Unanimidad | 0.0 = Máxima Polarización.
+           */
+          communityConsensusIndexNumeric: 1 - Math.abs(aggregatedTrustScoreNumeric - 0.5) * 2,
         });
       });
 
-      // REPORTE DE ÉXITO SRE (Uso de 'void' para promesas de telemetría)
+      // REPORTE DE ÉXITO SRE
       void EmitTelemetrySignal({
         severityLevel: 'INFO',
         moduleIdentifier: 'TERRITORIAL_AGGREGATOR',
@@ -103,11 +123,12 @@ export const AggregateTerritorialSentiment = async (
         correlationIdentifier,
         message: 'IMPACT_ANALYTICS.LOGS.TERRITORIAL_SUCCESS',
         contextMetadata: {
-          detectedTerritoriesQuantity: territorialResultsCollection.length
-        }
+          detectedTerritoriesQuantity: territorialResultsCollection.length,
+          totalInputsProcessedQuantity: evaluationInputsCollection.length,
+        },
       });
 
       return territorialResultsCollection;
-    }
+    },
   );
 };

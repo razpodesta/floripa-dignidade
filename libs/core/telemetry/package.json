@@ -2,9 +2,11 @@
   "name": "@floripa-dignidade/telemetry",
   "version": "1.0.0",
   "private": true,
+  "description": "Búnker Core de orquestação telemétrica, rastreabilidade forense e gestão do fluxo sanguíneo digital. Implementa a infraestrutura nervosa para a observabilidade total do ecossistema Floripa Dignidade, garantindo a integridade do rastro de eventos e medição de latência de grau industrial sob o padrão ISO/IEC 25010.",
   "type": "module",
-  "description": "Búnker de orquestación telemétrica y trazabilidad forense digital",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -16,5 +18,12 @@
     "@floripa-dignidade/exceptions": "workspace:*",
     "@swc/helpers": "~0.5.18",
     "zod": "^3.25.76"
+  },
+  "nx": {
+    "tags": [
+      "scope:core",
+      "type:logic",
+      "platform:isomorphic"
+    ]
   }
 }

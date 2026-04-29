@@ -337,6 +337,9 @@ importers:
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../telemetry
+      '@swc/helpers':
+        specifier: ~0.5.18
+        version: 0.5.21
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -371,12 +374,18 @@ importers:
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../telemetry
+      '@swc/helpers':
+        specifier: ~0.5.18
+        version: 0.5.21
       zod:
         specifier: ^3.25.76
         version: 3.25.76
 
   libs/core/exceptions:
     dependencies:
+      '@swc/helpers':
+        specifier: ~0.5.18
+        version: 0.5.21
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -393,7 +402,7 @@ importers:
         specifier: ~0.5.18
         version: 0.5.21
       next:
-        specifier: '>=15.0.0'
+        specifier: ~16.1.6
         version: 16.1.7(@babel/core@7.29.0)(@playwright/test@1.59.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(sass@1.99.0)
       zod:
         specifier: ^3.25.76
@@ -449,17 +458,23 @@ importers:
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../../core/telemetry
+      '@swc/helpers':
+        specifier: ~0.5.18
+        version: 0.5.21
       zod:
         specifier: ^3.25.76
         version: 3.25.76
 
   libs/engines/search-engine:
     dependencies:
+      '@floripa-dignidade/telemetry':
+        specifier: workspace:*
+        version: link:../../core/telemetry
       '@swc/helpers':
         specifier: ~0.5.18
         version: 0.5.21
       fuse.js:
-        specifier: ^7.0.0
+        specifier: ^7.3.0
         version: 7.3.0
       zod:
         specifier: ^3.25.76
@@ -467,12 +482,18 @@ importers:
 
   libs/modules/identity:
     dependencies:
+      '@floripa-dignidade/environment-validator':
+        specifier: workspace:*
+        version: link:../../core/environment-validator
       '@floripa-dignidade/exceptions':
         specifier: workspace:*
         version: link:../../core/exceptions
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../../core/telemetry
+      '@swc/helpers':
+        specifier: ~0.5.18
+        version: 0.5.21
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -488,6 +509,30 @@ importers:
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../../core/telemetry
+      '@swc/helpers':
+        specifier: ~0.5.18
+        version: 0.5.21
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
+
+  libs/modules/messaging-engine:
+    dependencies:
+      '@floripa-dignidade/environment-validator':
+        specifier: workspace:*
+        version: link:../../core/environment-validator
+      '@floripa-dignidade/exceptions':
+        specifier: workspace:*
+        version: link:../../core/exceptions
+      '@floripa-dignidade/identity':
+        specifier: workspace:*
+        version: link:../identity
+      '@floripa-dignidade/telemetry':
+        specifier: workspace:*
+        version: link:../../core/telemetry
+      '@swc/helpers':
+        specifier: ~0.5.18
+        version: 0.5.21
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -503,6 +548,27 @@ importers:
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../../core/telemetry
+      '@swc/helpers':
+        specifier: ~0.5.18
+        version: 0.5.21
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
+
+  libs/modules/pmf-open-data-engine:
+    dependencies:
+      '@floripa-dignidade/environment-validator':
+        specifier: workspace:*
+        version: link:../../core/environment-validator
+      '@floripa-dignidade/exceptions':
+        specifier: workspace:*
+        version: link:../../core/exceptions
+      '@floripa-dignidade/telemetry':
+        specifier: workspace:*
+        version: link:../../core/telemetry
+      '@swc/helpers':
+        specifier: ~0.5.18
+        version: 0.5.21
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -515,6 +581,9 @@ importers:
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../../core/telemetry
+      '@swc/helpers':
+        specifier: ~0.5.18
+        version: 0.5.21
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -533,27 +602,42 @@ importers:
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../../core/telemetry
+      '@swc/helpers':
+        specifier: ~0.5.18
+        version: 0.5.21
       zod:
         specifier: ^3.25.76
         version: 3.25.76
 
   libs/modules/whatsapp/communication-service:
     dependencies:
+      '@floripa-dignidade/environment-validator':
+        specifier: workspace:*
+        version: link:../../../core/environment-validator
       '@floripa-dignidade/exceptions':
         specifier: workspace:*
         version: link:../../../core/exceptions
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../../../core/telemetry
+      '@swc/helpers':
+        specifier: ~0.5.18
+        version: 0.5.21
       zod:
         specifier: ^3.25.76
         version: 3.25.76
 
   libs/shared:
     dependencies:
+      '@floripa-dignidade/exceptions':
+        specifier: workspace:*
+        version: link:../core/exceptions
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../core/telemetry
+      '@radix-ui/react-navigation-menu':
+        specifier: ^1.2.14
+        version: 1.2.14(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@radix-ui/react-slot':
         specifier: ^1.1.0
         version: 1.2.4(@types/react@19.2.14)(react@19.2.5)
@@ -563,6 +647,12 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      framer-motion:
+        specifier: ^12.38.0
+        version: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      lucide-react:
+        specifier: ^1.8.0
+        version: 1.11.0(react@19.2.5)
       react:
         specifier: ^19.0.0
         version: 19.2.5
@@ -575,6 +665,9 @@ importers:
       zod:
         specifier: ^3.25.76
         version: 3.25.76
+      zustand:
+        specifier: ^5.0.12
+        version: 5.0.12(@types/react@19.2.14)(react@19.2.5)
 
 packages:
 

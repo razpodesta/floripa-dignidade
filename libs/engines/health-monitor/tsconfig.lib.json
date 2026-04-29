@@ -3,8 +3,23 @@
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc/libs/engines/health-monitor",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/engines/health-monitor/tsconfig.lib.tsbuildinfo",
+
+    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
+    "composite": true,           /* Habilita la compilación incremental de las sondas SRE */
+    "declaration": true,         /* Emite las firmas de tipos (.d.ts) para el sistema de salud */
+    "declarationMap": true,      /* Mapeo para trazabilidad en el IDE */
+    "emitDeclarationOnly": true, /* Delega la lógica de ejecución al motor SWC */
+    "rootDir": "src",            /* Blindaje de frontera física absoluta */
+
+    /* --- RESOLUCIÓN NEXT-GEN (Next.js 16 Ready) --- */
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true, /* Fuerza la separación estricta entre tipos y lógica */
+    "isolatedModules": true,
+
+    /* --- ADN DEL ENTORNO (SRE Monitoring Context) --- */
     "types": ["node"],
-    "lib": ["ES2022"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"] /* Necesario para pings, latencia y telemetría */
   },
   "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
@@ -12,6 +27,9 @@
     "src/**/*.test.ts",
     "jest.config.ts",
     "dist",
-    "out-tsc"
+    "out-tsc",
+    "node_modules",
+    "../../../dist",
+    "../../../node_modules"
   ]
 }

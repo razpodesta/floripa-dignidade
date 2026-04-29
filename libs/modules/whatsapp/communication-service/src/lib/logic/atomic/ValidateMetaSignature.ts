@@ -1,74 +1,112 @@
 /**
- * @section WhatsApp Logic - Meta Criptographic Validator
+ * @section WhatsApp Logic - Meta Cryptographic Validator
  * @description Valida la autenticidad de los paquetes entrantes mediante el
- * algoritmo SHA256 HMAC provisto por Meta.
+ * algoritmo SHA256 HMAC provisto por Meta. Implementa comparación de tiempo
+ * constante (timingSafeEqual) para prevenir ataques de temporización.
  *
- * Protocolo OEDP-V15.0 - Security First & Functional Atomicity.
+ * Protocolo OEDP-V17.0 - Security First & Functional Atomicity.
+ * SANEADO Zenith: Erradicación de process.env y uso de Aduana de Entorno.
+ *
  * @author Raz Podestá - MetaShark Tech
  */
 
 import { createHmac, timingSafeEqual } from 'node:crypto';
+import { ValidateEnvironmentAduana } from '@floripa-dignidade/environment-validator';
+import { ValidationException } from '@floripa-dignidade/exceptions';
 import {
   EmitTelemetrySignal,
-  GenerateCorrelationIdentifier
+  GenerateCorrelationIdentifier,
 } from '@floripa-dignidade/telemetry';
+
+/* 1. ADN Estructural (Internal Contract) */
+import { ValidateMetaSignatureSchema } from './schemas/ValidateMetaSignature.schema';
+import type { IValidateMetaSignatureParameters } from './schemas/ValidateMetaSignature.schema';
 
 /** Identificador técnico del aparato para el Neural Sentinel. */
 const SECURITY_ATOM_IDENTIFIER = 'WHATSAPP_SECURITY_ADUANA';
 
 /**
- * Compara la firma recibida con la firma calculada localmente.
+ * Compara la firma recibida con la firma calculada utilizando el secreto soberano.
  *
- * @param rawRequestBodyLiteral - El cuerpo de la petición sin procesar (Buffer/String).
- * @param xHubSignatureHeaderLiteral - La cabecera 'X-Hub-Signature-256' de Meta.
- * @returns {boolean} Verdadero si la identidad de Meta es legítima.
+ * @param parameters - Objeto contendo o corpo da requisição e a assinatura de Meta.
+ * @returns {boolean} Verdadero si la identidad de Meta es legítima y comprobada.
+ * @throws {ValidationException} Si los parámetros de entrada violan el contrato.
  */
 export const ValidateMetaSignature = (
-  rawRequestBodyLiteral: string,
-  xHubSignatureHeaderLiteral: string
+  parameters: IValidateMetaSignatureParameters
 ): boolean => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
-  const metaAppSecretLiteral = process.env['WHATSAPP_APP_SECRET'] || '';
+
+  /**
+   * 1. CAPTURA DE INFRAESTRUCTURA (Sovereign Secret Capture)
+   * 🛡️ SANEADO Zenith: El secreto se recupera exclusivamente a través de la aduana
+   * validada en el arranque, garantizando que el token sea un Branded Type.
+   */
+  const { WHATSAPP_APP_SECRET } = ValidateEnvironmentAduana();
+
+  // 2. ADUANA DE ADN (Input Validation)
+  const validationResult = ValidateMetaSignatureSchema.safeParse(parameters);
+
+  if (!validationResult.success) {
+    throw new ValidationException('CONTRATO_DE_FIRMA_WHATSAPP_VIOLADO', {
+      issuesCollection: validationResult.error.flatten(),
+    });
+  }
+
+  const { rawRequestBodyLiteral, xHubSignatureHeaderLiteral } = validationResult.data;
 
   try {
-    // 1. LIMPIEZA DE PREFIJO
-    // Meta envía la firma como 'sha256=hash_result'
+    /**
+     * 3. NORMALIZACIÓN DE FIRMA (Protocol Cleaning)
+     * Meta envía la firma con el prefijo "sha256=".
+     */
     const signaturePrefixLiteral = 'sha256=';
     const receivedHashLiteral = xHubSignatureHeaderLiteral.replace(signaturePrefixLiteral, '');
 
-    // 2. CÁLCULO DE FIRMA LOCAL (HMAC SHA256)
-    const calculatedHashLiteral = createHmac('sha256', metaAppSecretLiteral)
+    /**
+     * 4. CÁLCULO DE FIRMA LOCAL (HMAC SHA256)
+     */
+    const calculatedHashLiteral = createHmac('sha256', WHATSAPP_APP_SECRET)
       .update(rawRequestBodyLiteral)
       .digest('hex');
 
-    // 3. COMPARACIÓN SEGURA (Constant-time comparison)
-    // timingSafeEqual previene ataques de análisis de tiempo de ejecución.
+    /**
+     * 5. COMPARACIÓN SEGURA (Constant-time Comparison)
+     * Protege contra ataques de análisis de tiempo de respuesta (Timing Attacks).
+     */
     const isIdentityMatchBoolean = timingSafeEqual(
       Buffer.from(receivedHashLiteral, 'hex'),
-      Buffer.from(calculatedHashLiteral, 'hex')
+      Buffer.from(calculatedHashLiteral, 'hex'),
     );
 
+    // 6. REPORTE DE TELEMETRÍA DE ALTA PRIORIDAD
     if (!isIdentityMatchBoolean) {
-      EmitTelemetrySignal({
+      void EmitTelemetrySignal({
         severityLevel: 'CRITICAL',
         moduleIdentifier: SECURITY_ATOM_IDENTIFIER,
-        operationCode: 'META_SIGNATURE_MISMATCH',
+        operationCode: 'META_SIGNATURE_MISMATCH_DETECTED',
         correlationIdentifier,
-        message: 'Fallo de integridad criptográfica: Intento de suplantación de Webhook detectado.'
+        message: 'ALERTA DE SEGURIDAD: Intento de suplantación de Webhook de Meta.',
+        contextMetadata: { threatLevel: 'HIGH' }
       });
     }
 
     return isIdentityMatchBoolean;
 
-  } catch (caughtError) {
-    EmitTelemetrySignal({
+  } catch (caughtError: unknown) {
+    const errorDescriptionLiteral = caughtError instanceof Error
+      ? caughtError.message
+      : String(caughtError);
+
+    void EmitTelemetrySignal({
       severityLevel: 'ERROR',
       moduleIdentifier: SECURITY_ATOM_IDENTIFIER,
-      operationCode: 'SIGNATURE_CALCULATION_FAULT',
+      operationCode: 'SIGNATURE_VERIFICATION_FAULT',
       correlationIdentifier,
-      message: 'No se pudo verificar la firma debido a un error técnico interno.',
-      contextMetadata: { errorTrace: String(caughtError) }
+      message: 'Fallo técnico al verificar la integridad criptográfica.',
+      contextMetadata: { errorTrace: errorDescriptionLiteral }
     });
+
     return false;
   }
 };

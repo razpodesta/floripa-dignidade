@@ -1,24 +1,15 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    /**
-     * @section Gobernanza de Emisión
-     * La raíz del búnker actúa exclusivamente como mediador de configuración.
-     */
     "noEmit": true,
-
-    /** 🛡️ SANEADO Zenith: Preparación para TS 7.0 */
     "ignoreDeprecations": "5.0"
   },
-  /* 🛡️ LEY DEL GATEWAY: Vaciado absoluto. Evita la succión de archivos por otros búnkeres */
+  /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí para evitar colisiones de grafo. */
   "files": [],
   "include": [],
   "references": [
     { "path": "./tsconfig.lib.json" },
-    /**
-     * @section Grafo de Dependencias
-     * Este motor de inteligencia consume el sistema nervioso y el gestor de fallos.
-     */
+    /* --- ENLACES FÍSICOS AL ENJAMBRE (Consumidos por el Cerebro) --- */
     { "path": "../../core/telemetry" },
     { "path": "../../core/exceptions" }
   ]

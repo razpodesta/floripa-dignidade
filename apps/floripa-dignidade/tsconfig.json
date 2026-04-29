@@ -1,68 +1,46 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "preserve",
-    "noEmit": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "Preserve",
-    "moduleResolution": "bundler",
-    "ignoreDeprecations": "5.0",
-    "noUncheckedIndexedAccess": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowJs": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-
-    "plugins": [{ "name": "next" }],
-
-    "outDir": "../../dist/out-tsc/apps/floripa-dignidade",
-    "tsBuildInfoFile": "../../dist/out-tsc/apps/floripa-dignidade/tsconfig.tsbuildinfo",
-
     /**
-     * @section Espejo de Soberanía (Root-Relative Mapping)
-     * SANEADO: Se eliminan los prefijos '../../' para que las rutas coincidan
-     * con el baseUrl del monorepo. Esto erradica el error TS2307.
+     * 🛡️ ESTRATEGIA GATEKEEPER:
+     * Este archivo no emite código ni busca archivos directamente.
+     * Delega la responsabilidad de emisión al 'tsconfig.app.json'.
      */
-    "paths": {
-      /* Layer: CORE */
-      "@floripa-dignidade/analytics": ["libs/core/analytics/src/index.ts"],
-      "@floripa-dignidade/environment-validator": ["libs/core/environment-validator/src/index.ts"],
-      "@floripa-dignidade/exceptions": ["libs/core/exceptions/src/index.ts"],
-      "@floripa-dignidade/routing": ["libs/core/routing/src/index.ts"],
-      "@floripa-dignidade/telemetry": ["libs/core/telemetry/src/index.ts"],
-      "@floripa-dignidade/resend-provider": ["libs/core/communication-providers/resend/src/index.ts"],
-
-      /* Layer: ENGINES */
-      "@floripa-dignidade/health-analysis": ["libs/engines/health-analysis/src/index.ts"],
-      "@floripa-dignidade/health-monitor": ["libs/engines/health-monitor/src/index.ts"],
-      "@floripa-dignidade/search-engine": ["libs/engines/search-engine/src/index.ts"],
-
-      /* Layer: MODULES */
-      "@floripa-dignidade/identity": ["libs/modules/identity/src/index.ts"],
-      "@floripa-dignidade/newsletter": ["libs/modules/newsletter/src/index.ts"],
-      "@floripa-dignidade/social-media": ["libs/modules/social-media/src/index.ts"],
-      "@floripa-dignidade/whatsapp-communication-service": ["libs/modules/whatsapp/communication-service/src/index.ts"],
-
-      /* Layer: SHARED */
-      "@floripa-dignidade/shared": ["libs/shared/src/index.ts"],
-      "@floripa-dignidade/shared/design-system": ["libs/shared/src/lib/design-system/index.ts"],
-      "@floripa-dignidade/shared/ui-primitives": ["libs/shared/src/lib/ui-primitives/index.ts"],
-      "@floripa-dignidade/shared/composite-ui": ["libs/shared/src/lib/composite-ui/index.ts"],
-
-      /* App Local Context */
-      "@/*": ["src/*"]
-    },
-
-    "types": ["node"]
+    "noEmit": true,
+    "ignoreDeprecations": "5.0"
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "index.d.ts",
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "../../dist/apps/floripa-dignidade/.next/types/**/*.ts"
-  ],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
+
+  /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí para evitar colisiones de grafo. */
+  "files": [],
+  "include": [],
+
+  /**
+   * @section Grafo de Referencias Soberanas
+   * Define la jerarquía física de construcción. Nx y TSC utilizan este mapa
+   * para resolver las declaraciones (.d.ts) antes de procesar la App.
+   */
+  "references": [
+    { "path": "./tsconfig.app.json" },
+
+    /* --- CAPA 1: INFRAESTRUCTURA CORE (Cimientos) --- */
+    { "path": "../../libs/core/telemetry" },
+    { "path": "../../core/exceptions" },
+    { "path": "../../core/environment-validator" },
+    { "path": "../../core/routing" },
+
+    /* --- CAPA 2: MOTORES DE INTELIGENCIA (Engines) --- */
+    { "path": "../../libs/engines/impact-analytics-engine" },
+
+    /* --- CAPA 3: DOMINIOS DE NEGOCIO (Modules) --- */
+    { "path": "../../libs/modules/identity" },
+    { "path": "../../libs/modules/pmf-open-data-engine" },
+    /**
+     * 🛡️ SANEADO Zenith: Inyección de referencia territorial.
+     * Necesaria para la resolución de tipos de geolocalización en la App.
+     */
+    { "path": "../../libs/modules/territorial-engine" },
+
+    /* --- CAPA 4: FUNDICIÓN VISUAL (Shared UI & State) --- */
+    { "path": "../../libs/shared" }
+  ]
 }

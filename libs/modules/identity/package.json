@@ -2,10 +2,11 @@
   "name": "@floripa-dignidade/identity",
   "version": "1.1.0",
   "private": true,
-  "description": "Búnker soberano de Gestión de Identidad y Acceso (IAM). Orquesta la autoridad institucional, el RBAC y la validación de perfiles ciudadanos.",
+  "description": "Búnker de Gestão de Identidade e Acesso (IAM) e Soberania de Autoridade. Orquestra a hierarquia institucional de papéis (RBAC), a validação de perfis cidadãos e o controle perimetral de acesso baseado em peso bayesiano de credibilidade.",
   "type": "module",
   "sideEffects": false,
   "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -13,8 +14,6 @@
       "default": "./src/index.ts"
     }
   },
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
   "dependencies": {
     "@floripa-dignidade/environment-validator": "workspace:*",
     "@floripa-dignidade/exceptions": "workspace:*",

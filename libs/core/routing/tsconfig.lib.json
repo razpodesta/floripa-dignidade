@@ -1,57 +1,31 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    /**
-     * @section Gobernanza de Emisión - ISO Technical Rigor
-     * Protocolo OEDP-V17.0 - Build Resilience & Forensic Traceability.
-     */
     "outDir": "../../../dist/out-tsc/libs/core/routing",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/routing/tsconfig.lib.tsbuildinfo",
 
-    /**
-     * @section Aislamiento Soberano (rootDir Enforcement)
-     * Al establecer 'src' como raíz y activar 'emitDeclarationOnly',
-     * bloqueamos fugas de compilación. TSC valida el ADN, SWC ejecuta.
-     */
-    "rootDir": "src",
-    "noEmit": false,
-    "emitDeclarationOnly": true,
+    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
+    "composite": true,           /* Permite la compilación incremental del grafo */
+    "declaration": true,         /* Emite las firmas de tipos (.d.ts) */
+    "declarationMap": true,      /* Mapeo para trazabilidad en el IDE */
+    "emitDeclarationOnly": true, /* Delega la lógica de ejecución a SWC */
+    "rootDir": "src",            /* Blindaje de frontera física */
 
-    /**
-     * @section Integridad del Grafo (Project References)
-     */
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "inlineSources": true,
-
-    /**
-     * @section Resolución Next-Gen (Turbopack Compatible / Next.js 16+)
-     * Verbatim Module Syntax fuerza la separación absoluta entre Tipos y Lógica.
-     */
+    /* --- RESOLUCIÓN NEXT-GEN (Next.js 16 Ready) --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": true, /* Fuerza la separación estricta entre tipos y lógica */
     "isolatedModules": true,
 
-    /** Tipado de Infraestructura Edge/Node */
+    /* --- ADN DEL ENTORNO (Edge Runtime Context) --- */
     "types": ["node"],
-    "lib":["DOM", "DOM.Iterable", "ES2022"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"] /* Necesario para Headers, Requests y Web Crypto */
   },
-
-  /**
-   * @section Alcance de Auditoría Atómica
-   */
   "include": [
     "src/**/*.ts",
     "src/**/*.json"
   ],
-
-  /**
-   * @section Aduana de Exclusión (Anti-Contamination)
-   * Bloqueo físico estricto de artefactos de QA y dependencias superiores.
-   */
-  "exclude":[
+  "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "jest.config.ts",

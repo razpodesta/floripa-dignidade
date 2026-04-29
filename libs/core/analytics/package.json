@@ -2,9 +2,11 @@
   "name": "@floripa-dignidade/analytics",
   "version": "1.0.0",
   "private": true,
+  "description": "Búnker Core de captura de eventos de comportamiento, métricas de rendimiento y Core Web Vitals. Implementa ejecución no bloqueante para optimización de LCP e INP en Next.js 16.",
   "type": "module",
-  "description": "Búnker de captura de eventos de comportamiento y métricas de rendimiento (Web Vitals)",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -15,12 +17,13 @@
   "nx": {
     "tags": [
       "scope:core",
-      "type:core",
+      "type:data",
       "platform:web"
     ]
   },
   "dependencies": {
     "@floripa-dignidade/telemetry": "workspace:*",
+    "@swc/helpers": "~0.5.18",
     "zod": "^3.25.76"
   }
 }

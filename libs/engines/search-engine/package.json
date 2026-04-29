@@ -2,9 +2,11 @@
   "name": "@floripa-dignidade/search-engine",
   "version": "1.0.0",
   "private": true,
+  "description": "Búnker de Descoberta Universal e Indexação Semântica. Orquestra a recuperação de informações mediante busca difusa (Fuzzy Search), garantindo o filtrado por níveis de autoridade institucional (RBAC) e rastreabilidade forense de intenção.",
   "type": "module",
-  "description": "Motor de búsqueda difusa (Fuzzy Search) para el portal de Floripa Dignidade",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -12,16 +14,17 @@
       "default": "./src/index.ts"
     }
   },
+  "dependencies": {
+    "@floripa-dignidade/telemetry": "workspace:*",
+    "@swc/helpers": "~0.5.18",
+    "fuse.js": "^7.3.0",
+    "zod": "^3.25.76"
+  },
   "nx": {
     "tags": [
       "scope:engines",
       "type:logic",
       "platform:isomorphic"
     ]
-  },
-  "dependencies": {
-    "@swc/helpers": "~0.5.18",
-    "fuse.js": "^7.0.0",
-    "zod": "^3.25.76"
   }
 }

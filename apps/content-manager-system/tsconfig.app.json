@@ -1,0 +1,45 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    /* --- GOBERNANZA DE RENDERIZADO NEXT.JS 16 --- */
+    "jsx": "preserve",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "strict": true,
+    "noEmit": false,
+
+    /* --- ESTRATEGIA DE SALIDA --- */
+    "outDir": "../../dist/out-tsc/apps/content-manager-system",
+    "tsBuildInfoFile": "../../dist/out-tsc/apps/content-manager-system/tsconfig.app.tsbuildinfo",
+
+    /* --- ADUANA DE ADN LOCAL --- */
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+
+    /* Soporte para el rastro de hardware de Node.js (Payload context) */
+    "types": ["node"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "index.d.ts",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".next",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
+}

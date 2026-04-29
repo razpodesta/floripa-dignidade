@@ -2,8 +2,11 @@
   "name": "@floripa-dignidade/social-media",
   "version": "1.0.0",
   "private": true,
+  "description": "Búnker de Orquestração de Redes Sociais. Atua como o núcleo de integração multi-plataforma para a difusão de impactos e escuta de eventos em redes externas (Facebook, Instagram, Threads), garantindo o desacoplamento de APIs proprietárias e a integridade do rastro social.",
   "type": "module",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -13,5 +16,12 @@
   },
   "dependencies": {
     "@swc/helpers": "~0.5.18"
+  },
+  "nx": {
+    "tags": [
+      "scope:modules",
+      "type:logic",
+      "platform:isomorphic"
+    ]
   }
 }

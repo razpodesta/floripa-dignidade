@@ -4,6 +4,15 @@
     "noEmit": true,
     "ignoreDeprecations": "5.0"
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["dist", "out-tsc", "node_modules"]
+  /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí. Solo gestión de puentes físicos. */
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./tsconfig.lib.json" },
+    /* --- ENLACES FÍSICOS AL ENJAMBRE (Consumidos por el Motor de Suscripción) --- */
+    { "path": "../../core/telemetry" },
+    { "path": "../../core/exceptions" },
+    { "path": "../../core/environment-validator" },
+    { "path": "../../core/communication-providers/resend" }
+  ]
 }

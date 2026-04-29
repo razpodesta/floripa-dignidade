@@ -1,50 +1,27 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    /**
-     * @section Gobernanza de Emisión - ISO Technical Rigor
-     * Protocolo OEDP-V16.0 - Build Resilience & Forensic Traceability.
-     */
     "outDir": "../../../dist/out-tsc/libs/core/exceptions",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/exceptions/tsconfig.lib.tsbuildinfo",
 
-    /**
-     * @section Aislamiento Soberano (rootDir Enforcement)
-     * SANEADO: Se fuerza la raíz en 'src' y se bloquea la emisión de JS.
-     * Esto erradica el error TS6059 al garantizar que TSC solo audite el código fuente.
-     */
-    "rootDir": "src",
-    "noEmit": false,
-    "emitDeclarationOnly": true,
+    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
+    "composite": true,           /* Habilita la compilación incremental en el grafo */
+    "declaration": true,         /* Emite las firmas de tipos (.d.ts) */
+    "declarationMap": true,      /* Mapeo para depuración en el IDE */
+    "emitDeclarationOnly": true, /* Delega la lógica a SWC/Turbopack */
+    "rootDir": "src",            /* Blindaje de frontera física */
 
-    /**
-     * @section Integridad del ADN (Project References)
-     * SANEADO: Configuración de Grado Enterprise para la sincronización del grafo.
-     */
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "inlineSources": true,
-
-    /**
-     * @section Resolución Next-Gen
-     * Sincronización absoluta con el motor de construcción de Vercel/Next.js.
-     */
+    /* --- RESOLUCIÓN NEXT-GEN (Next.js 16 Ready) --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true, /* Fuerza la pureza de importación de tipos */
+    "isolatedModules": true,
+
+    /* --- ADN DEL ENTORNO --- */
     "types": [],
     "lib": ["ES2022"]
   },
-
-  /**
-   * @section Alcance de Auditoría Atómica
-   */
   "include": ["src/**/*.ts", "src/**/*.json"],
-
-  /**
-   * @section Aduana de Exclusión (Anti-Contamination)
-   * SANEADO: Prohibición física de acceso a memorias volátiles o externas.
-   */
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",

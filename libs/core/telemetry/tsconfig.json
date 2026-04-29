@@ -1,21 +1,15 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    /**
-     * @section Gobernanza de Emisión
-     * La raíz del búnker actúa exclusivamente como mediador de configuración.
-     */
     "noEmit": true,
-
-    /** 🛡️ SANEADO Zenith: Preparación para TS 7.0 */
     "ignoreDeprecations": "5.0"
   },
-  /* 🛡️ LEY DEL GATEWAY: Vaciado absoluto para forzar las Project References */
+  /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí. Solo orquestación de referencias. */
   "files": [],
   "include": [],
-  "references":[
+  "references": [
     { "path": "./tsconfig.lib.json" },
-    /* Puente físico exigido por el átomo ReportForensicException.ts */
+    /* --- ENLACES FÍSICOS AL ENJAMBRE (Grafo Sincronizado) --- */
     { "path": "../exceptions" }
   ]
 }

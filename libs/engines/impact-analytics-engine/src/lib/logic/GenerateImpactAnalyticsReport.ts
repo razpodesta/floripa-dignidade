@@ -1,10 +1,10 @@
 /**
  * @section Impact Analytics - Comprehensive Report Orchestrator
- * @description Motor superior que ensambla la analítica bayesiana global y
- * el desglose territorial. Actúa como la "Mente" del búnker estadístico.
+ * @description Motor superior encargado de ensamblar la analítica bayesiana global
+ * y el desglose territorial (Mapa de Calor).
  *
- * Protocolo OEDP-V16.0 - Swarm Intelligence & High Performance SRE.
- * SANEADO Zenith: Integración total de átomos funcionales. Responsabilidad Única.
+ * Protocolo OEDP-V17.0 - High Performance SRE & Swarm Intelligence.
+ * SANEADO Zenith: Desacoplamiento total de 'reputation-engine' y resolución de TS6059/TS6307.
  *
  * @author Raz Podestá - MetaShark Tech
  */
@@ -16,31 +16,29 @@ import {
 
 import { InternalSystemException } from '@floripa-dignidade/exceptions';
 
-/* 1. ADN del Dominio */
-import { TerritorialImpactReportSchema } from '../schemas/TerritorialImpactReport.schema';
+/* 1. ADN Estructural del Dominio (Interfaces Internas) */
 import type { ITerritorialImpactReport } from '../schemas/TerritorialImpactReport.schema';
 import type { IPopularAcceptanceIndicator } from '../schemas/PopularAcceptanceIndicator.schema';
+import type { IEvaluationInput } from '../schemas/EvaluationInput.schema';
 
-/* 2. ADN de Reputación (Entrada de Datos) */
-import type { IPublicEvaluationPulse } from '@floripa-dignidade/reputation-engine';
-
-/* 3. Enjambre de Átomos Matemáticos y Geográficos */
+/* 2. Enjambre Atómico de Inteligencia */
 import { AggregateBayesianImpactMetrics } from './AggregateBayesianImpactMetrics';
 import { AggregateTerritorialSentiment } from './atomic/AggregateTerritorialSentiment';
+import { ValidateTerritorialReportADN } from './atomic/ValidateTerritorialReportADN';
 
-/** Identificador técnico del orquestador. */
-const IMPACT_ORCHESTRATOR_IDENTIFIER = 'IMPACT_ANALYTICS_REPORT_ENGINE';
+/** Identificador técnico del orquestador para el Neural Sentinel. */
+const IMPACT_REPORT_ORCHESTRATOR_IDENTIFIER = 'IMPACT_ANALYTICS_REPORT_ENGINE';
 
 /**
- * Genera un reporte de impacto multidimensional basado en pulsos civiles.
+ * Genera un reporte de impacto multidimensional basado en entradas de evaluación.
  *
  * @param targetEntityIdentifier - UUID de la entidad bajo auditoría.
- * @param evaluationPulsesCollection - Universo de datos capturado por el Reputation Engine.
+ * @param evaluationInputsCollection - Colección agnóstica de entradas (Independiente de módulos).
  * @returns {Promise<{ globalIndicator: IPopularAcceptanceIndicator, territorialReport: ITerritorialImpactReport }>}
  */
 export const GenerateImpactAnalyticsReport = async (
   targetEntityIdentifier: string,
-  evaluationPulsesCollection: IPublicEvaluationPulse[]
+  evaluationInputsCollection: IEvaluationInput[]
 ): Promise<{
   readonly globalIndicator: IPopularAcceptanceIndicator;
   readonly territorialReport: ITerritorialImpactReport;
@@ -48,32 +46,25 @@ export const GenerateImpactAnalyticsReport = async (
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
   return await TraceExecutionTime(
-    IMPACT_ORCHESTRATOR_IDENTIFIER,
-    'EXECUTE_FULL_ANALYTICS_PIPELINE',
+    IMPACT_REPORT_ORCHESTRATOR_IDENTIFIER,
+    'EXECUTE_FULL_ANALYTICS_REPORT_PIPELINE',
     correlationIdentifier,
     async () => {
       try {
-
-        /**
-         * FASE 1: Análisis Bayesiano Global (Reputación Ponderada)
-         * Determina el score oficial neutralizando el ruido de bots.
-         */
+        // FASE 1: ANÁLISIS BAYESIANO GLOBAL
         const globalIndicator = await AggregateBayesianImpactMetrics(
           targetEntityIdentifier,
-          evaluationPulsesCollection
+          evaluationInputsCollection
         );
 
-        /**
-         * FASE 2: Desglose Territorial (Geolocalización del Sentimiento)
-         * Agrupa y pondera los datos por distritos de Florianópolis.
-         */
+        // FASE 2: DESGLOSE TERRITORIAL (Geographic Clustering)
         const rawTerritorialClusters = await AggregateTerritorialSentiment(
-          evaluationPulsesCollection,
+          evaluationInputsCollection,
           correlationIdentifier
         );
 
-        // FASE 3: Validación de ADN del Reporte Territorial
-        const territorialReport = TerritorialImpactReportSchema.parse({
+        // FASE 3: CONSOLIDACIÓN Y ADUANA DE ADN
+        const territorialReport = ValidateTerritorialReportADN({
           targetEntityIdentifier,
           territorialClustersCollection: rawTerritorialClusters,
           generationTimestampISO: new Date().toISOString()
@@ -81,14 +72,14 @@ export const GenerateImpactAnalyticsReport = async (
 
         return { globalIndicator, territorialReport };
 
-      } catch (caughtError: unknown) {
-        const errorDescriptionLiteral = caughtError instanceof Error
-          ? caughtError.message
-          : String(caughtError);
+      } catch (caughtExecutionError: unknown) {
+        const errorDescriptionLiteral = caughtExecutionError instanceof Error
+          ? caughtExecutionError.message
+          : String(caughtExecutionError);
 
         throw new InternalSystemException('FALLO_CRITICO_EN_GENERACION_DE_REPORTE_SRE', {
           originalErrorLiteral: errorDescriptionLiteral,
-          targetEntityIdentifier,
+          evaluatedEntityId: targetEntityIdentifier,
           correlationIdentifier
         });
       }

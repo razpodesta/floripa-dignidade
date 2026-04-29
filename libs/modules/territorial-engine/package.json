@@ -2,9 +2,11 @@
   "name": "@floripa-dignidade/territorial-engine",
   "version": "1.0.0",
   "private": true,
+  "description": "Búnker de Inteligência Territorial e Geográfica. Orquestra a sincronização com as bases de dados abertas do IBGE para a classificação de impacto social por distritos e bairros de Florianópolis, garantindo a integridade do mapeamento regional.",
   "type": "module",
-  "description": "Motor de Gestión Territorial basado en estándares oficiales del IBGE para la clasificación de impacto social.",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -15,12 +17,13 @@
   "dependencies": {
     "@floripa-dignidade/exceptions": "workspace:*",
     "@floripa-dignidade/telemetry": "workspace:*",
+    "@swc/helpers": "~0.5.18",
     "zod": "^3.25.76"
   },
   "nx": {
     "tags": [
       "scope:modules",
-      "type:data",
+      "type:logic",
       "platform:isomorphic"
     ]
   }

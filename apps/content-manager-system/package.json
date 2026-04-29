@@ -2,11 +2,14 @@
   "name": "@floripa-dignidade/content-manager-system",
   "version": "1.1.0",
   "private": true,
+  "description": "Búnker de Gestión de Contenidos Soberano basado en Payload 3.0. Orquesta la persistencia multimedia, gobernanza institucional y el rastro de identidad civil.",
   "type": "module",
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "nx": {
     "tags": [
       "scope:app",
-      "role:cms",
+      "type:app",
       "platform:node"
     ]
   },

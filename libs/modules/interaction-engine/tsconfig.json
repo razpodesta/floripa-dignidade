@@ -1,0 +1,17 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "ignoreDeprecations": "5.0"
+  },
+  /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí para evitar colisiones de grafo. */
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./tsconfig.lib.json" },
+    /* --- ENLACES FÍSICOS AL ENJAMBRE (Consumidos por el Sensor de Sentimiento) --- */
+    { "path": "../../core/telemetry" },
+    { "path": "../../core/exceptions" },
+    { "path": "../identity" }
+  ]
+}

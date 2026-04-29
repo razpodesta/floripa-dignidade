@@ -1,0 +1,13 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "ignoreDeprecations": "5.0"
+  },
+  /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí para evitar colisiones de grafo. */
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./tsconfig.lib.json" }
+  ]
+}

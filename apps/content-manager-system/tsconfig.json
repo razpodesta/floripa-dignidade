@@ -1,92 +1,20 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    /**
-     * @section Gobernanza de Renderizado
-     * Preserva la gramática JSX para que sea procesada por el motor Turbopack.
-     */
-    "jsx": "preserve",
     "noEmit": true,
-    "emitDeclarationOnly": false,
-    "lib": ["dom", "dom.iterable", "esnext"],
-
-    /**
-     * @section Resolución de Próxima Generación
-     * SANEADO Zenith: Alineación con Next.js 15 y supresión de deprecaciones TS 7.0.
-     */
-    "module": "Preserve",
-    "moduleResolution": "bundler",
-    "ignoreDeprecations": "5.0",
-
-    /**
-     * @section Rigor de ADN (ISO 25010)
-     */
-    "noUncheckedIndexedAccess": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowJs": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-
-    "outDir": "../../dist/out-tsc/apps/content-manager-system",
-    "tsBuildInfoFile": "../../dist/out-tsc/apps/content-manager-system/tsconfig.tsbuildinfo",
-
-    /**
-     * @section Espejo de Soberanía (Root-Relative Mapping)
-     * SANEADO: Mapeo explícito de fronteras para evitar la paradoja del BaseUrl
-     * en entornos Linux (Vercel).
-     */
-    "paths": {
-      /* Layer: CORE */
-      "@floripa-dignidade/analytics": ["libs/core/analytics/src/index.ts"],
-      "@floripa-dignidade/environment-validator": ["libs/core/environment-validator/src/index.ts"],
-      "@floripa-dignidade/exceptions": ["libs/core/exceptions/src/index.ts"],
-      "@floripa-dignidade/routing": ["libs/core/routing/src/index.ts"],
-      "@floripa-dignidade/telemetry": ["libs/core/telemetry/src/index.ts"],
-      "@floripa-dignidade/resend-provider": ["libs/core/communication-providers/resend/src/index.ts"],
-
-      /* Layer: ENGINES */
-      "@floripa-dignidade/health-analysis": ["libs/engines/health-analysis/src/index.ts"],
-      "@floripa-dignidade/health-monitor": ["libs/engines/health-monitor/src/index.ts"],
-      "@floripa-dignidade/search-engine": ["libs/engines/search-engine/src/index.ts"],
-
-      /* Layer: MODULES */
-      "@floripa-dignidade/identity": ["libs/modules/identity/src/index.ts"],
-      "@floripa-dignidade/newsletter": ["libs/modules/newsletter/src/index.ts"],
-      "@floripa-dignidade/social-media": ["libs/modules/social-media/src/index.ts"],
-      "@floripa-dignidade/whatsapp-communication-service": ["libs/modules/whatsapp/communication-service/src/index.ts"],
-
-      /* Layer: SHARED */
-      "@floripa-dignidade/shared": ["libs/shared/src/index.ts"],
-      "@floripa-dignidade/shared/design-system": ["libs/shared/src/lib/design-system/index.ts"],
-      "@floripa-dignidade/shared/ui-primitives": ["libs/shared/src/lib/ui-primitives/index.ts"],
-      "@floripa-dignidade/shared/composite-ui": ["libs/shared/src/lib/composite-ui/index.ts"],
-
-      /* App Local Context */
-      "@/*": ["src/*"]
-    },
-
-    /** Soporte soberano para Node.js y el rastro de Next.js */
-    "types": ["node"]
+    "ignoreDeprecations": "5.0"
   },
-
-  /**
-   * @section Alcance de Auditoría
-   */
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "index.d.ts",
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "../../dist/apps/content-manager-system/.next/types/**/*.ts"
-  ],
-
-  "exclude": ["node_modules", "dist", ".next", "**/*.spec.ts", "**/*.test.ts"]
+  "files": [],
+  "include": [],
+  /* --- SOVEREIGN PROJECT REFERENCES --- */
+  /* 🛡️ LEY DEL GRAFO: Enlaces físicos a los búnkeres consumidos por el CMS */
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    /* Infraestructura Core */
+    { "path": "../../libs/core/environment-validator" },
+    { "path": "../../libs/core/telemetry" },
+    { "path": "../../libs/core/exceptions" },
+    /* Dominios de Negocio */
+    { "path": "../../libs/modules/identity" }
+  ]
 }

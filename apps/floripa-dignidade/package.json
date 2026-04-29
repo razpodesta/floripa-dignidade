@@ -2,7 +2,17 @@
   "name": "@floripa-dignidade/floripa-dignidade",
   "version": "1.1.0",
   "private": true,
+  "description": "Portal Ciudadano Soberano de Floripa Dignidade. Orquestador final del embudo de conversión social, transparencia territorial y auditoría de Derechos Humanos.",
   "type": "module",
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
+  "nx": {
+    "tags": [
+      "scope:app",
+      "type:app",
+      "platform:web"
+    ]
+  },
   "dependencies": {
     "next": "~16.1.6",
     "react": "^19.0.0",

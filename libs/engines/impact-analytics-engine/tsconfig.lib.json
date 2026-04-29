@@ -3,17 +3,43 @@
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc/libs/engines/impact-analytics-engine",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/engines/impact-analytics-engine/tsconfig.lib.tsbuildinfo",
+
+    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+
+    /* --- RESOLUCIÓN NEXT-GEN --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    /*
+       🛡️ SANEADO Zenith: Redirección de Grafo (Fix TS6059)
+       Obligamos al compilador a buscar los tipos (.d.ts) en el directorio de salida
+       en lugar de intentar leer los fuentes (.ts) de las carpetas core.
+    */
+    "paths": {
+      "@floripa-dignidade/telemetry": ["../../../dist/out-tsc/libs/core/telemetry/src/index.d.ts"],
+      "@floripa-dignidade/exceptions": ["../../../dist/out-tsc/libs/core/exceptions/src/index.d.ts"],
+      "@floripa-dignidade/environment-validator": ["../../../dist/out-tsc/libs/core/environment-validator/src/index.d.ts"]
+    },
+
     "types": [],
-    "lib": ["DOM", "DOM.Iterable", "ES2022"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "jest.config.ts",
     "dist",
-    "out-tsc"
+    "out-tsc",
+    "node_modules",
+    "../../../dist",
+    "../../../node_modules"
   ]
 }

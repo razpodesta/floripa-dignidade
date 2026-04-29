@@ -1,11 +1,11 @@
 /**
- * @section Identity Logic - Identity Authority Calculator
- * @description Átomo encargado de computar el coeficiente de credibilidad
- * bayesiana del ciudadano. Evalúa la antigüedad, el nivel de verificación
- * y la vinculación social para determinar el peso de su voz en la red.
+ * @section Identity Logic - Identity Authority Orchestrator
+ * @description Orquestrador atômico que computa a autoridade bayesiana do cidadão.
+ * Consolida bônus sociais, verificação documental e antiguidade em um único
+ * coeficiente de influência institucional.
  *
- * Protocolo OEDP-V16.0 - Functional Atomicity & High Performance SRE.
- * Vision: Anti-Spam & Verified Social Impact.
+ * Protocolo OEDP-V17.0 - Swarm Intelligence & High Performance SRE.
+ * SANEADO Zenith: Atomização da lógica de datas e validação por Aduana Zod.
  *
  * @author Raz Podestá - MetaShark Tech
  */
@@ -16,83 +16,116 @@ import {
   TraceExecutionTime
 } from '@floripa-dignidade/telemetry';
 
-/* 1. ADN Estructural (Verbatim Module Syntax) */
-import type { IUserIdentity } from '../../schemas/UserIdentity.schema';
+import { InternalSystemException } from '@floripa-dignidade/exceptions';
+
+/* 1. ADN Estructural (Contracts) */
+import {
+  CalculateIdentityAuthoritySchema,
+  IdentityAuthorityResultSchema
+} from './schemas/CalculateIdentityAuthority.schema';
+
+import type {
+  ICalculateIdentityAuthorityParameters,
+  IIdentityAuthorityResult
+} from './schemas/CalculateIdentityAuthority.schema';
+
+/* 2. Átomos de Cálculo Interno */
+import { CalculateSeniorityBonus } from './CalculateSeniorityBonus';
+
+/** Identificador técnico para auditoria cognitiva. */
+const AUTHORITY_ENGINE_IDENTIFIER = 'IDENTITY_AUTHORITY_CALCULATOR';
 
 /**
- * @section Pesos Algorítmicos (Constants)
- * Define la influencia de cada factor en la autoridad final del ciudadano.
+ * @section Constantes de Ponderação (Ground Truth)
  */
-const BASE_TRUST_WEIGHT_NUMERIC = 0.1;           // Peso inicial para anónimos.
-const SOCIAL_LINK_BONUS_NUMERIC = 0.2;           // Bonus por vincular Google/Apple/X.
-const LEGAL_VERIFICATION_BONUS_NUMERIC = 0.5;    // Bonus por validación documental.
-const SENIORITY_MAXIMUM_BONUS_NUMERIC = 0.2;     // Bonus máximo por antigüedad (1 año).
+const BASE_ANONYMOUS_TRUST_WEIGHT_NUMERIC = 0.1;
+const SOCIAL_FEDERATION_BONUS_NUMERIC = 0.2;
+const LEGAL_VERIFICATION_BONUS_NUMERIC = 0.5;
 
 /**
- * Calcula el coeficiente de autoridad institucional de una identidad.
+ * Executa o cálculo integral da autoridade institucional de uma identidade.
  *
- * @param citizenIdentitySnapshot - ADN de la identidad capturada en la sesión.
- * @returns {Promise<number>} Coeficiente de confianza normalizado entre 0.0 y 1.0.
+ * @param identitySnapshot - ADN da identidade capturada na sessão.
+ * @returns {Promise<IIdentityAuthorityResult>} Resultado validado e auditado.
  */
 export const CalculateIdentityAuthority = async (
-  citizenIdentitySnapshot: IUserIdentity
-): Promise<number> => {
+  identitySnapshot: ICalculateIdentityAuthorityParameters
+): Promise<IIdentityAuthorityResult> => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
   return await TraceExecutionTime(
-    'IDENTITY_AUTHORITY_CALCULATOR',
-    'EXECUTE_BAYESIAN_WEIGHT_COMPUTATION',
+    AUTHORITY_ENGINE_IDENTIFIER,
+    'EXECUTE_BAYESIAN_AUTHORITY_COMPUTATION',
     correlationIdentifier,
     async () => {
+      try {
+        // 1. ADUANA DE ENTRADA (Input Validation)
+        const validationInputResult = CalculateIdentityAuthoritySchema.safeParse(identitySnapshot);
 
-      // 1. CÁLCULO DE BASE SOCIAL
-      // El respaldo de un tercero (OAuth2) eleva la confianza inicial.
-      const hasSocialLinkBoolean = citizenIdentitySnapshot.socialProviderIdentifier !== 'INTERNAL_INFRASTRUCTURE';
-      let currentAuthorityScoreNumeric = BASE_TRUST_WEIGHT_NUMERIC;
-
-      if (hasSocialLinkBoolean) {
-        currentAuthorityScoreNumeric += SOCIAL_LINK_BONUS_NUMERIC;
-      }
-
-      // 2. CÁLCULO DE VERIFICACIÓN SRE
-      // La validación humana de documentos es el factor de mayor peso.
-      if (citizenIdentitySnapshot.isIdentityLegallyVerifiedBoolean) {
-        currentAuthorityScoreNumeric += LEGAL_VERIFICATION_BONUS_NUMERIC;
-      }
-
-      // 3. CÁLCULO DE ANTIGÜEDAD (Loyalty Factor)
-      const accountCreationDate = new Date(citizenIdentitySnapshot.occurrenceTimestampISO);
-      const currentDate = new Date();
-      const accountAgeInDaysQuantity = Math.floor(
-        (currentDate.getTime() - accountCreationDate.getTime()) / (1000 * 3600 * 24)
-      );
-
-      /**
-       * Escalado de antigüedad: 365 días para alcanzar el bonus máximo.
-       */
-      const seniorityMultiplierNumeric = Math.min(accountAgeInDaysQuantity / 365, 1);
-      currentAuthorityScoreNumeric += (seniorityMultiplierNumeric * SENIORITY_MAXIMUM_BONUS_NUMERIC);
-
-      // 4. NORMALIZACIÓN DE SALIDA
-      // Garantizamos que el score nunca exceda el rango 0.0 - 1.0.
-      const finalAuthorityCoefficientNumeric = Math.min(currentAuthorityScoreNumeric, 1.0);
-
-      // 5. REPORTE DE AUDITORÍA COGNITIVA
-      void EmitTelemetrySignal({
-        severityLevel: 'INFO',
-        moduleIdentifier: 'IDENTITY_AUTHORITY_CALCULATOR',
-        operationCode: 'AUTHORITY_COEFFICIENT_GENERATED',
-        correlationIdentifier,
-        message: 'IDENTITY.LOGS.AUTHORITY_CALCULATED',
-        contextMetadata: {
-          citizenIdentifier: citizenIdentitySnapshot.identityIdentifier,
-          authorityScore: finalAuthorityCoefficientNumeric,
-          accountAgeInDays: accountAgeInDaysQuantity,
-          isVerified: citizenIdentitySnapshot.isIdentityLegallyVerifiedBoolean
+        if (!validationInputResult.success) {
+          throw new Error('INVALID_IDENTITY_DATA_FOR_CALCULATION');
         }
-      });
 
-      return finalAuthorityCoefficientNumeric;
+        const validatedIdentity = validationInputResult.data;
+        let currentAuthorityScoreNumeric = BASE_ANONYMOUS_TRUST_WEIGHT_NUMERIC;
+
+        // 2. BÔNUS DE FEDERAÇÃO SOCIAL
+        const isFederatedIdentityBoolean = validatedIdentity.socialProviderIdentifier !== 'INTERNAL_INFRASTRUCTURE';
+        if (isFederatedIdentityBoolean) {
+          currentAuthorityScoreNumeric += SOCIAL_FEDERATION_BONUS_NUMERIC;
+        }
+
+        // 3. BÔNUS DE SOBERANIA LEGAL (Documental)
+        if (validatedIdentity.isIdentityLegallyVerifiedBoolean) {
+          currentAuthorityScoreNumeric += LEGAL_VERIFICATION_BONUS_NUMERIC;
+        }
+
+        // 4. BÔNUS DE ANTIGUIDADE (Delegado ao Átomo Matemático)
+        const {
+          daysSinceActivationQuantity,
+          seniorityBonusNumeric
+        } = CalculateSeniorityBonus(validatedIdentity.occurrenceTimestampISO);
+
+        currentAuthorityScoreNumeric += seniorityBonusNumeric;
+
+        // 5. NORMALIZAÇÃO E CONSTRUÇÃO DO RESULTADO
+        const finalCoefficientNumeric = Math.min(currentAuthorityScoreNumeric, 1.0);
+
+        const calculationResultSnapshot: IIdentityAuthorityResult = {
+          authorityCoefficientNumeric: finalCoefficientNumeric,
+          daysSinceActivationQuantity,
+          isVerifiedHumanBoolean: validatedIdentity.isIdentityLegallyVerifiedBoolean
+        };
+
+        // 6. ADUANA DE SAÍDA (Output Validation)
+        const validatedOutput = IdentityAuthorityResultSchema.parse(calculationResultSnapshot);
+
+        // 7. REPORTE DE TELEMETRIA (Audit Trail)
+        void EmitTelemetrySignal({
+          severityLevel: 'INFO',
+          moduleIdentifier: AUTHORITY_ENGINE_IDENTIFIER,
+          operationCode: 'AUTHORITY_SCORE_GENERATED',
+          correlationIdentifier,
+          message: 'IDENTITY.LOGS.AUTHORITY_CALCULATED',
+          contextMetadata: {
+            citizenId: validatedIdentity.identityIdentifier,
+            finalScore: finalCoefficientNumeric,
+            daysActive: daysSinceActivationQuantity
+          }
+        });
+
+        return validatedOutput;
+
+      } catch (caughtError: unknown) {
+        const errorDescriptionLiteral = caughtError instanceof Error
+          ? caughtError.message
+          : String(caughtError);
+
+        throw new InternalSystemException('FALLO_EN_MOTOR_DE_AUTORIDAD_SRE', {
+          originalError: errorDescriptionLiteral,
+          correlationIdentifier
+        });
+      }
     }
   );
 };

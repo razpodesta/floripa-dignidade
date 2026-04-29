@@ -2,9 +2,11 @@
   "name": "@floripa-dignidade/newsletter",
   "version": "1.1.0",
   "private": true,
-  "description": "Motor soberano de captación ciudadana, orquestación de comunicaciones Double Opt-In e integración con proveedores transaccionales.",
+  "description": "Búnker de Gestão de Newsletters e Captação de Cidadãos. Orquestra o ciclo de vida de assinaturas via protocolo Double Opt-In, integrado com provedores de comunicação transacional e persistência Cloud-Sovereign para a rede de transparência.",
   "type": "module",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -12,19 +14,18 @@
       "default": "./src/index.ts"
     }
   },
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
   "dependencies": {
     "@floripa-dignidade/exceptions": "workspace:*",
     "@floripa-dignidade/resend-provider": "workspace:*",
     "@floripa-dignidade/telemetry": "workspace:*",
+    "@swc/helpers": "~0.5.18",
     "zod": "^3.25.76"
   },
   "nx": {
     "tags": [
       "scope:modules",
       "type:logic",
-      "platform:node"
+      "platform:isomorphic"
     ]
   }
 }

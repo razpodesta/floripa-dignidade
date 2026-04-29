@@ -2,9 +2,11 @@
   "name": "@floripa-dignidade/impact-analytics-engine",
   "version": "1.0.0",
   "private": true,
+  "description": "Búnker de Inteligência Estatística e Agregação Bayesiana. Orquestra a transformação de pulsos de reputação e dados de transparência em indicadores de impacto social e aceitação popular de grau forense, neutralizando ruído e ataques de automação.",
   "type": "module",
-  "description": "Búnker de Inteligencia Estadística, Análisis de Impacto Social y Termómetro de Aceptación Popular.",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -14,8 +16,9 @@
   },
   "dependencies": {
     "@floripa-dignidade/exceptions": "workspace:*",
-    "@floripa-dignidade/telemetry": "workspace:*",
     "@floripa-dignidade/reputation-engine": "workspace:*",
+    "@floripa-dignidade/telemetry": "workspace:*",
+    "@swc/helpers": "~0.5.18",
     "zod": "^3.25.76"
   },
   "nx": {

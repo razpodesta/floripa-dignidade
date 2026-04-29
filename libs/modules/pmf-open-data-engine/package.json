@@ -1,0 +1,31 @@
+{
+  "name": "@floripa-dignidade/pmf-open-data-engine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Búnker de Inteligência de Dados Abertos e Auditoria Fiscal. Orquestra a extração, normalização e assinatura criptográfica da execução orçamentária da Prefeitura de Florianópolis (PMF), integrando o rastro de gastos públicos ao ecossistema de impacto social.",
+  "type": "module",
+  "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@floripa-dignidade/environment-validator": "workspace:*",
+    "@floripa-dignidade/exceptions": "workspace:*",
+    "@floripa-dignidade/telemetry": "workspace:*",
+    "@swc/helpers": "~0.5.18",
+    "zod": "^3.25.76"
+  },
+  "nx": {
+    "tags": [
+      "scope:modules",
+      "type:data",
+      "platform:isomorphic"
+    ]
+  }
+}

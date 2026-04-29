@@ -2,9 +2,11 @@
   "name": "@floripa-dignidade/reputation-engine",
   "version": "1.0.0",
   "private": true,
+  "description": "Búnker de Gestão de Credibilidade e Reputação Soberana. Orquestra a integridade de avaliações públicas sob o padrão ISO 20488, garantindo a captura de pulsos de confiança e a auditoria ética de depoimentos cidadãos para a rede de transparência.",
   "type": "module",
-  "description": "Búnker de Gestión de Credibilidad, Reputación Soberana y Auditoría de Confianza ISO 20488.",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -15,6 +17,7 @@
   "dependencies": {
     "@floripa-dignidade/exceptions": "workspace:*",
     "@floripa-dignidade/telemetry": "workspace:*",
+    "@swc/helpers": "~0.5.18",
     "zod": "^3.25.76"
   },
   "nx": {

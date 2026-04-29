@@ -4,11 +4,17 @@
     "noEmit": true,
     "ignoreDeprecations": "5.0"
   },
-  "include": [],
+  /* 🛡️ LEY DEL ORQUESTADOR: No compilar nada aquí. Solo gestión de puentes físicos. */
   "files": [],
+  "include": [],
   "references": [
-    {
-      "path": "./tsconfig.lib.json"
-    }
+    { "path": "./tsconfig.lib.json" },
+    /*
+       🛡️ SANEADO: Referencias físicas de proyecto.
+       Garantizan que Nx compile las dependencias antes que este motor.
+    */
+    { "path": "../../core/telemetry" },
+    { "path": "../../core/exceptions" },
+    { "path": "../../core/environment-validator" }
   ]
 }

@@ -4,17 +4,18 @@
     "noEmit": true,
     "ignoreDeprecations": "5.0"
   },
+  /* 🛡️ LEY DEL ORQUESTADOR: Puentes físicos obligatorios para evitar errores TS6059/TS6307 */
   "files": [],
   "include": [],
   "references": [
     { "path": "./tsconfig.lib.json" },
-    /**
-     * @section Grafo de Dependencias
-     * SANEADO Zenith: Puentes obligatorios para resolver TS6059/TS6307.
-     */
+    /* Infraestructura Core */
     { "path": "../../core/telemetry" },
     { "path": "../../core/exceptions" },
     { "path": "../../core/environment-validator" },
-    { "path": "../identity" }
+    /* Dominios de Dependencia */
+    { "path": "../identity" },
+    /* 🛡️ SANEADO: Referencia vital para el consumo de useGlobalStateStore en los Hooks */
+    { "path": "../../shared" }
   ]
 }

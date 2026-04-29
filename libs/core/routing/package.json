@@ -2,9 +2,11 @@
   "name": "@floripa-dignidade/routing",
   "version": "1.0.0",
   "private": true,
+  "description": "Búnker Core de interceptación de frontera y orquestación de ruteo internacionalizado. Gestiona la soberanía lingüística y el control de acceso perimetral en el Edge Runtime de Next.js 16.",
   "type": "module",
-  "description": "Búnker soberano de interceptación de solicitudes y orquestación de rutas internacionalizadas",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -26,6 +28,6 @@
     "zod": "^3.25.76"
   },
   "peerDependencies": {
-    "next": ">=15.0.0"
+    "next": "~16.1.6"
   }
 }

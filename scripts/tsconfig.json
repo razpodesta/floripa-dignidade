@@ -2,9 +2,16 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "ignoreDeprecations": "5.0",
-    "types": ["node"]
+    "ignoreDeprecations": "5.0"
   },
-  "include": ["src/**/*.ts", "src/**/*.json"],
-  "exclude": ["dist", "out-tsc", "node_modules"]
+  /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí. Solo gestión de puentes físicos. */
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./tsconfig.lib.json" },
+    /* --- ENLACES FÍSICOS AL ENJAMBRE (Consumidos por los Triggers) --- */
+    { "path": "../libs/tools" },
+    { "path": "../libs/core/telemetry" },
+    { "path": "../libs/core/exceptions" }
+  ]
 }

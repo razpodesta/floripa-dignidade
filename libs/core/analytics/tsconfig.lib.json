@@ -3,8 +3,31 @@
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc/libs/core/analytics",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/analytics/tsconfig.lib.tsbuildinfo",
-    "lib": ["DOM", "DOM.Iterable", "ES2022"]
+
+    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+
+    /* --- RESOLUCIÓN NEXT-GEN --- */
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    /* --- LIBRERÍAS DE HARDWARE (Web & Workers) --- */
+    "lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"],
+    "types": []
   },
   "include": ["src/**/*.ts", "src/**/*.json"],
-  "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts", "jest.config.ts", "dist", "out-tsc"]
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "jest.config.ts",
+    "dist",
+    "out-tsc",
+    "node_modules"
+  ]
 }

@@ -1,0 +1,35 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc/libs/modules/interaction-engine",
+    "tsBuildInfoFile": "../../../dist/out-tsc/libs/modules/interaction-engine/tsconfig.lib.tsbuildinfo",
+
+    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
+    "composite": true,           /* Habilita la compilación incremental de interações */
+    "declaration": true,         /* Emite as firmas de tipos (.d.ts) para o Portal e CMS */
+    "declarationMap": true,      /* Mapeamento para rastreabilidade de suporte no IDE */
+    "emitDeclarationOnly": true, /* Delega a lógica ao motor SWC/Turbopack */
+    "rootDir": "src",            /* Blindagem de fronteira física absoluta (Fix TS6059) */
+
+    /* --- RESOLUÇÃO NEXT-GEN (Next.js 16 Ready) --- */
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true, /* Separação estrita entre tipos e lógica de interação */
+    "isolatedModules": true,
+
+    /* --- ADN DO AMBIENTE (Isomorphic Interaction Context) --- */
+    "types": [],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"] /* Suporte para eventos de UI e telemetria */
+  },
+  "include": ["src/**/*.ts", "src/**/*.json"],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "jest.config.ts",
+    "dist",
+    "out-tsc",
+    "node_modules",
+    "../../../dist",
+    "../../../node_modules"
+  ]
+}

@@ -2,9 +2,11 @@
   "name": "@floripa-dignidade/tools",
   "version": "1.0.0",
   "private": true,
+  "description": "Búnker de Ferramentas e Automação. Orquestra os scripts de suporte ao desenvolvimento, o compilador linguístico (Internationalization Weaver) e os processos de auditoria forense do monorepo Floripa Dignidade.",
   "type": "module",
   "sideEffects": false,
-  "description": "Búnker de herramientas de automatización, compilación lingüística y auditoría forense",
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -12,18 +14,18 @@
       "default": "./src/index.ts"
     }
   },
-  "nx": {
-    "tags": [
-      "scope:tools",
-      "type:tool",
-      "platform:node"
-    ]
-  },
   "dependencies": {
     "@swc/helpers": "~0.5.18",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@types/node": "20.19.9"
+  },
+  "nx": {
+    "tags": [
+      "scope:tools",
+      "type:tool",
+      "platform:node"
+    ]
   }
 }

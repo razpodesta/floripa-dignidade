@@ -1,8 +1,15 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true
+    "noEmit": true,
+    "ignoreDeprecations": "5.0"
   },
-  "include": ["src/**/*.ts", "src/**/*.json"],
-  "exclude": ["dist", "out-tsc", "node_modules"]
+  /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí para evitar TS6059 */
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./tsconfig.lib.json" },
+    /* --- GRAFO DE DEPENDENCIAS (Búnkeres consumidos) --- */
+    { "path": "../telemetry" }
+  ]
 }

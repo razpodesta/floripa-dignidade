@@ -1,84 +1,102 @@
 /**
- * @section Identity Logic - Authority Validation
- * @description Valida si una identidad cumple con los requisitos de rango para una operación.
+ * @section Identity Logic - Authority Validation Orchestrator
+ * @description Orquestrador encarregado de validar se uma identidade cidadã
+ * cumpre os requisitos de autoridade para uma transação.
  *
- * Protocolo OEDP-V14.0 - Verbatim Module Syntax.
- * @author Dirección de Ingeniería - Floripa Dignidade
+ * Protocolo OEDP-V17.0 - High Performance SRE & Swarm Intelligence.
+ * SANEADO Zenith: Correção de TS2554 (Async call) e sincronização com parâmetros nominais.
+ *
+ * @author Raz Podestá - MetaShark Tech
  */
 
 import { ValidationException } from '@floripa-dignidade/exceptions';
 import {
   EmitTelemetrySignal,
-  GenerateCorrelationIdentifier
+  GenerateCorrelationIdentifier,
 } from '@floripa-dignidade/telemetry';
 
-/** 🛡️ SANEAMIENTO Zenith: Importación de ADN como tipo puro */
+/* 1. ADN Estructural (Verbatim Module Syntax) */
 import type { UserAccessRole } from '../schemas/UserAccessRole.schema';
-import type { IUserIdentity } from '../schemas/UserIdentity.schema';
 import { UserIdentitySchema } from '../schemas/UserIdentity.schema';
+import type { IUserIdentity } from '../schemas/UserIdentity.schema';
 
-const IDENTITY_MODULE_IDENTIFIER = 'IDENTITY_ACCESS_SENTRY';
+/* 2. Enxame Atômico */
+import { EvaluateAuthorityHierarchy } from './atomic/EvaluateAuthorityHierarchy';
+
+/** Identificador técnico do sensor para o Neural Sentinel. */
+const IDENTITY_ACCESS_IDENTIFIER = 'IDENTITY_ACCESS_SENTRY';
 
 /**
- * Verifica si la identidad proporcionada posee el rol requerido.
+ * Verifica se a identidade cumpre o contrato técnico e possui autoridade legítima.
  *
- * @param rawUserIdentityData - Datos de identidad pendientes de validación.
- * @param requiredAccessRole - Nivel de autoridad mínimo solicitado.
- * @returns Identidad validada y purificada.
+ * @param rawUserIdentityData - Objeto capturado da sessão ou API.
+ * @param requiredAccessRole - Nível de autoridade solicitado.
+ * @returns {Promise<IUserIdentity>} Identidade purificada e validada.
+ * @throws {ValidationException} Se o ADN estiver corrupto ou a autoridade for insuficiente.
  */
-export const ValidateUserAccess = (
+export const ValidateUserAccess = async (
   rawUserIdentityData: unknown,
   requiredAccessRole: UserAccessRole,
-): IUserIdentity => {
+): Promise<IUserIdentity> => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
+  // 1. ADUANA DE ADN (Safe Parsing)
   const validationResult = UserIdentitySchema.safeParse(rawUserIdentityData);
 
   if (!validationResult.success) {
-    const errorCodeLiteral = 'ADN_IDENTIDAD_CORRUPTO';
-
-    EmitTelemetrySignal({
+    void EmitTelemetrySignal({
       severityLevel: 'CRITICAL',
-      moduleIdentifier: IDENTITY_MODULE_IDENTIFIER,
-      operationCode: 'IDENTITY_SCHEMA_VIOLATION',
+      moduleIdentifier: IDENTITY_ACCESS_IDENTIFIER,
+      operationCode: 'IDENTITY_CONTRACT_VIOLATION',
       correlationIdentifier,
-      message: 'Los datos de identidad no cumplen el contrato técnico.',
-      contextMetadata: {
-        validationErrors: validationResult.error.flatten()
-      },
+      message: 'Os dados de identidade falharam na auditoria de esquema.',
+      contextMetadata: { issues: validationResult.error.flatten() }
     });
 
-    throw new ValidationException(errorCodeLiteral, {
-      identityValidationIssues: validationResult.error.flatten(),
+    throw new ValidationException('ADN_IDENTIDAD_CORRUPTO', {
+      validationIssues: validationResult.error.flatten(),
     });
   }
 
-  const authenticatedIdentity = validationResult.data;
+  const authenticatedIdentity: IUserIdentity = validationResult.data;
 
-  const hasRequiredAuthority =
-    authenticatedIdentity.assignedAccessRole === requiredAccessRole ||
-    authenticatedIdentity.assignedAccessRole === 'SYSTEM_ADMINISTRATOR';
+  /**
+   * 2. EVALUACIÓN DE JERARQUÍA (Delegación Atómica)
+   * SANEADO Zenith: Invocação assíncrona e passagem de parâmetros via objeto (Fix TS2554).
+   */
+  const isAuthorizedBoolean = await EvaluateAuthorityHierarchy({
+    activeRoleLiteral: authenticatedIdentity.assignedAuthorityRoleLiteral,
+    requiredRoleLiteral: requiredAccessRole
+  });
 
-  if (!hasRequiredAuthority) {
-    const errorCodeLiteral = 'ACCESO_NO_AUTORIZADO';
-
-    EmitTelemetrySignal({
+  if (!isAuthorizedBoolean) {
+    void EmitTelemetrySignal({
       severityLevel: 'WARNING',
-      moduleIdentifier: IDENTITY_MODULE_IDENTIFIER,
-      operationCode: 'UNAUTHORIZED_AUTHORITY_ATTEMPT',
+      moduleIdentifier: IDENTITY_ACCESS_IDENTIFIER,
+      operationCode: 'UNAUTHORIZED_ACCESS_ATTEMPT',
       correlationIdentifier,
-      message: `Intento de acceso no autorizado por el ciudadano: ${authenticatedIdentity.identifier}`,
+      message: `Bloqueio de segurança: Acesso negado para [${authenticatedIdentity.assignedAuthorityRoleLiteral}]`,
       contextMetadata: {
-        requiredAccessRole,
-        currentCitizenRole: authenticatedIdentity.assignedAccessRole
-      },
+        citizenId: authenticatedIdentity.identityIdentifier,
+        requiredRole: requiredAccessRole
+      }
     });
 
-    throw new ValidationException(errorCodeLiteral, {
-      requiredAccessRole,
-      citizenIdentifier: authenticatedIdentity.identifier,
+    throw new ValidationException('ACCESO_NO_AUTORIZADO', {
+      requiredRole: requiredAccessRole,
+      activeRole: authenticatedIdentity.assignedAuthorityRoleLiteral,
+      citizenIdentifier: authenticatedIdentity.identityIdentifier,
     });
   }
+
+  // 3. REPORTE DE TRANSITO LEGÍTIMO
+  void EmitTelemetrySignal({
+    severityLevel: 'INFO',
+    moduleIdentifier: IDENTITY_ACCESS_IDENTIFIER,
+    operationCode: 'IDENTITY_ACCESS_AUTHORIZED',
+    correlationIdentifier,
+    message: 'Acesso perimetral autorizado com sucesso.'
+  });
 
   return authenticatedIdentity;
 };

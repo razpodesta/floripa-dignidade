@@ -1,43 +1,42 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    /**
-     * @section Gobernanza de Emisión - ISO Technical Rigor
-     * Protocolo OEDP-V17.0 - Build Resilience & Forensic Traceability.
-     */
+    /* --- ESTRATEGIA DE SALIDA ZENITH --- */
     "outDir": "../../../dist/out-tsc/libs/modules/identity",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/modules/identity/tsconfig.lib.tsbuildinfo",
 
-    /**
-     * @section Aislamiento Soberano (rootDir Enforcement)
-     * SANEADO Zenith: Bloquea la succión de archivos externos y el error TS6059.
-     * TSC valida los tipos (.d.ts) mientras Turbopack/Next.js 16 gestiona el build.
-     */
-    "rootDir": "src",
-    "noEmit": false,
-    "emitDeclarationOnly": true,
+    /* --- INTEGRIDADE SOBERANA (ADN Emitter) --- */
+    "composite": true,           /* Essencial para o Grafo de Referências */
+    "declaration": true,         /* Emite as assinaturas de ADN (.d.ts) */
+    "declarationMap": true,      /* Mapeamento para DX no VSCode */
+    "emitDeclarationOnly": true, /* Delega lógica ao SWC; TSC foca no ADN */
+    "rootDir": "src",            /* Fronteira física estrita (Fix TS6059) */
 
-    /**
-     * @section Integridad del Grafo (Project References)
+    /*
+     * 🛡️ MANOBRA DE ISOLAMENTO (OEDP-V17.0)
+     * Resetamos os 'paths' para garantir que o compilador utilize as 'references'
+     * físicas e os .d.ts já emitidos, impedindo a sucção de fontes externas.
      */
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "inlineSources": true,
+    "paths": {},
 
-    /**
-     * @section Resolución Next-Gen (Next.js 16+ & React 19)
-     * 🛡️ PURGA DE CRONOLOGÍA APLICADA.
-     */
+    /* --- RESOLUÇÃO NEXT-GEN (Standard Next.js 16) --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
+    /* --- ADN DO AMBIENTE (IAM Context) --- */
     "types": ["node"],
-    "lib": ["DOM", "DOM.Iterable", "ES2022"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["src/**/*.ts", "src/**/*.json"],
+
+  /* --- ESCOPO DE AUDITORIA --- */
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.json"
+  ],
+
+  /* --- ADUANA DE EXCLUSÃO (Anti-Contamination) --- */
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
@@ -45,6 +44,7 @@
     "dist",
     "out-tsc",
     "node_modules",
+    /* Bloqueio físico de subida para garantir a soberania do rootDir */
     "../../../dist",
     "../../../node_modules"
   ]

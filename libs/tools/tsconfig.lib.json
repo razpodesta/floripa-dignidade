@@ -3,17 +3,33 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc/libs/tools",
     "tsBuildInfoFile": "../../dist/out-tsc/libs/tools/tsconfig.lib.tsbuildinfo",
+
+    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
+    "composite": true,           /* Habilita la compilación incremental de herramientas */
+    "declaration": true,         /* Emite las firmas de tipos (.d.ts) para los disparadores CLI */
+    "declarationMap": true,      /* Mapeo para trazabilidad en el IDE */
+    "emitDeclarationOnly": true, /* Delega la ejecución a TSX/Node */
+    "rootDir": "src",            /* Blindaje de frontera física absoluta */
+
+    /* --- RESOLUCIÓN NEXT-GEN --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "forceConsistentCasingInFileNames": true,
-    "lib": ["DOM", "DOM.Iterable", "ES2022"]
+    "verbatimModuleSyntax": true, /* Fuerza la pureza de importación de tipos */
+    "isolatedModules": true,
+
+    /* --- ADN DEL ENTORNO (Node.js Automation Context) --- */
+    "types": ["node"],           /* Acceso mandatorio a fs, path y process */
+    "lib": ["ES2022"]            /* Contexto de ejecución de servidor */
   },
   "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
-    "node_modules",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "jest.config.ts",
     "dist",
     "out-tsc",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
+    "node_modules",
+    "../../dist",
+    "../../node_modules"
   ]
 }

@@ -3,8 +3,23 @@
   "compilerOptions": {
     "outDir": "../../../../dist/out-tsc/libs/core/communication-providers/resend",
     "tsBuildInfoFile": "../../../../dist/out-tsc/libs/core/communication-providers/resend/tsconfig.lib.tsbuildinfo",
+
+    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+
+    /* --- RESOLUCIÓN NEXT-GEN --- */
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    /* --- ADN DEL ENTORNO (Node.js I/O) --- */
     "types": ["node"],
-    "lib": ["DOM", "DOM.Iterable", "ES2022"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
   "include": ["src/**/*.ts"],
   "exclude": [
@@ -12,6 +27,7 @@
     "src/**/*.test.ts",
     "jest.config.ts",
     "dist",
-    "out-tsc"
+    "out-tsc",
+    "node_modules"
   ]
 }

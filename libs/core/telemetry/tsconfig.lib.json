@@ -1,65 +1,51 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    /**
-     * @section Gobernanza de Emisión - ISO Technical Rigor
-     * Protocolo OEDP-V17.0 - Build Resilience & Forensic Traceability.
-     */
+    /* --- ESTRATÉGIA DE SAÍDA ZENITH --- */
     "outDir": "../../../dist/out-tsc/libs/core/telemetry",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/telemetry/tsconfig.lib.tsbuildinfo",
 
-    /**
-     * @section Aislamiento Soberano (rootDir Enforcement)
-     * SANEADO: Se establece 'src' como raíz absoluta y se bloquea la emisión de JS.
-     * TSC actúa exclusivamente como el arquitecto de ADN del sistema nervioso.
-     */
-    "rootDir": "src",
-    "noEmit": false,
-    "emitDeclarationOnly": true,
+    /* --- INTEGRIDADE SOBERANA (ADN Emitter) --- */
+    "composite": true,           /* Habilita a participação no Grafo Incremental */
+    "declaration": true,         /* Emite as assinaturas de tipos (.d.ts) vitais */
+    "declarationMap": true,      /* Mapeamento para DX forense no IDE */
+    "emitDeclarationOnly": true, /* O motor SWC cuida da lógica; TSC valida o ADN */
+    "rootDir": "src",            /* Blindagem de fronteira física (Fix TS6059) */
 
-    /**
-     * @section Integridad del Grafo (Project References)
-     * SANEADO: Sincronizado para permitir resolución de tipos instantánea
-     * sin contaminación de ámbitos externos.
+    /*
+     * 🛡️ MANOBRA DE ISOLAMENTO (OEDP-V17.0)
+     * Resetamos os 'paths' para obrigar o compilador a usar as 'references'
+     * e os arquivos .d.ts das dependências (ex: exceptions),
+     * impedindo a sucção de código fonte externo.
      */
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "inlineSources": true,
+    "paths": {},
 
-    /**
-     * @section Resolución Next-Gen (Turbopack / Next.js 16+)
-     * 🛡️ PURGA DE CRONOLOGÍA APLICADA.
-     * Activación estricta de Verbatim Syntax para aislamiento lógico.
-     */
+    /* --- RESOLUÇÃO NEXT-GEN (Standard Next.js 16) --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": true, /* Separação estrita entre ADN e Lógica */
     "isolatedModules": true,
 
-    "types":["node"],
-    "lib": ["DOM", "DOM.Iterable", "ES2022"]
+    /* --- ADN DO AMBIENTE (System Nervous Context) --- */
+    "types": ["node"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
 
-  /**
-   * @section Alcance de Auditoría Atómica
-   */
-  "include":[
+  /* --- ESCOPO DE AUDITORIA ATÔMICA --- */
+  "include": [
     "src/**/*.ts",
     "src/**/*.json"
   ],
 
-  /**
-   * @section Aduana de Exclusión (Anti-Contamination)
-   * SANEADO: Bloqueo físico estricto de cualquier rastro volátil o externo.
-   */
-  "exclude":[
+  /* --- ADUANA DE EXCLUSÃO (Anti-Contamination) --- */
+  "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "jest.config.ts",
     "dist",
     "out-tsc",
     "node_modules",
+    /* 🛡️ SANEADO Zenith: Bloqueio físico para forçar o uso de referências de projeto */
     "../../../dist",
     "../../../node_modules"
   ]

@@ -2,9 +2,11 @@
   "name": "@floripa-dignidade/messaging-engine",
   "version": "1.6.0",
   "private": true,
+  "description": "Búnker de Mensageria, Comunicação Soberana e Presença Cognitiva. Orquestra a entrega inteligente de notificações Web Push, o gerenciamento de mensagens diretas e a governança de grupos territoriais (Action Hubs) com rastreabilidade forense no Edge Runtime.",
   "type": "module",
-  "description": "Búnker soberano de mensajería, alertas PWA, presencia y gobernanza de grupos territoriales.",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",

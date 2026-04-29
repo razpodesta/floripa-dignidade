@@ -2,9 +2,11 @@
   "name": "@floripa-dignidade/exceptions",
   "version": "1.1.0",
   "private": true,
-  "description": "Búnker soberano de gestión de anomalías, códigos de error ISO e integridad forense del ecosistema.",
+  "description": "Búnker Core de gestión unificada de anomalías, códigos de error ISO y captura de snapshots forenses. Proporciona la infraestructura base para la resiliencia y auto-sanación del sistema mediante excepciones semánticas tipadas.",
   "type": "module",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -12,15 +14,14 @@
       "default": "./src/index.ts"
     }
   },
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
   "dependencies": {
+    "@swc/helpers": "~0.5.18",
     "zod": "^3.25.76"
   },
   "nx": {
     "tags": [
       "scope:core",
-      "type:core",
+      "type:logic",
       "platform:isomorphic"
     ]
   }

@@ -1,20 +1,21 @@
 /**
  * @section Environment DNA - Infrastructure Sovereignty Schema
- * @description Define el contrato de integridad absoluto para las variables de entorno.
- * Implementa Branded Types para blindar secretos y asegurar el formato ISO.
- * Actúa como la Aduana de ADN para la ejecución Cloud-Sovereign (ADR 0015).
+ * @description Define o contrato de integridade absoluto para as variáveis de ambiente.
+ * Implementa Branded Types para blindar segredos e garantir o padrão ISO de segurança.
+ * Atua como a única Aduana de ADN para a execução Cloud-Sovereign (ADR 0015).
  *
- * Protocolo OEDP-V16.0 - Sovereign Data & ReadOnly Integrity.
- * SANEADO Zenith: Inyección de persistencia S3-Compatible y auditoría de Nx Cloud.
+ * Protocolo OEDP-V17.0 - Sovereign Data & ReadOnly Integrity.
+ * SANEADO Zenith: Injeção do SovereignEmergencyToken para auditoria de segurança máxima.
  *
- * @author Engineering Department - Floripa Dignidade (Super AI Orchestrator)
+ * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
 import { z } from 'zod';
 
 /**
  * @section Branded Types (ADN Criptográfico)
- * @description Evitan la colisión semántica entre diferentes secretos de infraestructura.
+ * @description Evitam a colisão semântica entre diferentes segredos de infraestrutura.
  */
 export const ResendApiKeySchema = z.string()
   .startsWith('re_')
@@ -22,12 +23,12 @@ export const ResendApiKeySchema = z.string()
 
 export const SupabaseUrlSchema = z.string()
   .url()
-  .describe('URL física del proyecto en el Tier de Supabase.')
+  .describe('URL física do projeto no Tier de Supabase.')
   .brand<'SupabaseUrl'>();
 
 export const SupabaseServiceKeySchema = z.string()
   .min(50)
-  .describe('Token de acceso administrativo (Service Role) para bypass de RLS.')
+  .describe('Token de acesso administrativo (Service Role) para bypass de RLS.')
   .brand<'SupabaseServiceKey'>();
 
 export const PostgresUrlSchema = z.string()
@@ -43,86 +44,97 @@ export const PayloadSecretSchema = z.string()
   .min(32, { message: 'PAYLOAD_SECRET_MUST_BE_AT_LEAST_32_CHARACTERS' })
   .brand<'PayloadSecret'>();
 
-/** 🛡️ NUEVO: ADN para Persistencia Multimedia (S3 Gateway) */
+/**
+ * 🛡️ SANEADO Zenith: ADN para Poder Soberano de Emergência
+ * Este token permite a ativação de privilégios de auditoria total em caso de colapso.
+ */
+export const SovereignEmergencyTokenSchema = z.string()
+  .min(32)
+  .describe('Token de alta segurança para bypass de auditoria em casos de falha crítica.')
+  .brand<'SovereignEmergencyToken'>();
+
+/** ADN para Persistência Multimídia (S3 Gateway) */
 export const S3EndpointSchema = z.string().url().brand<'S3Endpoint'>();
 export const S3AccessKeyIdSchema = z.string().min(10).brand<'S3AccessKeyId'>();
 export const S3SecretAccessKeySchema = z.string().min(10).brand<'S3SecretAccessKey'>();
 
 /**
  * @name EnvironmentSchema
- * @description Aduana maestra que valida la salud del entorno antes del arranque.
- * Implementa un patrón de validación proactiva (Fail-Fast) para evitar "Zombie States".
+ * @description Aduana mestra que valida a saúde do ambiente antes do arranque do sistema.
+ * Implementa o padrão de validação proativa (Fail-Fast) para evitar estados inconsistentes.
  */
 export const EnvironmentSchema = z.object({
 
-  // --- COMUNICACIÓN TRANSACCIONAL (Resend) ---
+  // --- COMUNICAÇÃO TRANSACIONAL (Resend) ---
   RESEND_API_KEY: ResendApiKeySchema
-    .describe('Clave de API oficial para el despacho de correos electrónicos transaccionales.'),
+    .describe('Chave de API oficial para o despacho de correios eletrônicos transacionais.'),
 
   RESEND_FROM_EMAIL: z.string()
     .email()
-    .describe('Dirección de remitente autorizada por el DNS de la ONG.'),
+    .describe('Endereço de remetente autorizado pelo DNS da ONG.'),
 
-  // --- SOBERANÍA CLOUD (Supabase / Persistence) ---
+  // --- SOBERANIA CLOUD (Supabase / Persistência) ---
   SUPABASE_URL: SupabaseUrlSchema
-    .describe('Punto de enlace REST para la base de datos de ciudadanos.'),
+    .describe('Ponto de enlace REST para a base de dados de cidadãos.'),
 
   SUPABASE_SERVICE_ROLE_KEY: SupabaseServiceKeySchema
-    .describe('Llave maestra para operaciones de escritura asíncronas en Supabase.'),
+    .describe('Chave mestra para operações de escrita assíncronas no Supabase.'),
 
   DATABASE_URL: PostgresUrlSchema
-    .describe('Cadena de conexión física para el motor de persistencia Postgres.'),
+    .describe('String de conexão física para o motor de persistência Postgres.'),
 
-  // --- PERSISTENCIA MULTIMEDIA (S3-Compatible / Supabase Storage) ---
-  /** 🛡️ SANEADO Zenith: Soporte para almacenamiento stateless a costo cero */
+  // --- PERSISTÊNCIA MULTIMÍDIA (S3-Compatible / Supabase Storage) ---
   S3_ENDPOINT: S3EndpointSchema
-    .describe('Punto de enlace S3 proporcionado por Supabase Storage.'),
+    .describe('Ponto de enlace S3 fornecido pelo Supabase Storage.'),
 
   S3_ACCESS_KEY_ID: S3AccessKeyIdSchema
-    .describe('Identificador de acceso para el protocolo S3.'),
+    .describe('Identificador de acesso para o protocolo S3.'),
 
   S3_SECRET_ACCESS_KEY: S3SecretAccessKeySchema
-    .describe('Clave secreta criptográfica para la persistencia multimedia.'),
+    .describe('Chave secreta criptográfica para a persistência multimídia.'),
 
   S3_REGION: z.string()
     .default('us-east-1')
-    .describe('Región física del bucket de almacenamiento.'),
+    .describe('Região física do bucket de armazenamento.'),
 
   S3_BUCKET: z.string()
     .min(3)
     .default('media-vault')
-    .describe('Nombre del contenedor de archivos en la nube.'),
+    .describe('Nome do contêiner de arquivos na nuvem.'),
 
-  // --- GESTIÓN DE CONTENIDOS (Payload CMS) ---
+  // --- GESTÃO DE CONTEÚDO (Payload CMS) ---
   PAYLOAD_SECRET: PayloadSecretSchema
-    .describe('Secreto criptográfico inalterable para la seguridad de sesiones administrativas.'),
+    .describe('Segredo criptográfico inalterável para a segurança de sessões administrativas.'),
 
-  // --- GATEWAY DE MENSAJERÍA (WhatsApp / Meta) ---
+  /** 🛡️ SANEADO: Injeção oficial do token de bypass soberano no contrato global */
+  SOVEREIGN_EMERGENCY_TOKEN: SovereignEmergencyTokenSchema,
+
+  // --- GATEWAY DE MENSAGENS (WhatsApp / Meta) ---
   WHATSAPP_VERIFY_TOKEN: z.string()
     .min(10)
-    .describe('Token secreto para el apretón de manos inicial (Handshake) con Meta.'),
+    .describe('Token secreto para o handshake inicial com a Meta.'),
 
   WHATSAPP_APP_SECRET: WhatsAppSecretSchema
-    .describe('Secreto de aplicación para la validación de firmas HMAC SHA256.'),
+    .describe('Segredo de aplicação para validação de assinaturas HMAC SHA256.'),
 
-  // --- IDENTIDAD Y ORQUESTACIÓN DE PLATAFORMA ---
+  // --- IDENTIDADE E ORQUESTRAÇÃO DE PLATAFORMA ---
   NEXT_PUBLIC_SITE_URL: z.string()
     .url()
-    .describe('URL absoluta del portal para generación de enlaces y metadatos SEO.'),
+    .describe('URL absoluta do portal para geração de links e metadados SEO.'),
 
   NODE_ENV: z.enum(['development', 'production', 'test'])
     .default('development')
-    .describe('Identificador del modo de ejecución del compilador.'),
+    .describe('Identificador do modo de execução do compilador.'),
 
-  /** 🛡️ SANEADO: Auditoría de Nx Cloud para CI/CD */
+  /** Auditoria de Nx Cloud para CI/CD */
   NX_CLOUD_ACCESS_TOKEN: z.string()
     .optional()
-    .describe('Token para habilitar cómputo remoto y caché distribuida.'),
+    .describe('Token para habilitar computação remota e cache distribuído.'),
 
 }).readonly();
 
 /**
  * @section ADN Tipado (Verbatim Module Syntax)
- * Interfaz inmutable que garantiza un acceso 100% Type-Safe a la infraestructura.
+ * Interface inalterável que garante acesso 100% Type-Safe à infraestrutura.
  */
 export type IEnvironmentVariables = z.infer<typeof EnvironmentSchema>;

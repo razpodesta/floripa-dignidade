@@ -1,8 +1,16 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true
+    "noEmit": true,
+    "ignoreDeprecations": "5.0"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"],
-  "exclude": ["dist", "out-tsc", "node_modules"]
+  /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí para evitar colisiones de grafo. */
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./tsconfig.lib.json" },
+    /* --- ENLACES FÍSICOS AL ENJAMBRE (Consumidos por la UI y el State Store) --- */
+    { "path": "../core/telemetry" },
+    { "path": "../core/exceptions" }
+  ]
 }

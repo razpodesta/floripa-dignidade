@@ -1,24 +1,15 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    /**
-     * @section Gobernanza de Emisión
-     * La raíz del búnker actúa exclusivamente como mediador de configuración.
-     */
     "noEmit": true,
-
-    /** 🛡️ SANEADO Zenith: Preparación para TS 7.0 */
     "ignoreDeprecations": "5.0"
   },
-  /* 🛡️ LEY DEL GATEWAY: Vaciado de 'include' para forzar el Sovereign Graph */
+  /* 🛡️ LEY DEL GATEKEEPER: No compilar nada aquí. Solo orquestar el emisor y dependencias. */
   "files": [],
   "include": [],
   "references": [
     { "path": "./tsconfig.lib.json" },
-    /**
-     * @section Grafo de Dependencias
-     * Identidad es un búnker de alta jerarquía que consume infraestructura base.
-     */
+    /* --- REFERENCIAS FÍSICAS EXIGIDAS POR EL GRAFO (Fix TS6307) --- */
     { "path": "../../core/environment-validator" },
     { "path": "../../core/exceptions" },
     { "path": "../../core/telemetry" }

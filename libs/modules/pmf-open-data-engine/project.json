@@ -1,0 +1,35 @@
+{
+  "name": "@floripa-dignidade/pmf-open-data-engine",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/modules/pmf-open-data-engine/src",
+  "projectType": "library",
+  "tags": [
+    "scope:modules",
+    "type:data",
+    "platform:isomorphic"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/modules/pmf-open-data-engine",
+        "main": "libs/modules/pmf-open-data-engine/src/index.ts",
+        "tsConfig": "libs/modules/pmf-open-data-engine/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p libs/modules/pmf-open-data-engine/tsconfig.lib.json --noEmit"
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    }
+  }
+}

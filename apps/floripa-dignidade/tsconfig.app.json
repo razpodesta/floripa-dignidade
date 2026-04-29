@@ -1,0 +1,86 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    /* --- GOBERNANZA DE RENDERIZADO NEXT.JS 16 & REACT 19 --- */
+    "jsx": "preserve",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "strict": true,
+    "noEmit": false,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    /* --- ESTRATEGIA DE SALIDA (BUILD ARTIFACTS) --- */
+    "outDir": "../../dist/out-tsc/apps/floripa-dignidade",
+    "tsBuildInfoFile": "../../dist/out-tsc/apps/floripa-dignidade/tsconfig.app.tsbuildinfo",
+
+    /*
+       🛡️ SANEADO Zenith: Redirección de ADN Maestro (Solución TS6059 / TS6307)
+       Esta configuración bloquea físicamente que el compilador de la App intente
+       leer los archivos fuentes (.ts) de las librerías, lo cual violaría el
+       'rootDir: src' local. Obligamos a resolver contra las firmas (.d.ts) en dist.
+    */
+    "paths": {
+      "@/*": ["src/*"],
+
+      /* Layer: CORE (Cimientos de Infraestructura) */
+      "@floripa-dignidade/telemetry": ["../../dist/out-tsc/libs/core/telemetry/src/index.d.ts"],
+      "@floripa-dignidade/exceptions": ["../../dist/out-tsc/libs/core/exceptions/src/index.d.ts"],
+      "@floripa-dignidade/environment-validator": ["../../dist/out-tsc/libs/core/environment-validator/src/index.d.ts"],
+      "@floripa-dignidade/routing": ["../../dist/out-tsc/libs/core/routing/src/index.d.ts"],
+      "@floripa-dignidade/resend-provider": ["../../dist/out-tsc/libs/core/communication-providers/resend/src/index.d.ts"],
+
+      /* Layer: ENGINES (Motores de Inteligencia) */
+      "@floripa-dignidade/impact-analytics-engine": ["../../dist/out-tsc/libs/engines/impact-analytics-engine/src/index.d.ts"],
+      "@floripa-dignidade/health-analysis": ["../../dist/out-tsc/libs/engines/health-analysis/src/index.d.ts"],
+      "@floripa-dignidade/health-monitor": ["../../dist/out-tsc/libs/engines/health-monitor/src/index.d.ts"],
+      "@floripa-dignidade/search-engine": ["../../dist/out-tsc/libs/engines/search-engine/src/index.d.ts"],
+
+      /* Layer: MODULES (Dominios de Negocio) */
+      "@floripa-dignidade/identity": ["../../dist/out-tsc/libs/modules/identity/src/index.d.ts"],
+      "@floripa-dignidade/pmf-open-data-engine": ["../../dist/out-tsc/libs/modules/pmf-open-data-engine/src/index.d.ts"],
+      "@floripa-dignidade/territorial-engine": ["../../dist/out-tsc/libs/modules/territorial-engine/src/index.d.ts"],
+      "@floripa-dignidade/newsletter": ["../../dist/out-tsc/libs/modules/newsletter/src/index.d.ts"],
+      "@floripa-dignidade/messaging-engine": ["../../dist/out-tsc/libs/modules/messaging-engine/src/index.d.ts"],
+      "@floripa-dignidade/reputation-engine": ["../../dist/out-tsc/libs/modules/reputation-engine/src/index.d.ts"],
+      "@floripa-dignidade/interaction-engine": ["../../dist/out-tsc/libs/modules/interaction-engine/src/index.d.ts"],
+      "@floripa-dignidade/whatsapp-communication-service": ["../../dist/out-tsc/libs/modules/whatsapp/communication-service/src/index.d.ts"],
+
+      /* Layer: VISUAL (Shared UI & State Store) */
+      "@floripa-dignidade/shared": ["../../dist/out-tsc/libs/shared/src/index.d.ts"]
+    },
+
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+
+    /* Soporte soberano para Node.js (Instrumentation & Edge Context) */
+    "types": ["node"]
+  },
+
+  /**
+   * @section Alcance de Escaneo (Source Inclusion)
+   * Limitamos el escaneo estrictamente a la carpeta src del búnker de la App.
+   */
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "index.d.ts",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".next",
+    "out-tsc",
+    "../../dist/out-tsc",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
+}

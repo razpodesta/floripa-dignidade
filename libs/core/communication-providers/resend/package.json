@@ -2,8 +2,11 @@
   "name": "@floripa-dignidade/resend-provider",
   "version": "1.0.0",
   "private": true,
+  "description": "Búnker Core especializado en la transmisión física de correos electrónicos transaccionales y auditoría de salud (SRE) del proveedor Resend.",
   "type": "module",
   "sideEffects": false,
+  "author": "Raz Podestá - MetaShark Tech",
+  "license": "UNLICENSED",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -12,7 +15,11 @@
     }
   },
   "nx": {
-    "tags": ["scope:core", "type:data", "platform:node"]
+    "tags": [
+      "scope:core",
+      "type:data",
+      "platform:node"
+    ]
   },
   "dependencies": {
     "@floripa-dignidade/telemetry": "workspace:*",
