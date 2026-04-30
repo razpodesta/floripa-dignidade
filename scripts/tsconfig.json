@@ -1,17 +1,19 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    /* 🛡️ ESTRATEGIA GATEKEEPER: Bloqueo de emisión y orquestación de puentes físicos. */
     "noEmit": true,
     "ignoreDeprecations": "5.0"
   },
-  /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí. Solo gestión de puentes físicos. */
   "files": [],
   "include": [],
   "references": [
     { "path": "./tsconfig.lib.json" },
-    /* --- ENLACES FÍSICOS AL ENJAMBRE (Consumidos por los Triggers) --- */
-    { "path": "../libs/tools" },
-    { "path": "../libs/core/telemetry" },
-    { "path": "../libs/core/exceptions" }
+    /*
+       🛡️ SANEADO Zenith: Referencia física de proyecto.
+       Nx utiliza este enlace para garantizar que 'tools' se compile
+       siempre antes que los disparadores de 'scripts'.
+    */
+    { "path": "../libs/tools" }
   ]
 }

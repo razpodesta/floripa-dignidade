@@ -1,20 +1,33 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
+    /**
+     * 🛡️ ESTRATEGIA GATEKEEPER:
+     * Este archivo actúa como escudo perimetral. No emite código ni ADN;
+     * su única misión es coordinar las referencias físicas del enjambre.
+     */
     "noEmit": true,
     "ignoreDeprecations": "5.0"
   },
+
   /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí para evitar colisiones de grafo. */
   "files": [],
   "include": [],
+
+  /**
+   * @section Grafo de Referencias Sincronizadas
+   * Define la jerarquía física de construcción. Nx utiliza este mapa para
+   * asegurar que los cimientos se procesen antes que este motor de datos.
+   */
   "references": [
     { "path": "./tsconfig.lib.json" },
-    /* --- ENLACES FÍSICOS AL ENJAMBRE (Consumidos por el Motor PMF) --- */
-    /* Capa Core */
+
+    /* --- CAPA 1: INFRAESTRUCTURA CORE --- */
     { "path": "../../core/telemetry" },
     { "path": "../../core/exceptions" },
     { "path": "../../core/environment-validator" },
-    /* Capa Modules (Cruzamiento Territorial) */
+
+    /* --- CAPA 3: DOMINIOS RELACIONADOS --- */
     { "path": "../territorial-engine" }
   ]
 }

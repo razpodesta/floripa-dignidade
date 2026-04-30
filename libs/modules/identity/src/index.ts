@@ -12,11 +12,11 @@
  */
 
 /**
- * @version 1.2.5
- * Estatus: Nivelamento Zenith completo. Suporte para Hierarquia Bayeseana e
- * Blindagem Criptográfica de Autoridade Máxima.
+ * @version 1.3.0
+ * Estatus: Nivelamento Zenith completo. Suporte para Hierarquia Bayeseana,
+ * Persistência Cloud (SyncIdentityAuthority) e Blindagem Criptográfica.
  */
-export const MODULE_IDENTITY_VERSION = '1.2.5';
+export const MODULE_IDENTITY_VERSION = '1.3.0';
 
 /**
  * @section Camada 1: ADN Estrutural (Schemas & Types)
@@ -55,8 +55,9 @@ export {
  * Unidades funcionais para gestão de acesso e soberania.
  */
 
-// Orquestrador de Fronteira (RBAC Sentry)
+// Orquestradores Principais (RBAC Sentry & Persistência)
 export { ValidateUserAccess } from './lib/logic/ValidateUserAccess';
+export { SyncIdentityAuthority } from './lib/logic/SyncIdentityAuthority';
 
 // Átomos Lógicos (Functional Swarm)
 export { AnonymizeCitizenName } from './lib/logic/atomic/AnonymizeCitizenName';

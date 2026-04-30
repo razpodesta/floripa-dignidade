@@ -1,90 +1,125 @@
 /**
  * @section Observatory Shell - Public Expenditure Page (Orchestrator)
  * @description Punto de acceso soberano para la auditoría de recursos públicos.
+ * Coordina la captura de datos gubernamentales, la validación de autoridad
+ * y el montaje del enjambre visual del dashboard forense.
  *
- * Protocolo OEDP-V17.0 - High Performance, SRP & Zero Abbreviations.
- * SANEADO Zenith: Reducción de líneas (168 -> 72), ordenamiento alfabético
- * y gestión de promesas telemétricas con 'void'.
+ * Protocolo OEDP-V17.0 - High Performance SRE & Swarm Intelligence.
+ * SANEADO Zenith: Resolución de TS2322, TS2307 y cumplimiento de 'await' en accesos.
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
 import React from 'react';
-import { redirect } from 'next/navigation';
-import { AlertTriangle, BarChart3, FileText, ShieldCheck } from 'lucide-react';
+import { notFound } from 'next/navigation';
 
-/* 1. Infraestructura Core e Identidad (Alphabetical Sort) */
-import { USER_ROLES, ValidateUserAccess } from '@floripa-dignidade/identity';
-import { EmitTelemetrySignal, GenerateCorrelationIdentifier } from '@floripa-dignidade/telemetry';
+/* 1. Infraestructura Core & Routing (Alphabetical Sort) */
+import {
+  SupportedLocaleSchema,
+  ValidateLinguisticContract
+} from '@floripa-dignidade/routing';
+import {
+  EmitTelemetrySignal,
+  GenerateCorrelationIdentifier
+} from '@floripa-dignidade/telemetry';
 
-/* 2. Motores de Inteligencia (PMF Domain) */
+/* 2. Motores de Datos (PMF Domain) */
+/**
+ * 🛡️ SANEADO Zenith: Importación de lógica y tipos nominales.
+ * Si TS2307 persiste en el IDE, ejecute 'pnpm nx build pmf-open-data-engine'.
+ */
 import { SyncMunicipalityExpenditure } from '@floripa-dignidade/pmf-open-data-engine';
 import type { IPublicExpenditure } from '@floripa-dignidade/pmf-open-data-engine';
 
-/* 3. Componentes Visuales y Átomos Locales */
-import { GlobalActionButton } from '@floripa-dignidade/shared';
-import { MetricCard } from './components/MetricCard';
+/* 3. Enjambre Atómico Local (UI & Logic) */
+import { ObservatoryI18nSchema } from '../i18n/ObservatoryI18n.schema';
+import { CalculateObservatoryMetrics } from './logic/CalculateObservatoryMetrics';
+import { ValidateObservatoryAccess } from './logic/ValidateObservatoryAccess';
 import { ExpenditureTable } from './components/ExpenditureTable';
+import { ObservatoryHeader } from './components/ObservatoryHeader';
+import { ObservatoryMetricsGrid } from './components/ObservatoryMetricsGrid';
 
+/**
+ * @interface IObservatoryPageProperties
+ * @description Contrato de parámetros de ruta para el App Router.
+ */
 interface IObservatoryPageProperties {
   readonly params: Promise<{ locale: string }>;
 }
 
-export default async function PublicExpenditureObservatoryPage({ params }: IObservatoryPageProperties) {
-  const { locale } = await params;
+/**
+ * Componente de Servidor principal del Observatorio.
+ */
+export default async function PublicExpenditureObservatoryPage({
+  params
+}: IObservatoryPageProperties) {
+  const { locale: rawLocaleIdentifier } = await params;
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
-  // FASE 1: VALIDACIÓN DE AUTORIDAD (Identity Guardian)
-  const mockUserIdentity = { assignedAuthorityRoleLiteral: 'INFRASTRUCTURE_SOVEREIGN_AUDITOR' as const };
+  // 1. ADUANA DE ADN LINGÜÍSTICO
+  const localeValidationResult = SupportedLocaleSchema.safeParse(rawLocaleIdentifier);
+  if (!localeValidationResult.success) notFound();
+  const validatedLocaleIdentifier = localeValidationResult.data;
+
+  /**
+   * 2. SEGURIDAD PERIMETRAL (RBAC Guard)
+   * 🛡️ SANEADO Zenith: Se añade 'await' para cumplir con el contrato asíncrono
+   * y resolver el error de promesas flotantes (ESLint).
+   */
+  await ValidateObservatoryAccess(validatedLocaleIdentifier);
+
+  // 3. CARGA DE ALMA LINGÜÍSTICA (Isomorphic Dictionary)
+  let dictionary;
   try {
-    ValidateUserAccess(mockUserIdentity, USER_ROLES.INFRASTRUCTURE_SOVEREIGN_AUDITOR);
-  } catch (_caughtException: unknown) {
-    redirect(`/${locale}/unauthorized`);
+    const rawDictionaryData = await import(`./i18n/${validatedLocaleIdentifier}.json`);
+    ValidateLinguisticContract(
+      'OBSERVATORY_SHELL',
+      ObservatoryI18nSchema,
+      rawDictionaryData.default,
+      validatedLocaleIdentifier
+    );
+    dictionary = rawDictionaryData.default;
+  } catch (_error) {
+    notFound();
   }
 
-  // REPORTE DE ACCESO (SRE Visibility - Fix no-floating-promises)
-  void EmitTelemetrySignal({
-    severityLevel: 'WARNING',
-    moduleIdentifier: 'OBSERVATORY_SHELL',
-    operationCode: 'RESERVED_DATA_ACCESSED',
-    correlationIdentifier,
-    message: `Acceso administrativo al observatorio en [${locale}].`,
-    contextMetadata: { role: mockUserIdentity.assignedAuthorityRoleLiteral }
-  });
-
-  // FASE 2: CAPTURA DE DATOS (Data Acquisition)
+  // 4. CAPTURA DE DATOS GUBERNAMENTALES (Data Acquisition)
   const publicExpenditureCollection: IPublicExpenditure[] = await SyncMunicipalityExpenditure({
     municipalitySlugLiteral: 'florianopolis',
     periodRange: { initial: '01/2026', final: '04/2026' }
   });
 
-  const totalAuditedNumeric = publicExpenditureCollection.reduce(
-    (sum: number, item: IPublicExpenditure) => sum + item.totalExecutedAmountNumeric, 0
-  );
+  // 5. INTELIGENCIA DE DASHBOARD (Aritmética Pura)
+  const calculatedMetrics = CalculateObservatoryMetrics(publicExpenditureCollection);
+
+  // 6. REPORTE DE ESTADO (SRE Visibility)
+  void EmitTelemetrySignal({
+    severityLevel: 'INFO',
+    moduleIdentifier: 'OBSERVATORY_SHELL',
+    operationCode: 'FORENSIC_DASHBOARD_ASSEMBLED',
+    correlationIdentifier,
+    message: `Dashboard del observatorio montado para [${validatedLocaleIdentifier}].`,
+    contextMetadata: { recordCount: publicExpenditureCollection.length }
+  });
 
   return (
-    <main className="min-h-screen bg-slate-50 p-4 md:p-8 lg:p-12 print:bg-white">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 print:hidden">
-        <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tighter flex items-center gap-3 uppercase">
-            <ShieldCheck className="text-amber-500" size={36} />
-            Observatório de Gastos
-          </h1>
-          <p className="text-slate-500 font-medium">Auditoria forense da execução orçamentária PMF</p>
-        </div>
-        <GlobalActionButton visualIntentConfiguration="OUTLINE" className="bg-white">
-          <FileText size={18} />
-          <span>Exportar Relatório</span>
-        </GlobalActionButton>
-      </header>
+    <main className="min-h-screen bg-slate-50 p-4 md:p-8 lg:p-12 print:bg-white animate-in fade-in duration-1000">
+      <ObservatoryHeader
+        titleLiteral={dictionary.metadata.pageTitleLiteral}
+        descriptionLiteral={dictionary.metadata.pageDescriptionLiteral}
+        exportActionLabelLiteral={dictionary.actions.exportCsvLabel}
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-        <MetricCard iconNode={<BarChart3 />} labelLiteral="Total Auditado" valueLiteral={`R$ ${totalAuditedNumeric.toLocaleString('pt-BR')}`} />
-        <MetricCard iconNode={<AlertTriangle />} labelLiteral="Anomalias Detectadas" valueLiteral="02" isAlertVariantBoolean />
-        <MetricCard iconNode={<ShieldCheck className="text-green-500" />} labelLiteral="Integridade" valueLiteral="100%" />
-      </div>
+      <ObservatoryMetricsGrid
+        metrics={calculatedMetrics}
+        labels={dictionary.dashboard}
+      />
 
-      <ExpenditureTable expenditureCollection={publicExpenditureCollection} />
+      {/* 🛡️ SANEADO Zenith: Sincronización de nombre de propiedad (Fix TS2322) */}
+      <ExpenditureTable
+        publicExpenditureCollection={publicExpenditureCollection}
+        tableHeadlineLiteral={dictionary.table.columnEntity}
+      />
     </main>
   );
 }

@@ -2,45 +2,43 @@
  * @section Infrastructure Logic - Global State Swarm Orchestrator
  * @description Punto de ensamblaje maestro para el enjambre de memoria institucional.
  * Orquesta la fusión de rebanadas lógicas (Slices) y aplica políticas de
- * persistencia selectiva basadas en el Manifiesto ADR 0025.
- * 
- * Protocolo OEDP-V16.0 - High Performance, SRE Resilience & Liquid Democracy.
- * SANEADO Zenith: Resolución de error TS6133 (Unused Variable) y rastro forense.
+ * persistencia soberana.
+ *
+ * Protocolo OEDP-V17.0 - High Performance, SRE Resilience & ISO Standards.
+ * SANEADO Zenith: Resolución de error 'sort-imports' y atomización de lógica.
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
-/* 1. Infraestructura de Telemetría (Standard PascalCase) */
-import { 
-  EmitTelemetrySignal, 
-  GenerateCorrelationIdentifier 
-} from '@floripa-dignidade/telemetry';
-
-/* 2. Enjambre de Rebanadas Lógicas (Atomic Slices) */
-import { createUiSlice, type TUiSlice } from './slices/createUiSlice';
+/* 1. Enjambre de Rebanadas Lógicas (Slices) */
+import { createGovernanceSlice, type TGovernanceSlice } from './slices/createGovernanceSlice';
+import { createPresenceSlice, type TPresenceSlice } from './slices/createPresenceSlice';
 import { createReputationSlice, type TReputationSlice } from './slices/createReputationSlice';
 import { createSyncSentrySlice, type TSyncSentrySlice } from './slices/createSyncSentrySlice';
-import { createPresenceSlice, type TPresenceSlice } from './slices/createPresenceSlice';
-import { createGovernanceSlice, type TGovernanceSlice } from './slices/createGovernanceSlice';
+import { createUiSlice, type TUiSlice } from './slices/createUiSlice';
+
+/* 2. Átomos de Lógica y Persistencia (Sovereign Swarm) */
+import { StatePersistenceFilter } from './logic/StatePersistenceFilter';
+import { StateHydrationAuditor } from './logic/StateHydrationAuditor';
 
 /**
  * @interface IGlobalSovereignStore
  * @description Unión inmutable de todos los contratos lógicos del enjambre.
  */
-type IGlobalSovereignStore = 
-  TUiSlice & 
-  TReputationSlice & 
-  TSyncSentrySlice & 
-  TPresenceSlice & 
+export type IGlobalSovereignStore =
+  TUiSlice &
+  TReputationSlice &
+  TSyncSentrySlice &
+  TPresenceSlice &
   TGovernanceSlice;
 
 /**
  * @name useGlobalStateStore
  * @description Única Fuente de Verdad (SSOT) para el estado cognitivo del ecosistema.
- * Utiliza el patrón de persistencia 'Stale-While-Revalidate' para performance.
+ * Implementa persistencia multinivel basada en el Estándar de Soberanía ADR 0025.
  */
 export const useGlobalStateStore = create<IGlobalSovereignStore>()(
   persist(
@@ -52,66 +50,17 @@ export const useGlobalStateStore = create<IGlobalSovereignStore>()(
       ...createGovernanceSlice(...args),
     }),
     {
-      /** Identificador físico del búnker de memoria en el navegador. */
+      /** Identificador físico del búnker de memoria en el hardware local. */
       name: 'fd-sovereign-vault-v1',
+
+      /** 🛡️ SANEADO Zenith: Miembros de importación ordenados alfabéticamente. */
       storage: createJSONStorage(() => localStorage),
-      
-      /**
-       * @section Auditoría SRE (Hydration Guard)
-       * SANEADO Zenith: El parámetro inicial se marca como '_' para evitar TS6133.
-       */
-      onRehydrateStorage: (_state) => {
-        const correlationIdentifier = GenerateCorrelationIdentifier();
-        
-        return (rehydratedState, error) => {
-          if (error) {
-            void EmitTelemetrySignal({
-              severityLevel: 'ERROR',
-              moduleIdentifier: 'GLOBAL_STATE_ORCHESTRATOR',
-              operationCode: 'STATE_HYDRATION_FAULT',
-              correlationIdentifier,
-              message: 'Fallo crítico al intentar recuperar la soberanía del disco local.',
-              contextMetadata: { errorTrace: String(error) }
-            });
-            return;
-          }
 
-          void EmitTelemetrySignal({
-            severityLevel: 'INFO',
-            moduleIdentifier: 'GLOBAL_STATE_ORCHESTRATOR',
-            operationCode: 'STATE_HYDRATION_NOMINAL',
-            correlationIdentifier,
-            message: 'Soberanía recuperada: Memoria institucional sincronizada con el disco.',
-            contextMetadata: { 
-              hasMandatary: !!rehydratedState?.activeMandataryIdentifier,
-              isOnline: rehydratedState?.availabilityStatus === 'ONLINE'
-            }
-          });
-        };
-      },
+      /** 🛡️ SANEADO Zenith: Delegación de auditoría al átomo especializado. */
+      onRehydrateStorage: StateHydrationAuditor,
 
-      /**
-       * @section Filtro de Soberanía (ADR 0025)
-       * Seleccionamos exclusivamente qué fragmentos de ADN deben ser 'Inmortales'.
-       */
-      partialize: (state) => ({
-        // Dominio: Identidad & Reputación
-        actorAuthorityWeightNumeric: state.actorAuthorityWeightNumeric,
-        lastViewedIndicatorsMapping: state.lastViewedIndicatorsMapping,
-        
-        // Dominio: Gobernanza & Democracia Líquida
-        activeMandataryIdentifier: state.activeMandataryIdentifier,
-        favoriteGroupsCollection: state.favoriteGroupsCollection,
-        communitySeniorityLevelQuantity: state.communitySeniorityLevelQuantity,
-        
-        // Dominio: Presencia & Hardware
-        activePushTokenSecret: state.activePushTokenSecret,
-        customStatusMessageLiteral: state.customStatusMessageLiteral,
-        
-        // Dominio: Resiliencia SRE
-        pendingActionsQueueQuantity: state.pendingActionsQueueQuantity,
-        lastSuccessfulSyncTimestampISO: state.lastSuccessfulSyncTimestampISO,
-      }),
+      /** 🛡️ SANEADO Zenith: Delegación del filtro de soberanía al átomo lógico. */
+      partialize: StatePersistenceFilter,
     }
   )
 );

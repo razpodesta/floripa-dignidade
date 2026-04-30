@@ -1,31 +1,30 @@
 /**
- * @section PMF Engine Logic - E-Pública to Sovereign Mapper
+ * @section PMF Engine Logic - E-Pública to Sovereign Mapper (Orchestrator)
  * @description Átomo de lógica pura encargado de la homogenización de datos.
- * Transforma el registro crudo del protocolo gubernamental en el ADN de Gasto Público
- * Soberano. Realiza la agregación de flujos de caja, normaliza identificadores
- * fiscales y prepara la entidad para el cruzamiento territorial.
+ * Coordina el enjambre de sub-mapeadores para transformar registros gubernamentales
+ * en inteligencia civil inmutable y validada por Zod.
  *
- * Protocolo OEDP-V17.0 - Functional Atomicity & Mathematical Precision.
- * Vision: Data Sanitization & Integrity for Civic Auditing.
+ * Protocolo OEDP-V17.0 - Swarm Intelligence & ISO Technical Naming.
+ * SANEADO Zenith: Resolución de error 'sort-imports' y atomización total.
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
-import {
-  EmitTelemetrySignal,
-  TraceExecutionTime
-} from '@floripa-dignidade/telemetry';
+import { EmitTelemetrySignal, TraceExecutionTime } from '@floripa-dignidade/telemetry';
 
-/* 1. ADN de Entrada (Protocolo Crudo) */
+/* 1. ADN de Entrada y Salida (Alphabetical Order - ISO Compliance) */
+import {
+  type ExpenditureIdentifier,
+  type IPublicExpenditure,
+  PublicExpenditureSchema,
+  type TerritorialTechnicalIdentifier,
+} from '../../../schemas/sovereign/PublicExpenditure.schema';
 import type { IEPublicaExpenseRaw } from '../../../schemas/protocol/EPublicaExpense.schema';
 
-/* 2. ADN de Salida (Soberanía Normalizada) */
-import { PublicExpenditureSchema } from '../../../schemas/sovereign/PublicExpenditure.schema';
-import type {
-  IPublicExpenditure,
-  ExpenditureIdentifier,
-  ProviderCnpj
-} from '../../../schemas/sovereign/PublicExpenditure.schema';
+/* 2. Enjambre Atómico de Soporte (Mappers especializados) */
+import { CalculateExecutedFinancialBalance } from './CalculateExecutedFinancialBalance';
+import { MapBudgetTaxonomy } from './MapBudgetTaxonomy';
+import { MapProviderIdentity } from './MapProviderIdentity';
 
 /** Identificador técnico del aparato para el Neural Sentinel. */
 const DATA_MAPPER_IDENTIFIER = 'EPUBLICA_SOVEREIGN_MAPPER';
@@ -33,15 +32,14 @@ const DATA_MAPPER_IDENTIFIER = 'EPUBLICA_SOVEREIGN_MAPPER';
 /**
  * Mapea y purifica un registro individual de la Prefeitura.
  *
- * @param rawExpenseSnapshot - Registro extraído directamente de la API de red.
+ * @param rawExpenseSnapshot - Registro extraído de la API de red.
  * @param correlationIdentifier - Identificador de trazabilidad del hilo superior.
- * @returns {Promise<IPublicExpenditure>} Entidad homogenizada validada por la aduana Zod.
+ * @returns {Promise<IPublicExpenditure>} Entidad homogenizada y validada.
  */
 export const MapEPublicaToSovereign = async (
   rawExpenseSnapshot: IEPublicaExpenseRaw,
-  correlationIdentifier: string
+  correlationIdentifier: string,
 ): Promise<IPublicExpenditure> => {
-
   return await TraceExecutionTime(
     DATA_MAPPER_IDENTIFIER,
     'MAP_GOVERNMENT_RECORD_TO_SOVEREIGN_ADN',
@@ -50,51 +48,42 @@ export const MapEPublicaToSovereign = async (
       const { registro } = rawExpenseSnapshot;
 
       /**
-       * 1. AGREGACIÓN FINANCIERA (Liquidity Calculus)
-       * Sumamos todos los movimientos de caja asociados al empenho.
-       * Esto nos da el valor real EJECUTADO, no solo el valor previsto.
+       * FASE 1: INTELIGENCIA FINANCIERA Y FISCAL
+       * Delegamos los cálculos y limpiezas a los átomos correspondientes.
        */
-      const totalExecutedAmountNumeric = registro.listMovimentos.reduce(
-        (accumulator, movement) => accumulator + movement.valorMovimento,
-        0
+      const totalExecutedAmountNumeric = CalculateExecutedFinancialBalance(
+        registro.listMovimentos,
+        correlationIdentifier,
+      );
+
+      const providerMetadata = MapProviderIdentity(
+        registro.fornecedor.pessoa.nome,
+        registro.fornecedor.pessoa.cpfCnpj,
+      );
+
+      const functionalCategory = MapBudgetTaxonomy(
+        registro.despesa.funcao.denominacao,
+        registro.despesa.subfuncao.denominacao,
+        registro.despesa.programa.denominacao,
       );
 
       /**
-       * 2. SANEAMIENTO DE IDENTIDAD FISCAL (CNPJ Normalization)
-       * Eliminamos puntos, guiones y barras para obtener los 14 dígitos puros.
-       */
-      const purifiedCnpjLiteral = registro.fornecedor.pessoa.cpfCnpj.replace(/\D/g, '');
-
-      /**
-       * 3. CONSTRUCCIÓN DE LA ENTIDAD SOBERANA
-       * Mapeamos la jerarquía técnica de la Prefeitura a nuestro ADN plano.
+       * FASE 2: ENSAMBLAJE DE LA ENTIDAD SOBERANA
+       * Construimos el snapshot inmutable para el Data Lake.
        */
       const sovereignExpenditureSnapshot = {
-        /** Generamos un ID basado en el número de empenho y ejercicio para evitar duplicados */
         expenditureIdentifier: `PMF-EXP-${registro.empenho.numero}` as ExpenditureIdentifier,
-
         governmentTechnicalReferenceLiteral: registro.empenho.numero.toString(),
 
         /**
          * @future_integration
-         * TODO: Invocar LinkExpenditureToTerritory.ts para determinar el ID del IBGE.
-         * De momento, se asigna el ID global de Florianópolis.
+         * Vinculación geográfica basada en el rastro del IBGE.
          */
-        targetTerritoryIdentifier: '4205407',
+        targetTerritoryIdentifier: '4205407' as TerritorialTechnicalIdentifier,
 
         totalExecutedAmountNumeric,
-
-        providerMetadata: {
-          legalNameLiteral: registro.fornecedor.pessoa.nome,
-          taxIdentificationNumber: purifiedCnpjLiteral as ProviderCnpj,
-        },
-
-        functionalCategory: {
-          functionNameLiteral: registro.despesa.funcao.denominacao,
-          subFunctionNameLiteral: registro.despesa.subfuncao.denominacao,
-          programNameLiteral: registro.despesa.programa.denominacao,
-        },
-
+        providerMetadata,
+        functionalCategory,
         serviceDescriptionLiteral: registro.empenho.objetoResumido.trim(),
 
         auditMetadata: {
@@ -104,36 +93,33 @@ export const MapEPublicaToSovereign = async (
         },
       };
 
-      // 4. ADUANA DE ADN (Validación de Salida)
+      // 3. ADUANA DE ADN (Validación Final)
       const validationResult = PublicExpenditureSchema.safeParse(sovereignExpenditureSnapshot);
 
       if (!validationResult.success) {
         void EmitTelemetrySignal({
-          severityLevel: 'ERROR',
+          severityLevel: 'CRITICAL',
           moduleIdentifier: DATA_MAPPER_IDENTIFIER,
           operationCode: 'SOVEREIGN_MAPPING_VIOLATION',
           correlationIdentifier,
-          message: 'Fallo al homogenizar el registro gubernamental: ADN de salida corrupto.',
-          contextMetadata: {
-            issues: validationResult.error.flatten(),
-            governmentId: registro.empenho.numero
-          }
+          message: 'Fallo al homogenizar registro: El ADN de salida viola el contrato.',
+          contextMetadata: { issuesCollection: validationResult.error.flatten() },
         });
 
-        throw new Error('MAPPING_TRANSFORMATION_FAULT');
+        throw new Error('PMF_ENGINE.ERRORS.MAPPING_TRANSFORMATION_FAULT');
       }
 
-      // 5. REPORTE DE TRAZABILIDAD
+      // 4. REPORTE DE ÉXITO
       void EmitTelemetrySignal({
-        severityLevel: 'DEBUG',
+        severityLevel: 'INFO',
         moduleIdentifier: DATA_MAPPER_IDENTIFIER,
-        operationCode: 'RECORD_SUCCESSFULLY_NORMALIZED',
+        operationCode: 'RECORD_NORMALIZATION_SUCCESS',
         correlationIdentifier,
         message: 'PMF_ENGINE.LOGS.RECORD_MAPPED',
-        contextMetadata: { id: sovereignExpenditureSnapshot.expenditureIdentifier }
+        contextMetadata: { id: sovereignExpenditureSnapshot.expenditureIdentifier },
       });
 
       return validationResult.data;
-    }
+    },
   );
 };

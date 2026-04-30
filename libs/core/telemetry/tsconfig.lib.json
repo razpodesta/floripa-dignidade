@@ -1,43 +1,45 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    /* --- ESTRATÉGIA DE SAÍDA ZENITH --- */
+    /* --- ESTRATEGIA DE SALIDA ZENITH (Out-of-Source) --- */
     "outDir": "../../../dist/out-tsc/libs/core/telemetry",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/telemetry/tsconfig.lib.tsbuildinfo",
 
-    /* --- INTEGRIDADE SOBERANA (ADN Emitter) --- */
-    "composite": true,           /* Habilita a participação no Grafo Incremental */
-    "declaration": true,         /* Emite as assinaturas de tipos (.d.ts) vitais */
-    "declarationMap": true,      /* Mapeamento para DX forense no IDE */
-    "emitDeclarationOnly": true, /* O motor SWC cuida da lógica; TSC valida o ADN */
-    "rootDir": "src",            /* Blindagem de fronteira física (Fix TS6059) */
+    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
+    "composite": true,           /* Habilita la participación en el Grafo Incremental */
+    "declaration": true,         /* Emite las firmas de tipos (.d.ts) para el enjambre */
+    "declarationMap": true,      /* DX: Mapeo para salto al código fuente en el IDE */
+    "emitDeclarationOnly": true, /* El motor SWC cuida la lógica; TSC valida la pureza del ADN */
+    "rootDir": "src",            /* Blindaje de frontera física absoluta (Fix TS6059) */
 
-    /*
-     * 🛡️ MANOBRA DE ISOLAMENTO (OEDP-V17.0)
-     * Resetamos os 'paths' para obrigar o compilador a usar as 'references'
-     * e os arquivos .d.ts das dependências (ex: exceptions),
-     * impedindo a sucção de código fonte externo.
+    /**
+     * 🛡️ MANOBRA DE REDIRECCIÓN DE ADN (OEDP-V17.0)
+     * Sobreescribimos los paths globales para obligar al compilador a usar
+     * las declaraciones (.d.ts) en lugar de succionar código fuente externo.
+     * Esto extingue el error TS6059 de forma definitiva.
      */
-    "paths": {},
+    "paths": {
+      "@floripa-dignidade/exceptions": ["../../../dist/out-tsc/libs/core/exceptions/src/index.d.ts"]
+    },
 
-    /* --- RESOLUÇÃO NEXT-GEN (Standard Next.js 16) --- */
+    /* --- RESOLUCIÓN NEXT-GEN (Standard Next.js 16 & Turbopack) --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true, /* Separação estrita entre ADN e Lógica */
+    "verbatimModuleSyntax": true, /* Fuerza la separación estricta entre tipos y lógica */
     "isolatedModules": true,
 
-    /* --- ADN DO AMBIENTE (System Nervous Context) --- */
+    /* --- ADN DEL ENTORNO (System Nervous Context) --- */
     "types": ["node"],
     "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
 
-  /* --- ESCOPO DE AUDITORIA ATÔMICA --- */
+  /* --- ESCOPO DE AUDITORÍA ATÔMICA --- */
   "include": [
     "src/**/*.ts",
     "src/**/*.json"
   ],
 
-  /* --- ADUANA DE EXCLUSÃO (Anti-Contamination) --- */
+  /* --- ADUANA DE EXCLUSIÓN (Anti-Contamination) --- */
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
@@ -45,7 +47,7 @@
     "dist",
     "out-tsc",
     "node_modules",
-    /* 🛡️ SANEADO Zenith: Bloqueio físico para forçar o uso de referências de projeto */
+    /* 🛡️ SANEADO Zenith: Bloqueo de directorios de salida para evitar redundancia */
     "../../../dist",
     "../../../node_modules"
   ]

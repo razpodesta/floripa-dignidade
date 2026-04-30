@@ -1,31 +1,42 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../dist/out-tsc/scripts",
-    "tsBuildInfoFile": "../dist/out-tsc/scripts/tsconfig.lib.tsbuildinfo",
+    "outDir": "../../dist/out-tsc/scripts",
+    "tsBuildInfoFile": "../../dist/out-tsc/scripts/tsconfig.lib.tsbuildinfo",
 
     /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
-    "composite": true,           /* Habilita la compilación incremental de los disparadores */
-    "declaration": true,         /* Emite las firmas de tipos necesarias para el Grafo */
-    "declarationMap": true,      /* Mapeo para trazabilidad en el IDE */
-    "emitDeclarationOnly": true, /* Delega la ejecución real a TSX (Node.js) */
-    "rootDir": "src",            /* Blindaje de frontera física absoluta */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+
+    /*
+       🛡️ SANEADO Zenith: Redirección de Grafo (Fix TS2307 / TS6059)
+       Se erradicó el segmento 'src' de la ruta de salida. Cuando el búnker 'tools'
+       emite su ADN, omite la carpeta base. La resolución ahora apunta a la
+       verdad física inmutable.
+    */
+    "paths": {
+      "@floripa-dignidade/tools":["../../dist/out-tsc/libs/tools/index.d.ts"]
+    },
 
     /* --- RESOLUCIÓN NEXT-GEN --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true, /* Fuerza la separación estricta entre tipos y lógica */
+    "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
     /* --- ADN DEL ENTORNO (Node.js Scripting Context) --- */
-    "types": ["node"],           /* Acceso mandatorio a process, fs y APIs de sistema */
-    "lib": ["ES2022"]            /* Contexto de ejecución de servidor moderno */
+    "types": ["node"],
+    "lib": ["ES2022"]
   },
-  "include": ["src/**/*.ts", "src/**/*.json"],
-  "exclude": [
+  "include": ["src/**/*.ts"],
+  "exclude":[
     "node_modules",
     "dist",
     "out-tsc",
-    "src/**/*.spec.ts"
+    "../../dist",
+    "../../node_modules"
   ]
 }

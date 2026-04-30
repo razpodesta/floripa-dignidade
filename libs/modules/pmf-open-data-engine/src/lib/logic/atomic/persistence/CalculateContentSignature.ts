@@ -1,52 +1,100 @@
 /**
- * @section PMF Engine Logic - Content Signature Atom
- * @description Átomo de lógica pura encargado de generar una huella digital (Fingerprint)
- * basada exclusivamente en los datos financieros y técnicos del gasto. Permite detectar
- * mutaciones en el registro gubernamental sin depender de identificadores externos.
+ * @section PMF Engine Logic - Content Signature Orchestrator
+ * @description Átomo encargado de generar una huella digital (Fingerprint) SHA-256
+ * inalterable basada en el contenido técnico del gasto. Permite detectar
+ * mutaciones en los registros gubernamentales garantizando la soberanía del dato.
  *
- * Protocolo OEDP-V17.0 - Cryptographic Integrity & Change Detection.
- * Vision: Immutable Content Verification.
+ * Protocolo OEDP-V17.0 - High Performance SRE & Cryptographic Integrity.
+ * SANEADO Zenith: Normalización de rastro forense y tipado inmutable de entrada.
  *
  * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
-import { GenerateCorrelationIdentifier } from '@floripa-dignidade/telemetry';
+import {
+  EmitTelemetrySignal,
+  GenerateCorrelationIdentifier,
+} from '@floripa-dignidade/telemetry';
+
+import { NormalizeObjectToDeterministicJson } from './NormalizeObjectToDeterministicJson';
+
+/** Identificador técnico del aparato para el Neural Sentinel. */
+const CRYPTO_SIGNATURE_IDENTIFIER = 'CONTENT_INTEGRITY_HASHER';
 
 /**
- * Genera un Hash SHA-256 del contenido técnico del gasto.
+ * Genera una firma criptográfica SHA-256 del contenido técnico proporcionado.
+ * Implementa ejecución nativa vía Web Crypto API para máxima eficiencia en el Edge.
  *
- * @param contentPayload - Objeto con los datos sensibles (monto, descripción, proveedor).
- * @param correlationIdentifier - ID de trazabilidad.
- * @returns {Promise<string>} Firma de contenido hexadecimal.
+ * @param contentPayloadCollection - Diccionario inmutable con los datos sensibles del gasto.
+ * @param correlationIdentifier - Identificador de trazabilidad forense (Default: Auto-generated).
+ * @returns {Promise<string>} Firma hexadecimal de integridad inalterable.
  */
 export const CalculateContentSignature = async (
-  contentPayload: Record<string, unknown>,
-  correlationIdentifier: string = GenerateCorrelationIdentifier()
+  contentPayloadCollection: Readonly<Record<string, unknown>>,
+  correlationIdentifier: string = GenerateCorrelationIdentifier(),
 ): Promise<string> => {
+  /**
+   * @section Fase 1: Normalización de ADN
+   * Delegamos en el átomo de serialización para garantizar que el Hash
+   * sea determinista independientemente del orden de las llaves del objeto.
+   */
+  const deterministicJsonLiteral = NormalizeObjectToDeterministicJson(contentPayloadCollection);
 
   /**
-   * @section Normalización de ADN
-   * Ordenamos las llaves del objeto para que el hash sea determinista
-   * independientemente del orden en que lleguen los datos de la API.
+   * @section Fase 2: Procesamiento de Hardware
+   * Transformamos el literal de texto en un rastro binario para el motor digest.
    */
-  const sortedContentString = JSON.stringify(contentPayload, Object.keys(contentPayload).sort());
-
-  const encoderInstance = new TextEncoder();
-  const dataBuffer = encoderInstance.encode(sortedContentString);
+  const textEncoderInstance = new TextEncoder();
+  const binaryDataBuffer = textEncoderInstance.encode(deterministicJsonLiteral);
 
   try {
-    const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', binaryDataBuffer);
+
+    /**
+     * @section Fase 3: Transformación a Firma Legible
+     * Convertimos el buffer binario en una cadena hexadecimal técnica.
+     */
     const hashArrayCollection = Array.from(new Uint8Array(hashBuffer));
 
-    return hashArrayCollection
-      .map(byte => byte.toString(16).padStart(2, '0'))
+    const finalSignatureHexLiteral = hashArrayCollection
+      .map((byteValue) => byteValue.toString(16).padStart(2, '0'))
       .join('');
 
-  } catch (caughtError: unknown) {
     /**
-     * Fallback preventivo: Si falla la firma, devolvemos un token de error
-     * para forzar revisión manual en el Persistence Sentry.
+     * @section Telemetría Nominal
+     * Emitimos señal de éxito para el rastro de auditoría de persistencia.
      */
-    return `SIGNATURE_FAULT_${correlationIdentifier}`;
+    void EmitTelemetrySignal({
+      severityLevel: 'DEBUG',
+      moduleIdentifier: CRYPTO_SIGNATURE_IDENTIFIER,
+      operationCode: 'CRYPTOGRAPHIC_SIGNATURE_GENERATED',
+      correlationIdentifier,
+      message: 'Firma de integridad de contenido generada exitosamente.',
+    });
+
+    return finalSignatureHexLiteral;
+
+  } catch (_caughtError: unknown) {
+    /**
+     * @section Gestión de Colapso Criptográfico (Resilience)
+     * SANEADO Zenith: El error se marca con '_' para cumplimiento de ESLint.
+     * Se emite señal de prioridad CRITICAL para activar protocolos de sanación.
+     */
+    void EmitTelemetrySignal({
+      severityLevel: 'CRITICAL',
+      moduleIdentifier: CRYPTO_SIGNATURE_IDENTIFIER,
+      operationCode: 'CRYPTOGRAPHIC_ALGORITHM_FAULT',
+      correlationIdentifier,
+      message: 'Fallo catastrófico al intentar generar la firma de integridad.',
+      contextMetadata: {
+        errorTypeLiteral: _caughtError instanceof Error ? _caughtError.name : 'UnknownCryptoError',
+      },
+    });
+
+    /**
+     * Fallback de Seguridad: Retornamos un token de falla determinista
+     * para forzar una auditoría manual en el motor de persistencia soberana.
+     */
+    return `SIGNATURE_FAULT_SIGNAL_${correlationIdentifier}`;
   }
 };

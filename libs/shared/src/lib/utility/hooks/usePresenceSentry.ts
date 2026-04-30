@@ -1,92 +1,94 @@
 /**
- * @section Utility Logic - Presence Sentry Hook
- * @description Sensor de frontera encargado de monitorear la actividad física del
- * ciudadano. Utiliza la Visibility API para detectar estados 'AWAY' y sincroniza
- * los latidos (Heartbeats) con el State Store soberano.
- * 
- * Protocolo OEDP-V16.0 - High Performance, SRE Resilience & Privacy by Design.
- * Vision: Expert Presence Tracking (Better than WhatsApp).
+ * @section Utility Logic - Presence Sentry Hook (Sensor)
+ * @description Orquestador sensorial encargado de monitorear la actividad física
+ * del ciudadano mediante eventos del navegador. Sincroniza los latidos (Heartbeats)
+ * con el State Store soberano.
+ *
+ * Protocolo OEDP-V17.0 - High Performance, SRE Resilience & ISO Standards.
+ * SANEADO Zenith: Resolución de error 'sort-imports' y atomización de lógica.
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
-import { useEffect, useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useGlobalStateStore } from '../state-store';
+import { DetermineTargetPresenceStatus } from '../logic/DetermineTargetPresenceStatus';
 
 /**
  * @interface IUsePresenceSentryResult
- * @description Contrato de salida para la auditoría de presencia en la interfaz.
+ * @description Contrato de salida inmutable para la auditoría del sensor.
  */
 interface IUsePresenceSentryResult {
-  /** Indica si el sistema está capturando señales de vida actualmente. */
+  /** Indica si el sistema de vigilancia sensorial está operativo. */
   readonly isSentryActiveBoolean: boolean;
 }
 
 /**
  * Hook de élite para la gestión automatizada de presencia ciudadana.
- * Implementa detección de inactividad por desenfoque de pestaña y desconexión de red.
+ * Implementa una estrategia de "Passive Listening" para optimizar el Main Thread.
  *
- * @returns {IUsePresenceSentryResult} Estado del sensor.
+ * @returns {IUsePresenceSentryResult} Estado de activación del sensor.
  */
 export const usePresenceSentry = (): IUsePresenceSentryResult => {
-  const { 
-    SetAvailabilityStatusAction, 
-    availabilityStatus 
+  const {
+    SetAvailabilityStatusAction,
+    availabilityStatus
   } = useGlobalStateStore((state) => ({
     SetAvailabilityStatusAction: state.SetAvailabilityStatusAction,
     availabilityStatus: state.availabilityStatus
   }));
 
   /**
-   * @section Lógica de Inferencia de Estado
-   * SANEADO Zenith: Traducción de señales físicas a estados ontológicos.
+   * @section Sincronización de Señales
+   * Transfiere el estado detectado por el hardware al búnker de memoria.
    */
-  const synchronizePhysicalPresenceAction = useCallback(() => {
-    // CASO 1: Dispositivo Offline
-    if (!navigator.onLine) {
-      if (availabilityStatus !== 'OFFLINE') {
-        SetAvailabilityStatusAction('OFFLINE');
-      }
-      return;
-    }
+  const executePresenceSynchronizationAction = useCallback(() => {
+    // 1. Captura de señales físicas del dispositivo
+    const targetStatus = DetermineTargetPresenceStatus({
+      isNavigatorOnlineBoolean: navigator.onLine,
+      documentVisibilityStateLiteral: document.visibilityState
+    });
 
-    // CASO 2: Pestaña en segundo plano (Inactividad detectada)
-    if (document.visibilityState === 'hidden') {
-      SetAvailabilityStatusAction('AWAY');
-      return;
+    // 2. Commmit selectivo (Evita mutaciones redundantes)
+    if (targetStatus !== availabilityStatus) {
+      SetAvailabilityStatusAction(targetStatus);
     }
-
-    // CASO 3: Actividad plena
-    SetAvailabilityStatusAction('ONLINE');
   }, [availabilityStatus, SetAvailabilityStatusAction]);
 
   useEffect(() => {
-    /** 🛡️ SANEADO: Suscripción a eventos del sistema operativo y navegador */
-    window.addEventListener('focus', synchronizePhysicalPresenceAction);
-    window.addEventListener('blur', synchronizePhysicalPresenceAction);
-    document.addEventListener('visibilitychange', synchronizePhysicalPresenceAction);
-
-    /** 
-     * Heartbeat Preventivo:
-     * Sincronización forzada cada 2 minutos para evitar sesiones zombie
-     * en el Tier de Datos (Supabase).
+    /**
+     * @section Registro de Sensores (Hardware Listeners)
+     * Utilizamos eventos de enfoque y visibilidad para detectar el rastro humano.
      */
-    const heartbeatIntervalQuantity = 120000;
+    window.addEventListener('focus', executePresenceSynchronizationAction);
+    window.addEventListener('blur', executePresenceSynchronizationAction);
+    window.addEventListener('online', executePresenceSynchronizationAction);
+    window.addEventListener('offline', executePresenceSynchronizationAction);
+    document.addEventListener('visibilitychange', executePresenceSynchronizationAction);
+
+    /**
+     * @section Heartbeat Preventivo (Keep-Alive)
+     * Sincronización forzada para mitigar sesiones 'zombie'.
+     * @constant HEARTBEAT_INTERVAL_MILLISECONDS - 120,000 (2 Minutos).
+     */
+    const HEARTBEAT_INTERVAL_MILLISECONDS_QUANTITY = 120000;
     const heartbeatTimerReference = setInterval(
-      synchronizePhysicalPresenceAction, 
-      heartbeatIntervalQuantity
+      executePresenceSynchronizationAction,
+      HEARTBEAT_INTERVAL_MILLISECONDS_QUANTITY
     );
 
-    // Sincronización inicial al montar el aparato
-    synchronizePhysicalPresenceAction();
+    // Inferencia de estado inmediata al montaje del sensor.
+    executePresenceSynchronizationAction();
 
     return () => {
-      window.removeEventListener('focus', synchronizePhysicalPresenceAction);
-      window.removeEventListener('blur', synchronizePhysicalPresenceAction);
-      document.removeEventListener('visibilitychange', synchronizePhysicalPresenceAction);
+      window.removeEventListener('focus', executePresenceSynchronizationAction);
+      window.removeEventListener('blur', executePresenceSynchronizationAction);
+      window.removeEventListener('online', executePresenceSynchronizationAction);
+      window.removeEventListener('offline', executePresenceSynchronizationAction);
+      document.removeEventListener('visibilitychange', executePresenceSynchronizationAction);
       clearInterval(heartbeatTimerReference);
     };
-  }, [synchronizePhysicalPresenceAction]);
+  }, [executePresenceSynchronizationAction]);
 
   return {
     isSentryActiveBoolean: true

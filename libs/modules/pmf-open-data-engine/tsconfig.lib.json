@@ -5,13 +5,26 @@
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/modules/pmf-open-data-engine/tsconfig.lib.tsbuildinfo",
 
     /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
-    "composite": true,           /* Habilita la compilación incremental y el grafo de referencias */
-    "declaration": true,         /* Emite las firmas de tipos (.d.ts) para el Portal y Analítica */
-    "declarationMap": true,      /* Mapeo para trazabilidad forense en el IDE */
+    "composite": true,           /* Habilita la compilación incremental en el grafo global */
+    "declaration": true,         /* Emite las firmas de tipos (.d.ts) para el consumo de la App */
+    "declarationMap": true,      /* DX: Mapeo para salto al código fuente desde el IDE */
     "emitDeclarationOnly": true, /* Delega la lógica de ejecución al motor SWC/Turbopack */
     "rootDir": "src",            /* Blindaje de frontera física absoluta (Fix TS6059) */
 
-    /* --- RESOLUCIÓN NEXT-GEN (Next.js 16 Ready) --- */
+    /**
+     * 🛡️ MANIOBRA DE REDIRECCIÓN DE ADN (OEDP-V17.0)
+     * Sobreescribimos los paths globales para obligar al compilador a usar
+     * las declaraciones (.d.ts) en lugar de succionar código fuente externo.
+     * Esto extingue el error TS6059 de forma definitiva.
+     */
+    "paths": {
+      "@floripa-dignidade/telemetry": ["../../../dist/out-tsc/libs/core/telemetry/src/index.d.ts"],
+      "@floripa-dignidade/exceptions": ["../../../dist/out-tsc/libs/core/exceptions/src/index.d.ts"],
+      "@floripa-dignidade/environment-validator": ["../../../dist/out-tsc/libs/core/environment-validator/src/index.d.ts"],
+      "@floripa-dignidade/territorial-engine": ["../../../dist/out-tsc/libs/modules/territorial-engine/src/index.d.ts"]
+    },
+
+    /* --- RESOLUCIÓN NEXT-GEN (Standard Next.js 16 Ready) --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true, /* Fuerza la separación estricta entre tipos y lógica */
@@ -19,12 +32,16 @@
 
     /* --- ADN DEL ENTORNO (Data Extraction Context) --- */
     "types": ["node"],
-    "lib": ["ES2022", "DOM", "DOM.Iterable"] /* Soporte para fetch, crypto-digest y procesos asíncronos */
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
+
+  /* --- ESCOPO DE AUDITORÍA ATÓMICA --- */
   "include": [
     "src/**/*.ts",
     "src/**/*.json"
   ],
+
+  /* --- ADUANA DE EXCLUSIÓN (Anti-Contamination) --- */
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
@@ -32,6 +49,7 @@
     "dist",
     "out-tsc",
     "node_modules",
+    /* 🛡️ SANEADO Zenith: Bloqueo de directorios de salida para evitar redundancia */
     "../../../dist",
     "../../../node_modules"
   ]

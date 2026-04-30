@@ -5,13 +5,15 @@
     "ignoreDeprecations": "5.0"
   },
   /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí para evitar colisiones de grafo. */
-  "files": [],
+  "files":[],
   "include": [],
-  "references": [
+  "references":[
     { "path": "./tsconfig.lib.json" },
-    /* --- ENLACES FÍSICOS AL ENJAMBRE (Consumidos por el Sensor de Sentimiento) --- */
+    /* --- ENLACES FÍSICOS AL ENJAMBRE --- */
     { "path": "../../core/telemetry" },
     { "path": "../../core/exceptions" },
-    { "path": "../identity" }
+    { "path": "../identity" },
+    /* 🛡️ SANEADO Zenith: Enlace al búnker visual y de memoria (Shared) */
+    { "path": "../../shared" }
   ]
 }

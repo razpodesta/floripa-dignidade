@@ -1,72 +1,70 @@
 /**
  * @section PMF Open Data Engine - Package Entry Point (Barrel)
  * @description Único punto de exportación autorizado para el búnker de inteligencia
- * de datos abiertos. Orquesta la visibilidad de los contratos de ADN, la lógica de
- * orquestación y las almas lingüísticas para el ecosistema Floripa Dignidade.
+ * de datos abiertos. Orquesta la visibilidad de los contratos de ADN.
  *
- * Protocolo OEDP-V17.0 - Single Source Resolution & ISO Technical Naming.
- * Vision: Government Data as a Scalable Microservice.
+ * Protocolo OEDP-V17.0 - Single Source Resolution & Verbatim Module Syntax.
+ * SANEADO Zenith: Separación estricta entre ADN (tipos) y Cuerpo (lógica).
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
 /**
- * @version 1.2.0
- * Estatus: Nivelación Zenith completada. Soporte para Ingesta Híbrida y
- * Persistencia con Detección de Mutación SHA-256.
+ * @version 1.2.1
+ * Estatus: Nivelación Zenith completada. Soporte para Identificadores
+ * Territoriales Nominales y resolución de Grafo de Tipos.
  */
-export const MODULE_PMF_OPEN_DATA_ENGINE_VERSION = '1.2.0';
+export const MODULE_PMF_OPEN_DATA_ENGINE_VERSION = '1.2.1';
 
 /**
- * @section ADN Estructural (Schemas & Interfaces)
+ * @section Capa 1: ADN Estructural (Schemas & Types)
+ * Exportación de contratos inmutables para la validación y tipado.
  */
 
-// 1. Contratos de Protocolo (Crudos)
+// 1.1. Protocolo de Red Gubernamental (E-Pública Raw)
 export {
+  EPublicaApiResponseSchema,
   EPublicaExpenseSchema,
-  EPublicaApiResponseSchema
+  EPublicaMovementSchema,
 } from './lib/schemas/protocol/EPublicaExpense.schema';
 
 export type {
+  IEPublicaApiResponse,
   IEPublicaExpenseRaw,
-  IEPublicaApiResponse
+  IEPublicaMovementSnapshot,
 } from './lib/schemas/protocol/EPublicaExpense.schema';
 
-// 2. Contratos Soberanos (Homogenizados)
+// 1.2. Contratos Soberanos (Sovereign Data Normalized)
 export {
-  PublicExpenditureSchema,
   ExpenditureIdentifierSchema,
-  ProviderCnpjSchema
+  ProviderCnpjSchema,
+  PublicExpenditureSchema,
+  TerritorialTechnicalIdentifierSchema,
 } from './lib/schemas/sovereign/PublicExpenditure.schema';
 
 export type {
-  IPublicExpenditure,
   ExpenditureIdentifier,
-  ProviderCnpj
+  IPublicExpenditure,
+  ProviderCnpj,
+  TerritorialTechnicalIdentifier,
 } from './lib/schemas/sovereign/PublicExpenditure.schema';
 
 /**
- * @section Almas Lingüísticas (i18n)
+ * @section Capa 2: Almas Lingüísticas (i18n)
  */
 export { PmfOpenDataI18nSchema } from './lib/i18n/PmfOpenDataI18n.schema';
 export type { IPmfOpenDataI18n } from './lib/i18n/PmfOpenDataI18n.schema';
 
 /**
- * @section Motores de Inteligencia (Orchestrators & Logic)
+ * @section Capa 3: Motores de Lógica y Orquestadores (Swarm Intelligence)
  */
-
-// Orquestador Híbrido (Procesa API o Archivos Manuales)
 export { IngestMunicipalityData } from './lib/logic/orchestrators/MunicipalityDataIngestor';
-
-// Sincronizador Automático (Legacy Wrapper)
 export { SyncMunicipalityExpenditure } from './lib/logic/orchestrators/SyncMunicipalityExpenditure';
-
-// Centinela de Persistencia (Acceso directo para reparaciones de base de datos)
 export { SovereignPersistenceSentry } from './lib/logic/orchestrators/SovereignPersistenceSentry';
-
-// Fetcher Atómico (I/O de Red)
 export { FetchRawEPublicaData } from './lib/logic/atomic/fetchers/FetchRawEPublicaData';
 
-// Interfaces de Parametrización
-export type { ISyncExpenditureParameters } from './lib/logic/orchestrators/SyncMunicipalityExpenditure';
+/**
+ * @section Capa 4: Interfaces de Parametrización
+ */
 export type { IEPublicaFetchParameters } from './lib/logic/atomic/fetchers/FetchRawEPublicaData';
+export type { ISyncExpenditureParameters } from './lib/logic/orchestrators/SyncMunicipalityExpenditure';

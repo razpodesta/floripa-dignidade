@@ -5,24 +5,29 @@
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/modules/interaction-engine/tsconfig.lib.tsbuildinfo",
 
     /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
-    "composite": true,           /* Habilita la compilación incremental de interações */
-    "declaration": true,         /* Emite as firmas de tipos (.d.ts) para o Portal e CMS */
-    "declarationMap": true,      /* Mapeamento para rastreabilidade de suporte no IDE */
-    "emitDeclarationOnly": true, /* Delega a lógica ao motor SWC/Turbopack */
-    "rootDir": "src",            /* Blindagem de fronteira física absoluta (Fix TS6059) */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
 
-    /* --- RESOLUÇÃO NEXT-GEN (Next.js 16 Ready) --- */
+    /* 🛡️ SANEADO Zenith: Redirección de Grafo (Fix TS6059 / TS6307) */
+    "paths": {
+      "@floripa-dignidade/shared":["../../../dist/out-tsc/libs/shared/src/index.d.ts"]
+    },
+
+    /* --- RESOLUCIÓN NEXT-GEN (Next.js 16 Ready) --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true, /* Separação estrita entre tipos e lógica de interação */
+    "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- ADN DO AMBIENTE (Isomorphic Interaction Context) --- */
-    "types": [],
-    "lib": ["ES2022", "DOM", "DOM.Iterable"] /* Suporte para eventos de UI e telemetria */
+    /* --- ADN DEL ENTORNO (Isomorphic Interaction Context) --- */
+    "types":[],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["src/**/*.ts", "src/**/*.json"],
-  "exclude": [
+  "include":["src/**/*.ts", "src/**/*.json"],
+  "exclude":[
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "jest.config.ts",
