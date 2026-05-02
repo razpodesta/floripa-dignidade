@@ -22,8 +22,9 @@
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/core/communication-providers/resend"],
       "options": {
-        "command": "tsc -p libs/core/communication-providers/resend/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/core/communication-providers/resend/tsconfig.lib.json"
       },
       "cache": true
     },

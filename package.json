@@ -7,7 +7,7 @@
     "internationalization:build": "tsx scripts/src/run-weaver.ts",
     "// --- 🚀 PRODUCTION: VERCEL DEPLOYMENT PIPELINE ---": "",
     "vercel-build": "pnpm internationalization:build && nx build floripa-dignidade --prod",
-    "production:build:all": "nx run-many -t build --prod",
+    "build": "nx run-many -t build --prod",
     "// --- 🛠️ DEVELOPMENT: ATOMIC EXECUTION ---": "",
     "development:start": "nx serve floripa-dignidade",
     "development:content-management-system": "nx serve content-manager-system",

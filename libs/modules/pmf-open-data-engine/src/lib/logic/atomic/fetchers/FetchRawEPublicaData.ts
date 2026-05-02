@@ -1,13 +1,13 @@
 /**
- * @section PMF Engine Logic - E-Pública Raw Data Fetcher
- * @description Átomo de red encargado de la consulta física a la API de E-Pública.
- * Implementa vigilancia SRE mediante telemetría de latencia, gestión de timeouts
- * para el Edge Runtime y validación estricta del contrato de red gubernamental.
+ * @section PMF Engine Logic - E-Pública Raw Data Orchestrator
+ * @description Orquestador encargado de la obtención integral de datos abiertos.
+ * Coordina la construcción de URI, ejecución de red y validación de ADN Zod.
  *
- * Protocolo OEDP-V17.0 - High Performance SRE & Functional Atomicity.
- * Vision: Resilient Civic Data Acquisition.
+ * Protocolo OEDP-V17.0 - Swarm Intelligence & SRE Resilience.
+ * SANEADO Zenith: Sincronización PascalCase (Fix TS2724) y Atomización SRP.
  *
  * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
 import {
@@ -16,125 +16,111 @@ import {
   TraceExecutionTime
 } from '@floripa-dignidade/telemetry';
 
-import { mapHttpErrorToException } from '@floripa-dignidade/exceptions';
+import { MapHttpErrorToException } from '@floripa-dignidade/exceptions';
 
 /* 1. ADN de Protocolo (Aduana de Red) */
 import { EPublicaApiResponseSchema } from '../../../schemas/protocol/EPublicaExpense.schema';
 import type { IEPublicaApiResponse } from '../../../schemas/protocol/EPublicaExpense.schema';
+
+/* 2. Enjambre Atómico Local (Swiss-Watch Swarm) */
+import { BuildEPublicaRequestUrl } from './BuildEPublicaRequestUrl';
+import { ExecuteEPublicaNetworkRequest } from './ExecuteEPublicaNetworkRequest';
 
 /**
  * @interface IEPublicaFetchParameters
  * @description Contrato inmutable para la parametrización de la consulta externa.
  */
 export interface IEPublicaFetchParameters {
-  readonly municipalitySlugLiteral: string; // ej: 'florianopolis'
-  readonly initialPeriodLiteral: string;     // formato: 'mm/aaaa'
-  readonly finalPeriodLiteral: string;       // formato: 'mm/aaaa'
-  readonly managementUnitIdentifier?: number;
-  readonly startingRecordIndex?: number;
-  readonly recordQuantityLimit?: number;
+  readonly municipalitySlugLiteral: string;
+  readonly initialPeriodMonthYearLiteral: string; // ISO Naming
+  readonly finalPeriodMonthYearLiteral: string;   // ISO Naming
+  readonly managementUnitTechnicalIdentifier?: number;
+  readonly startingRecordIndexQuantity?: number;
+  readonly recordQuantityLimitQuantity?: number;
 }
 
 /** Identificador técnico del aparato para el Neural Sentinel. */
-const NETWORK_FETCHER_IDENTIFIER = 'EPUBLICA_RAW_NETWORK_FETCHER';
+const NETWORK_ORCHESTRATOR_IDENTIFIER = 'EPUBLICA_RAW_DATA_ORCHESTRATOR';
 
 /**
- * Ejecuta una petición GET asíncrona hacia el portal de transparencia solicitado.
+ * Ejecuta el pipeline de adquisición de datos gubernamentales.
  *
- * @param parameters - Configuración de filtrado y paginación.
+ * @param fetchParametersSnapshot - Configuración de filtrado y paginación.
  * @param correlationIdentifier - ID de trazabilidad forense del hilo superior.
- * @returns {Promise<IEPublicaApiResponse>} Respuesta validada y purificada por Zod.
- * @throws {InternalSystemException} Si la conexión falla o el ADN es corrupto.
+ * @returns {Promise<IEPublicaApiResponse>} Respuesta validada y purificada.
  */
 export const FetchRawEPublicaData = async (
-  parameters: IEPublicaFetchParameters,
+  fetchParametersSnapshot: IEPublicaFetchParameters,
   correlationIdentifier: string = GenerateCorrelationIdentifier()
 ): Promise<IEPublicaApiResponse> => {
 
   return await TraceExecutionTime(
-    NETWORK_FETCHER_IDENTIFIER,
-    'EXECUTE_EXTERNAL_API_REQUEST',
+    NETWORK_ORCHESTRATOR_IDENTIFIER,
+    'EXECUTE_EXTERNAL_DATA_PIPELINE',
     correlationIdentifier,
     async () => {
-      // 1. CONSTRUCCIÓN DE IDENTIDAD DE RED (URL Building)
-      const baseApiUrlLiteral = `https://transparencia.e-publica.net/epublica-portal/rest/${parameters.municipalitySlugLiteral}/api/v1/despesa`;
 
-      const queryParameters = new URLSearchParams({
-        periodo_inicial: parameters.initialPeriodLiteral,
-        periodo_final: parameters.finalPeriodLiteral,
-        ...(parameters.managementUnitIdentifier !== undefined && { codigo_unidade: parameters.managementUnitIdentifier.toString() }),
-        ...(parameters.startingRecordIndex !== undefined && { inicio_registro: parameters.startingRecordIndex.toString() }),
-        ...(parameters.recordQuantityLimit !== undefined && { cantidad_registro: parameters.recordQuantityLimit.toString() }),
-      });
-
-      const finalRequestUrlLiteral = `${baseApiUrlLiteral}?${queryParameters.toString()}`;
+      // 1. CONSTRUCCIÓN DE URI (Delegación Atómica)
+      const targetRequestUrlLiteral = BuildEPublicaRequestUrl(fetchParametersSnapshot);
 
       try {
-        // 2. EJECUCIÓN FÍSICA (Fetch Standard con AbortSignal)
-        const networkResponse = await fetch(finalRequestUrlLiteral, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'User-Agent': 'Floripa-Dignidade-Auditor-Engine/1.0',
-            'X-Correlation-ID': correlationIdentifier
-          },
-          /** SRE: Tiempo máximo de espera de 20 segundos para evitar bloqueos en el Edge */
-          signal: AbortSignal.timeout(20000)
-        });
+        // 2. EJECUCIÓN DE RED (Delegación Atómica)
+        const networkResponse = await ExecuteEPublicaNetworkRequest(
+          targetRequestUrlLiteral,
+          correlationIdentifier
+        );
 
-        // 3. GESTIÓN DE FALLOS DE PROTOCOLO (HTTP Guard)
-        if (!networkResponse.ok) {
-          throw mapHttpErrorToException(networkResponse.status, 'PMF_ENGINE.ERRORS.NETWORK_CONNECTION_FAULT', {
-            targetUrl: finalRequestUrlLiteral,
-            statusText: networkResponse.statusText
-          });
-        }
+        const rawJsonPayloadSnapshot = await networkResponse.json();
 
-        const rawJsonPayload = await networkResponse.json();
-
-        // 4. ADUANA DE ADN (Safe Parsing contra el Esquema de Protocolo)
-        const validationResult = EPublicaApiResponseSchema.safeParse(rawJsonPayload);
+        // 3. ADUANA DE ADN (Safe Parsing)
+        const validationResult = EPublicaApiResponseSchema.safeParse(rawJsonPayloadSnapshot);
 
         if (!validationResult.success) {
           void EmitTelemetrySignal({
             severityLevel: 'CRITICAL',
-            moduleIdentifier: NETWORK_FETCHER_IDENTIFIER,
+            moduleIdentifier: NETWORK_ORCHESTRATOR_IDENTIFIER,
             operationCode: 'EPUBLICA_CONTRACT_VIOLATION',
             correlationIdentifier,
             message: 'PMF_ENGINE.ERRORS.PROTOCOL_CONTRACT_VIOLATION',
-            contextMetadata: {
-              issues: validationResult.error.flatten(),
-              municipality: parameters.municipalitySlugLiteral
+            contextMetadataSnapshot: {
+              issuesCollection: validationResult.error.flatten(),
+              municipalityLiteral: fetchParametersSnapshot.municipalitySlugLiteral
             }
           });
 
-          throw mapHttpErrorToException(502, 'PMF_ENGINE.ERRORS.PROTOCOL_CONTRACT_VIOLATION');
+          throw MapHttpErrorToException(502, 'PMF_ENGINE.ERRORS.PROTOCOL_CONTRACT_VIOLATION');
         }
 
-        // 5. REPORTE DE ÉXITO SRE
+        // 4. REPORTE DE ÉXITO SRE (Visibility)
         void EmitTelemetrySignal({
           severityLevel: 'INFO',
-          moduleIdentifier: NETWORK_FETCHER_IDENTIFIER,
-          operationCode: 'EXTERNAL_DATA_RETRIEVED_NOMINAL',
+          moduleIdentifier: NETWORK_ORCHESTRATOR_IDENTIFIER,
+          operationCode: 'EXTERNAL_DATA_SYNC_NOMINAL',
           correlationIdentifier,
           message: 'PMF_ENGINE.LOGS.SYNC_SUCCESS',
-          contextMetadata: {
-            recordCount: validationResult.data.totalRegistros,
-            municipality: parameters.municipalitySlugLiteral
+          contextMetadataSnapshot: {
+            recordCountQuantity: validationResult.data.totalRegistros,
+            municipalityLiteral: fetchParametersSnapshot.municipalitySlugLiteral
           }
         });
 
         return validationResult.data;
 
       } catch (caughtError: unknown) {
-        // 6. RESILIENCIA FORENSE (Catch-all)
+        // 5. GESTIÓN FORENSE DE COLAPSO (Resilience Layer)
+
+        /** Evitamos la re-envoltura si el error ya es una excepción nivelada */
+        if (caughtError instanceof Error && caughtError.name.includes('Exception')) {
+           throw caughtError;
+        }
+
         const errorDescriptionLiteral = caughtError instanceof Error
           ? caughtError.message
           : String(caughtError);
 
-        throw mapHttpErrorToException(500, 'PMF_ENGINE.ERRORS.NETWORK_CONNECTION_FAULT', {
-          originalError: errorDescriptionLiteral,
-          targetUrl: finalRequestUrlLiteral
+        throw MapHttpErrorToException(500, 'PMF_ENGINE.ERRORS.NETWORK_CONNECTION_FAULT', {
+          originalErrorLiteral: errorDescriptionLiteral,
+          targetRequestUrlLiteral
         });
       }
     }

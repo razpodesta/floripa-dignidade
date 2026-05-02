@@ -1,9 +1,9 @@
 {
   "logs": {
-    "INTEGRITY_VIOLATION": "Integrity violation detected in environment variables. The system has been blocked for security.",
-    "VERIFICATION_SUCCESS": "Environment infrastructure successfully validated. Starting engines."
+    "INTEGRITY_VIOLATION": "Integrity violation detected in infrastructure secrets. System bootstrap has been blocked by the Neural Sentinel.",
+    "VERIFICATION_SUCCESS": "Hardware checkpoint passed. Sovereign infrastructure successfully validated."
   },
   "errors": {
-    "ENVIRONMENT_ADN_CORRUPT": "The environment contract is corrupted or incomplete."
+    "ENVIRONMENT_ADN_CORRUPT": "Infrastructure DNA contract is corrupted or has missing mandatory fields."
   }
 }

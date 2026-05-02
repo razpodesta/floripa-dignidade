@@ -5,21 +5,21 @@
     "tsBuildInfoFile": "../../dist/out-tsc/libs/tools/tsconfig.lib.tsbuildinfo",
 
     /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
-    "composite": true,           /* Habilita la compilación incremental de herramientas */
-    "declaration": true,         /* Emite las firmas de tipos (.d.ts) para los disparadores CLI */
-    "declarationMap": true,      /* Mapeo para trazabilidad en el IDE */
-    "emitDeclarationOnly": true, /* Delega la ejecución a TSX/Node */
-    "rootDir": "src",            /* Blindaje de frontera física absoluta */
+    "composite": true /* Habilita la compilación incremental de herramientas */,
+    "declaration": true /* Emite las firmas de tipos (.d.ts) para los disparadores CLI */,
+    "declarationMap": true /* Mapeo para trazabilidad en el IDE */,
+    "emitDeclarationOnly": true /* Delega la ejecución a TSX/Node */,
+    "rootDir": "src" /* Blindaje de frontera física absoluta */,
 
     /* --- RESOLUCIÓN NEXT-GEN --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true, /* Fuerza la pureza de importación de tipos */
+    "verbatimModuleSyntax": true /* Fuerza la pureza de importación de tipos */,
     "isolatedModules": true,
 
     /* --- ADN DEL ENTORNO (Node.js Automation Context) --- */
-    "types": ["node"],           /* Acceso mandatorio a fs, path y process */
-    "lib": ["ES2022"]            /* Contexto de ejecución de servidor */
+    "types": ["node"] /* Acceso mandatorio a fs, path y process */,
+    "lib": ["ES2022"] /* Contexto de ejecución de servidor */
   },
   "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
@@ -31,5 +31,13 @@
     "node_modules",
     "../../dist",
     "../../node_modules"
+  ],
+  "references": [
+    {
+      "path": "../core/exceptions/tsconfig.lib.json"
+    },
+    {
+      "path": "../core/telemetry/tsconfig.lib.json"
+    }
   ]
 }

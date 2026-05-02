@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/messaging-engine",
-  "version": "1.6.0",
+  "version": "1.7.1",
   "private": true,
-  "description": "Búnker de Mensageria, Comunicação Soberana e Presença Cognitiva. Orquestra a entrega inteligente de notificações Web Push, o gerenciamento de mensagens diretas e a governança de grupos territoriais (Action Hubs) com rastreabilidade forense no Edge Runtime.",
+  "description": "ISO-Standard: Bunker de Mensajeria, Comunicacion Soberana y Presencia Cognitiva. Orquestra notificaciones PWA y buzon unificado.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -18,6 +18,7 @@
     "@floripa-dignidade/environment-validator": "workspace:*",
     "@floripa-dignidade/exceptions": "workspace:*",
     "@floripa-dignidade/identity": "workspace:*",
+    "@floripa-dignidade/shared": "workspace:*",
     "@floripa-dignidade/telemetry": "workspace:*",
     "@swc/helpers": "~0.5.18",
     "zod": "^3.25.76"

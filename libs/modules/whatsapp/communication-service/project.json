@@ -5,8 +5,8 @@
   "projectType": "library",
   "tags": [
     "scope:modules",
-    "type:data",
-    "platform:node"
+    "type:logic",
+    "platform:isomorphic"
   ],
   "targets": {
     "build": {
@@ -22,8 +22,9 @@
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/modules/whatsapp/communication-service"],
       "options": {
-        "command": "tsc -p libs/modules/whatsapp/communication-service/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/modules/whatsapp/communication-service/tsconfig.lib.json"
       },
       "cache": true
     },

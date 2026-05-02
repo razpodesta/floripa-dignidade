@@ -3,10 +3,11 @@
  * @description Punto de entrada para la inferencia predictiva y auditoría lógica.
  * Transforma señales de telemetría en directivas de acción delegando a proveedores de IA.
  *
- * Protocolo OEDP-V15.0 - Verbatim Module Syntax & Type Purification.
- * Saneamiento: Resolución de infracción consistent-type-imports y desacoplamiento de esquemas.
+ * Protocolo OEDP-V17.0 - Verbatim Module Syntax & Swarm Intelligence.
+ * SANEADO Zenith: Consolidación de orquestador único, purga de redundancias,
+ * resolución de promesas flotantes y validación atómica del ADN cognitivo.
  *
- * @author Dirección de Ingeniería - Floripa Dignidade
+ * @author Raz Podestá - MetaShark Tech
  */
 
 import {
@@ -19,13 +20,46 @@ import { InternalSystemException } from '@floripa-dignidade/exceptions';
 
 /** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN como tipos */
 import type { IInferenceResponse, TAIProvider } from '../schemas/Inference.schema';
-
-/** 🛡️ LÓGICA: Importación de esquemas para validación en tiempo de ejecución */
 import { InferenceResponseSchema } from '../schemas/Inference.schema';
 
-import { executeHuggingFaceInference } from '../providers/HuggingFaceInferenceDriver';
+/* 🛡️ SANEAMIENTO Zenith: Uso del Factory Pattern para desacoplar implementaciones */
+import { DetermineIntelligenceDriver } from './IntelligenceProviderFactory';
 
+/** Identificador técnico del motor para el Neural Sentinel. */
 const ANALYSIS_ENGINE_IDENTIFIER = 'HEALTH_ANALYSIS_ENGINE';
+
+/**
+ * @section Átomo Interno: Aduana de ADN Cognitivo
+ * @description Aísla la responsabilidad de validar la estructura devuelta por la IA externa.
+ * Protege al ecosistema de "Alucinaciones" o cambios de formato de API.
+ */
+const validateCognitiveAdn = (
+  rawAiPayload: unknown,
+  correlationIdentifier: string
+): IInferenceResponse => {
+  const validationResult = InferenceResponseSchema.safeParse(rawAiPayload);
+
+  if (!validationResult.success) {
+    // Reporte inmediato de alucinación o cambio de contrato por parte de la IA
+    void EmitTelemetrySignal({
+      severityLevel: 'CRITICAL',
+      moduleIdentifier: ANALYSIS_ENGINE_IDENTIFIER,
+      operationCode: 'AI_HALLUCINATION_OR_ADN_CORRUPTION',
+      correlationIdentifier,
+      message: 'HEALTH_ANALYSIS.ERRORS.AI_CONTRACT_VIOLATION',
+      contextMetadata: {
+        structuralIssuesCollection: validationResult.error.flatten(),
+        rawAiResponseSnapshot: rawAiPayload,
+      },
+    });
+
+    throw new InternalSystemException('ALUCINACION_O_ADN_COGNITIVO_CORRUPTO', {
+      validationIssues: validationResult.error.flatten(),
+    });
+  }
+
+  return validationResult.data;
+};
 
 /**
  * Ejecuta un análisis cognitivo sobre señales de salud orquestando al proveedor seleccionado.
@@ -47,24 +81,24 @@ export const AnalyzeSystemHealthInference = async (
     correlationIdentifier,
     async () => {
       try {
-        let rawAiResponse: unknown;
+        // 1. RESOLUCIÓN DE DRIVER (Delegación Atómica al Factory)
+        const executeInferenceAction = DetermineIntelligenceDriver(targetAiProvider);
 
-        // SELECCIÓN ATÓMICA DE DRIVER
-        // En una fase futura, este bloque evolucionará a un 'InferenceProviderRegistry'.
-        if (targetAiProvider === 'HUGGING_FACE') {
-          rawAiResponse = await executeHuggingFaceInference(unvalidatedHealthPayload);
-        } else {
-          // Fallback resiliente hacia Hugging Face para otros proveedores no implementados.
-          rawAiResponse = await executeHuggingFaceInference(unvalidatedHealthPayload);
-        }
+        // 2. EJECUCIÓN DE INFERENCIA (I/O Red Externa)
+        const unvalidatedIntelligenceResponse = await executeInferenceAction(
+          unvalidatedHealthPayload
+        );
 
-        // ADUANA DE ADN: Purificación de la respuesta de la IA
-        const validatedInferenceResult = InferenceResponseSchema.parse(rawAiResponse);
+        // 3. ADUANA DE ADN (Delegación a Átomo Interno para SRP)
+        const validatedInferenceResult = validateCognitiveAdn(
+          unvalidatedIntelligenceResponse,
+          correlationIdentifier
+        );
 
         const isConfidenceBelowThresholdBoolean = validatedInferenceResult.confidenceScore < 0.75;
 
-        // REPORTE DE ESTADO COGNITIVO
-        EmitTelemetrySignal({
+        // 4. REPORTE DE ESTADO COGNITIVO
+        void EmitTelemetrySignal({
           severityLevel: isConfidenceBelowThresholdBoolean ? 'WARNING' : 'INFO',
           moduleIdentifier: ANALYSIS_ENGINE_IDENTIFIER,
           operationCode: 'INFERENCE_ORCHESTRATION_COMPLETED',
@@ -78,12 +112,18 @@ export const AnalyzeSystemHealthInference = async (
         });
 
         return validatedInferenceResult;
+      } catch (caughtError: unknown) {
+        // 5. GESTIÓN FORENSE DE COLAPSO (Resilience Layer)
 
-      } catch (caughtError) {
+        // Si la excepción ya fue generada y tipada por la Aduana Interna, se propaga intacta.
+        if (caughtError instanceof InternalSystemException) {
+          throw caughtError;
+        }
+
         const errorDescriptionLiteral =
           caughtError instanceof Error ? caughtError.message : 'Fallo cognitivo no identificado.';
 
-        EmitTelemetrySignal({
+        void EmitTelemetrySignal({
           severityLevel: 'CRITICAL',
           moduleIdentifier: ANALYSIS_ENGINE_IDENTIFIER,
           operationCode: 'INFERENCE_ORCHESTRATION_FAILURE',

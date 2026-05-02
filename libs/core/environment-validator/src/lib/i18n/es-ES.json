@@ -1,9 +1,9 @@
 {
   "logs": {
-    "INTEGRITY_VIOLATION": "Violación de integridad detectada en las variables de entorno. El sistema ha sido bloqueado por seguridad.",
-    "VERIFICATION_SUCCESS": "Infraestructura de entorno validada con éxito. Iniciando motores."
+    "INTEGRITY_VIOLATION": "Violación de integridad detectada en los secretos de infraestructura. El arranque del sistema ha sido bloqueado por el Neural Sentinel.",
+    "VERIFICATION_SUCCESS": "Aduana de hardware superada. Infraestructura soberana validada con éxito."
   },
   "errors": {
-    "ENVIRONMENT_ADN_CORRUPT": "El contrato de entorno está corrompido o incompleto."
+    "ENVIRONMENT_ADN_CORRUPT": "El contrato de ADN de la infraestructura está corrompido o posee campos obligatorios ausentes."
   }
 }

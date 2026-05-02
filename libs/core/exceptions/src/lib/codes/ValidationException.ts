@@ -1,32 +1,49 @@
-import { GlobalBaseException } from './GlobalBaseException';
-
 /**
- * @section Exception Engine - Specialized Exceptions
- * @description Excepción de Fallo de Integridad de Datos (Nivel Cliente / 400).
- * Protocolo OEDP-V13.0 - Data Sovereignty Enforcement.
+ * @section Exception Engine - Specialized Validation Exceptions
+ * @description Excepción de Fallo de Integridad de Datos (Nivel Cliente / HTTP 400).
+ * Se dispara cuando los payloads no cumplen con los contratos de ADN (Zod)
+ * establecidos en las fronteras de los búnkeres.
+ *
+ * Protocolo OEDP-V17.0 - Data Sovereignty Enforcement & ISO Naming.
+ * SANEADO Zenith: Resolución de TS2345 (Branded Type Match) y Nomenclatura Prosaica.
+ *
+ * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
+import { GlobalBaseException } from './GlobalBaseException';
+import type { ErrorCode } from '../schemas/Exception.schema';
+
 /**
- * Se dispara cuando los datos de entrada o payloads de comunicación no cumplen con
- * los contratos de ADN (Zod Schemas) establecidos en la frontera de un aparato.
- *
- * Indica que la solicitud es semánticamente incorrecta y previene la propagación
- * de datos corruptos hacia la lógica de negocio o persistencia.
- *
+ * @class ValidationException
  * @extends {GlobalBaseException}
+ * @description Representa un rechazo en la aduana de datos. Indica que la
+ * solicitud es semánticamente incorrecta, previniendo la polución de la lógica.
  */
 export class ValidationException extends GlobalBaseException {
   /**
-   * Inicializa un error de validación con estatus de solicitud incorrecta (HTTP 400).
+   * Inicializa un error de validación con estatus de solicitud incorrecta (Bad Request).
    *
-   * @param {string} message - Descripción del fallo de integridad o contrato detectado.
-   * @param {Record<string, unknown>} contextMetadata - Snapshot de los campos o reglas que fallaron.
+   * @param messageLiteral - Descripción del fallo de integridad o contrato detectado.
+   * @param contextMetadataCollection - Snapshot de los campos o reglas que fallaron.
    */
-  public constructor(message: string, contextMetadata: Record<string, unknown> = {}) {
+  public constructor(
+    messageLiteral: string,
+    contextMetadataCollection: Record<string, unknown> = {}
+  ) {
     /**
      * @constant VALIDATION_FAILED - Código semántico inmutable para fallos de esquema.
-     * @constant 400 - Status code de solicitud incorrecta (Bad Request).
+     * 🛡️ SANEADO: Se aplica casting 'as ErrorCode' para cumplir con el sellado
+     * nominal de marca (Branded Type) del sistema.
      */
-    super(message, 'VALIDATION_FAILED', 400, contextMetadata);
+    const operationalErrorCodeLiteral = 'VALIDATION_FAILED' as ErrorCode;
+    const httpStatusCodeNumeric = 400;
+
+    super(
+      messageLiteral,
+      operationalErrorCodeLiteral,
+      httpStatusCodeNumeric,
+      contextMetadataCollection
+    );
   }
 }

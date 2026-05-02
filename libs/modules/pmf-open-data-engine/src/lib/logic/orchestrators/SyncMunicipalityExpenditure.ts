@@ -1,55 +1,63 @@
 /**
  * @section PMF Engine Logic - Municipality Expenditure Orchestrator
  * @description Cerebro de flujo encargado de coordinar la sincronización integral
- * del gasto público. Orquesta el enjambre de átomos para transformar la base
- * de datos de la municipalidad en inteligencia civil inmutable.
+ * del gasto público. Implementa procesamiento concurrente con resiliencia atómica
+ * y cumplimiento estricto de tipos opcionales.
  *
  * Protocolo OEDP-V17.0 - Swarm Intelligence & High Performance SRE.
- * SANEADO Zenith: Atomización de segundo nivel y Resolución de TS6059/TS6307.
+ * SANEADO Zenith: Resolución de TS2379 (exactOptionalPropertyTypes) y Atomización SRP.
  *
  * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
 import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier,
-  TraceExecutionTime
+  TraceExecutionTime,
 } from '@floripa-dignidade/telemetry';
 
-import { InternalSystemException } from '@floripa-dignidade/exceptions';
+import { MapHttpErrorToException } from '@floripa-dignidade/exceptions';
 
-/* 1. ADN del Dominio (Soberanía) */
+/* 1. ADN del Dominio y Contratos (Verbatim Module Syntax) */
 import type { IPublicExpenditure } from '../../schemas/sovereign/PublicExpenditure.schema';
 
-/* 2. Enjambre Atómico (Internal Swarm) */
+/* 2. Enjambre Atómico Local (Swiss-Watch Swarm) */
 import { FetchRawEPublicaData } from '../atomic/fetchers/FetchRawEPublicaData';
 import { ProcessExpenditureRecord } from '../atomic/mappers/ProcessExpenditureRecord';
+import { CalculateSyncMetrics } from '../atomic/mappers/CalculateSyncMetrics';
 
 /**
  * @interface ISyncExpenditureParameters
- * @description Contrato de entrada para la ejecución de la auditoría masiva.
+ * @description Contrato inmutable para la parametrización de la auditoría masiva.
  */
 export interface ISyncExpenditureParameters {
+  /** Identificador de la ciudad (ej: 'florianopolis'). */
   readonly municipalitySlugLiteral: string;
+
+  /** Rango temporal de la auditoría. */
   readonly periodRange: {
-    readonly initial: string; // mm/aaaa
-    readonly final: string;   // mm/aaaa
+    /** Formato: 'mm/aaaa'. */
+    readonly initialMonthYearLiteral: string;
+    /** Formato: 'mm/aaaa'. */
+    readonly finalMonthYearLiteral: string;
   };
-  readonly managementUnitIdentifier?: number;
+
+  /** Código técnico de la unidad presupuestaria (Opcional). */
+  readonly managementUnitTechnicalIdentifier?: number | undefined;
 }
 
 /** Identificador técnico del orquestador para el Neural Sentinel. */
 const SYNC_ORCHESTRATOR_IDENTIFIER = 'PMF_EXPENDITURE_SYNC_ORCHESTRATOR';
 
 /**
- * Ejecuta el ciclo de vida completo de sincronización, auditoría y homogenización.
- * Implementa procesamiento concurrente de registros para maximizar performance en el Edge.
+ * Ejecuta la sincronización integral de datos abiertos gubernamentales.
  *
- * @param parameters - Criterios de búsqueda y filtrado presupuestario.
+ * @param parametersSnapshot - Criterios de búsqueda y filtrado institucional.
  * @returns {Promise<IPublicExpenditure[]>} Colección de gastos purificados y firmados.
  */
 export const SyncMunicipalityExpenditure = async (
-  parameters: ISyncExpenditureParameters
+  parametersSnapshot: ISyncExpenditureParameters,
 ): Promise<IPublicExpenditure[]> => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
@@ -59,56 +67,77 @@ export const SyncMunicipalityExpenditure = async (
     correlationIdentifier,
     async () => {
       try {
-        // 1. REPORTE DE INICIO (Audit Trail)
+        // 1. REPORTE DE INICIO (SRE Visibility)
         void EmitTelemetrySignal({
           severityLevel: 'INFO',
           moduleIdentifier: SYNC_ORCHESTRATOR_IDENTIFIER,
           operationCode: 'SYNC_PROCESS_STARTED',
           correlationIdentifier,
           message: 'PMF_ENGINE.LOGS.SYNC_STARTED',
-          contextMetadata: { ...parameters }
+          contextMetadataSnapshot: { ...parametersSnapshot },
         });
 
-        // 2. EXTRACCIÓN (I/O de Red - Stateless)
-        const rawGovernmentPayload = await FetchRawEPublicaData({
-          municipalitySlugLiteral: parameters.municipalitySlugLiteral,
-          initialPeriodLiteral: parameters.periodRange.initial,
-          finalPeriodLiteral: parameters.periodRange.final,
-          managementUnitIdentifier: parameters.managementUnitIdentifier
+        // 2. EXTRACCIÓN DE DATOS CRUDOS (I/O de Red - Stateless)
+        /**
+         * 🛡️ SANEADO Zenith: Resolución de TS2379.
+         * Usamos desestructuración y spread condicional para evitar pasar 'undefined'
+         * explícitamente a las propiedades opcionales del fetcher.
+         */
+        const rawGovernmentPayloadSnapshot = await FetchRawEPublicaData({
+          municipalitySlugLiteral: parametersSnapshot.municipalitySlugLiteral,
+          initialPeriodMonthYearLiteral: parametersSnapshot.periodRange.initialMonthYearLiteral,
+          finalPeriodMonthYearLiteral: parametersSnapshot.periodRange.finalMonthYearLiteral,
+          ...(parametersSnapshot.managementUnitTechnicalIdentifier !== undefined && {
+            managementUnitTechnicalIdentifier: parametersSnapshot.managementUnitTechnicalIdentifier
+          }),
         }, correlationIdentifier);
 
         /**
-         * 3. PROCESAMIENTO EN ENJAMBRE (Batch Mapping)
-         * Delegamos la responsabilidad de transformación al átomo 'ProcessExpenditureRecord'.
-         * SANEADO: Ejecución concurrente mediante Promise.all.
+         * 3. PROCESAMIENTO EN ENJAMBRE (Concurrent Mapping)
+         * Se envuelve cada ejecución en un bloque de resiliencia para que fallos
+         * individuales no detengan el lote (Fault Tolerance).
          */
-        const normalizedExpenditureCollection = await Promise.all(
-          rawGovernmentPayload.registros.map((governmentRecord) =>
-            ProcessExpenditureRecord(
-              governmentRecord,
-              parameters.municipalitySlugLiteral,
-              correlationIdentifier
-            )
-          )
+        const processSwarmPromisesCollection = rawGovernmentPayloadSnapshot.registros.map(
+          async (governmentRecordSnapshot) => {
+            try {
+              return await ProcessExpenditureRecord(
+                governmentRecordSnapshot,
+                parametersSnapshot.municipalitySlugLiteral,
+                correlationIdentifier,
+              );
+            } catch (_ignoredRecordFault: unknown) {
+              return null; // Marcado para el contador de métricas.
+            }
+          }
         );
 
-        // 4. REPORTE DE FINALIZACIÓN NOMINAL (SRE Analytics)
+        const normalizedResultsCollection = await Promise.all(processSwarmPromisesCollection);
+
+        // 4. CÁLCULO DE MÉTRICAS (Delegación Atómica)
+        const metricsSnapshot = CalculateSyncMetrics(normalizedResultsCollection);
+
+        // 5. REPORTE DE CIERRE NOMINAL (SRE Analytics)
         void EmitTelemetrySignal({
-          severityLevel: 'INFO',
+          severityLevel: metricsSnapshot.failedRecordsQuantity > 0 ? 'WARNING' : 'INFO',
           moduleIdentifier: SYNC_ORCHESTRATOR_IDENTIFIER,
           operationCode: 'SYNC_PROCESS_COMPLETED',
           correlationIdentifier,
           message: 'PMF_ENGINE.LOGS.SYNC_SUCCESS',
-          contextMetadata: {
-            processedRecordsQuantity: normalizedExpenditureCollection.length,
-            municipalityLiteral: parameters.municipalitySlugLiteral
-          }
+          contextMetadataSnapshot: {
+            ...metricsSnapshot,
+            municipalityLiteral: parametersSnapshot.municipalitySlugLiteral,
+          },
         });
 
-        return normalizedExpenditureCollection;
+        /** Retornamos solo los registros que superaron las aduanas de ADN. */
+        return normalizedResultsCollection.filter((item): item is IPublicExpenditure => item !== null);
 
       } catch (caughtError: unknown) {
-        // 5. GESTIÓN FORENSE DE COLAPSO (Resilience Layer)
+        // 6. GESTIÓN FORENSE DE COLAPSO
+        if (caughtError instanceof Error && caughtError.name.includes('Exception')) {
+          throw caughtError;
+        }
+
         const errorDescriptionLiteral = caughtError instanceof Error
           ? caughtError.message
           : String(caughtError);
@@ -118,15 +147,15 @@ export const SyncMunicipalityExpenditure = async (
           moduleIdentifier: SYNC_ORCHESTRATOR_IDENTIFIER,
           operationCode: 'SYNC_PIPELINE_CRITICAL_FAULT',
           correlationIdentifier,
-          message: 'Fallo catastrófico en el pipeline de auditoría de datos abiertos.',
-          contextMetadata: { errorTraceLiteral: errorDescriptionLiteral }
+          message: 'Fallo catastrófico en el orquestador de datos abiertos.',
+          contextMetadataSnapshot: { errorTraceLiteral: errorDescriptionLiteral },
         });
 
-        throw new InternalSystemException('FALLO_EN_ORQUESTACION_DE_DATOS_ABIERTOS_SRE', {
+        throw MapHttpErrorToException(500, 'PMF_ENGINE.ERRORS.PROTOCOL_CONTRACT_VIOLATION', {
           originalErrorLiteral: errorDescriptionLiteral,
-          correlationIdentifier
+          correlationIdentifier,
         });
       }
-    }
+    },
   );
 };

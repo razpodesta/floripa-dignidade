@@ -1,17 +1,20 @@
+/**
+ * @section tsconfig: Gatekeeper
+ * @description Proteccion de frontera fisica para el búnker de identidad.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
+    "composite": false,
     "noEmit": true,
     "ignoreDeprecations": "5.0"
   },
-  /* 🛡️ LEY DEL GATEKEEPER: No compilar nada aquí. Solo orquestar el emisor y dependencias. */
   "files": [],
   "include": [],
   "references": [
-    { "path": "./tsconfig.lib.json" },
-    /* --- REFERENCIAS FÍSICAS EXIGIDAS POR EL GRAFO (Fix TS6307) --- */
-    { "path": "../../core/environment-validator" },
-    { "path": "../../core/exceptions" },
-    { "path": "../../core/telemetry" }
+    {
+      "path": "./tsconfig.lib.json"
+    }
   ]
 }

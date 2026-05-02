@@ -6,12 +6,12 @@
   "tags": [
     "scope:engines",
     "type:logic",
-    "platform:node"
+    "platform:isomorphic"
   ],
   "targets": {
     "build": {
       "executor": "@nx/js:swc",
-      "outputs": ["{workspaceRoot}/dist/libs/engines/health-monitor"],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/engines/health-monitor",
         "main": "libs/engines/health-monitor/src/index.ts",
@@ -22,8 +22,9 @@
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/engines/health-monitor"],
       "options": {
-        "command": "tsc -p libs/engines/health-monitor/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/engines/health-monitor/tsconfig.lib.json"
       },
       "cache": true
     },

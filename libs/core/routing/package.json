@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/routing",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "private": true,
-  "description": "Búnker Core de interceptación de frontera y orquestación de ruteo internacionalizado. Gestiona la soberanía lingüística y el control de acceso perimetral en el Edge Runtime de Next.js 16.",
+  "description": "ISO-Standard: Bunker Core de interceptacion de frontera y orquestacion de ruteo internacionalizado.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -14,20 +14,20 @@
       "default": "./src/index.ts"
     }
   },
+  "dependencies": {
+    "@floripa-dignidade/exceptions": "workspace:*",
+    "@floripa-dignidade/telemetry": "workspace:*",
+    "@swc/helpers": "~0.5.18",
+    "zod": "^3.25.76"
+  },
+  "peerDependencies": {
+    "next": "~16.1.6"
+  },
   "nx": {
     "tags": [
       "scope:core",
       "type:logic",
       "platform:isomorphic"
     ]
-  },
-  "dependencies": {
-    "@floripa-dignidade/telemetry": "workspace:*",
-    "@floripa-dignidade/exceptions": "workspace:*",
-    "@swc/helpers": "~0.5.18",
-    "zod": "^3.25.76"
-  },
-  "peerDependencies": {
-    "next": "~16.1.6"
   }
 }

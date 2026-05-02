@@ -3,7 +3,11 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/core/environment-validator/src",
   "projectType": "library",
-  "tags": ["scope:core", "type:logic", "platform:isomorphic"],
+  "tags": [
+    "scope:core",
+    "type:logic",
+    "platform:isomorphic"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:swc",
@@ -13,16 +17,20 @@
         "main": "libs/core/environment-validator/src/index.ts",
         "tsConfig": "libs/core/environment-validator/tsconfig.lib.json",
         "stripLeadingPaths": true
-      }
+      },
+      "cache": true
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/core/environment-validator"],
       "options": {
-        "command": "tsc -p libs/core/environment-validator/tsconfig.lib.json --noEmit"
-      }
+        "command": "tsc -p libs/core/environment-validator/tsconfig.lib.json"
+      },
+      "cache": true
     },
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "executor": "@nx/eslint:lint",
+      "cache": true
     }
   }
 }

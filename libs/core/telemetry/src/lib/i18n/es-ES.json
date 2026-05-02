@@ -1,7 +1,7 @@
 {
-  "signals": {
-    "START_PROCESS": "Iniciando procesamiento atómico.",
-    "END_PROCESS": "Procesamiento finalizado con éxito.",
-    "LATENCY_REPORT": "Latencia de ejecución medida en milisegundos."
+  "telemetrySignalsMapping": {
+    "START_PROCESS": "Iniciando ejecución atómica en el núcleo del sistema.",
+    "END_PROCESS": "Ejecución finalizada con éxito. Señal nominal detectada.",
+    "LATENCY_REPORT": "Latencia de ejecución capturada en milisegundos (Auditoría Forense)."
   }
 }

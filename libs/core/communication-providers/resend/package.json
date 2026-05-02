@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/resend-provider",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Búnker Core especializado en la transmisión física de correos electrónicos transaccionales y auditoría de salud (SRE) del proveedor Resend.",
+  "description": "ISO-Standard: Bunker Core especializado en la transmision fisica de correos electronicos transaccionales y auditoria de salud (SRE) del proveedor Resend.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -14,21 +14,18 @@
       "default": "./src/index.ts"
     }
   },
+  "dependencies": {
+    "@floripa-dignidade/exceptions": "workspace:*",
+    "@floripa-dignidade/telemetry": "workspace:*",
+    "@swc/helpers": "~0.5.18",
+    "resend": "^4.0.0",
+    "zod": "^3.25.76"
+  },
   "nx": {
     "tags": [
       "scope:core",
       "type:data",
       "platform:node"
     ]
-  },
-  "dependencies": {
-    "@floripa-dignidade/telemetry": "workspace:*",
-    "@floripa-dignidade/exceptions": "workspace:*",
-    "@swc/helpers": "~0.5.18",
-    "resend": "^4.0.0",
-    "zod": "^3.25.76"
-  },
-  "devDependencies": {
-    "@types/node": "20.19.9"
   }
 }

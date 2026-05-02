@@ -1,36 +1,56 @@
+/**
+ * @section Exception DNA - Structural Integrity Schema
+ * @description Define el contrato de Verdad Única (SSOT) para la taxonomía de errores.
+ * Implementa Branded Types para evitar la polución de códigos y asegurar que
+ * solo literales autorizados circulen por el sistema nervioso central.
+ *
+ * Protocolo OEDP-V17.0 - Sovereign Data & ISO Standard Naming.
+ * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
+ */
+
 import { z } from 'zod';
 
 /**
- * @section Aduana de ADN - Códigos de Error
- */
-
-/**
- * Esquema Soberano que define los códigos de error estandarizados del ecosistema.
- * Estos códigos permiten una comunicación semántica y unificada entre el servidor,
- * el cliente y el Neural Sentinel para la toma de decisiones de auto-sanación.
+ * @section Tipado Nominal (Branded Types)
+ * @description Protege los códigos de error de colisiones semánticas.
  */
 export const ErrorCodeSchema = z.enum([
   'VALIDATION_FAILED',
   'UNAUTHORIZED_ACCESS',
   'INTERNAL_SYSTEM_FAILURE',
   'RESOURCE_NOT_FOUND',
-  'EXTERNAL_SERVICE_TIMEOUT'
-]).describe('Códigos estandarizados de error de Floripa Dignidade');
+  'EXTERNAL_SERVICE_TIMEOUT',
+  'INFRASTRUCTURE_BOOTSTRAP_FAULT',
+  'CRYPTOGRAPHIC_SIGNATURE_MISMATCH',
+  'PAYLOAD_TOO_LARGE',
+])
+  .describe('Catálogo oficial de códigos operativos soberanos.')
+  .brand<'ErrorCode'>();
 
-/**
- * Tipo inferido del esquema de códigos de error para uso en firmas de funciones.
- */
+/** Representación en tiempo de compilación del código de error sellado. */
 export type ErrorCode = z.infer<typeof ErrorCodeSchema>;
 
 /**
- * Esquema de captura de estado en tiempo de ejecución (Runtime Snapshot).
- * Define un diccionario de datos inmutable que representa el contexto exacto
- * de la memoria y las variables en el momento del fallo.
+ * @name RuntimeSnapshotSchema
+ * @description Aduana de ADN para la captura forense de metadatos en el momento del fallo.
  */
 export const RuntimeSnapshotSchema = z.record(z.string(), z.unknown())
-  .describe('Captura del estado de la memoria y variables en el momento del fallo para el Neural Sentinel');
+  .describe('Snapshot inmutable del contexto de ejecución donde ocurrió la anomalía.');
+
+/** Interfaz inmutable para el rastro forense. */
+export type IRuntimeSnapshot = z.infer<typeof RuntimeSnapshotSchema>;
 
 /**
- * Interfaz de la instantánea de ejecución para auditoría forense.
+ * @name ExceptionContractSchema
+ * @description Esquema de validación para la estructura interna de cualquier excepción.
  */
-export type IRuntimeSnapshot = z.infer<typeof RuntimeSnapshotSchema>;
+export const ExceptionContractSchema = z.object({
+  operationalErrorCodeLiteral: ErrorCodeSchema,
+  httpStatusCodeNumeric: z.number().int().min(400).max(599),
+  occurrenceTimestampISO: z.string().datetime(),
+  runtimeContextSnapshot: RuntimeSnapshotSchema,
+}).readonly();
+
+/** Interfaz de validación interna para el Neural Sentinel. */
+export type IExceptionContract = z.infer<typeof ExceptionContractSchema>;

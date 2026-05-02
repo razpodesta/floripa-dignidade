@@ -1,126 +1,99 @@
 /**
- * @section Telemetry Drivers - Cloud Log Transport Orchestrator
- * @description Orquestador soberano encargado de decidir la estrategia de despacho
- * de señales forenses. Implementa lógica de persistencia asimétrica y gestión
- * de concurrencia para el flujo sanguíneo digital.
+ * @section Telemetry Drivers - Sovereign Transport Orchestrator
+ * @description Orquestador superior encargado de coordinar el flujo sanguíneo digital.
+ * Implementa una arquitectura de enjambre delegando responsabilidades a átomos
+ * de criptografía y sensores de hardware.
  *
- * Protocolo OEDP-V16.0 - High Performance SRE & Swarm Intelligence.
- * SANEADO Zenith: Aislamiento de configuración y control de concurrencia (Locking).
+ * Protocolo OEDP-V17.0 - High Performance SRE & Atomic Swarm.
+ * SANEADO Zenith: Erradicación de errores de tipos globales y atomización SRP.
  *
  * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
-import type { ITelemetrySignal } from '../../schemas/TelemetrySignal.schema';
-import { TransmitSignalsToCloud } from './CloudLogTransport';
-import { ExtractTelemetryInfrastructureConfiguration } from './ExtractTelemetryInfrastructureConfiguration';
-import {
-  AddSignalToBuffer,
-  FlushBufferSignals,
-  GetBufferSizeQuantity
-} from './LogBufferManager';
+import type { ContentFingerprint, ITelemetrySignal } from '../../schemas/TelemetrySignal.schema';
+import { DetermineServerRuntime } from '../atomic/DetermineServerRuntime';
 
-/** @section Configuración Técnica de SRE (Frecuencia y Volumen) */
+/* 1. Enjambre Atómico de Gestión de Datos */
+import { AddTelemetrySignalToBuffer } from './AddTelemetrySignalToBuffer';
+import { GetTelemetryBufferSizeQuantity } from './GetTelemetryBufferSizeQuantity';
+import { PersistTelemetrySignalsToLocalStorage } from './PersistTelemetrySignalsToLocalStorage';
+import { SynchronizeTelemetryBufferAction } from './internal/SynchronizeTelemetryBufferAction';
+
+/* 2. Nuevos Átomos de Especialidad (Zenith Level) */
+import { ExecuteMerkleChainCalculation } from './internal/ExecuteMerkleChainCalculation';
+import { RegisterSovereignLastBreathSensor } from './internal/RegisterSovereignLastBreathSensor';
+
+/** @section Configuración Técnica de SRE */
 const MAXIMUM_BUFFER_CAPACITY_QUANTITY = 20;
 const FLUSH_DELAY_MILLISECONDS_QUANTITY = 5000;
 
+/** Rastro inalterable del último eslabón de la cadena Merkle. */
+let lastEventHashFingerprintLiteral: ContentFingerprint | undefined = undefined;
+
+/** Referencia de temporizador para el vaciado diferido. */
 let flushTimeoutReference: ReturnType<typeof setTimeout> | null = null;
 
 /**
- * Semáforo de Sincronización (Concurrency Safeguard).
- * Evita que múltiples hilos de ejecución intenten vaciar el buffer simultáneamente.
+ * Punto de entrada universal para el transporte de telemetría.
+ * Orquesta la transición entre hilos y la persistencia de resiliencia.
  */
-let isSynchronizationActiveBoolean = false;
+export const QueueTelemetrySignalForTransportAction = async (
+  validatedTelemetrySignalSnapshot: ITelemetrySignal,
+): Promise<void> => {
+  const isServerRuntimeBoolean = DetermineServerRuntime();
+  let forensicTelemetrySignalSnapshot = { ...validatedTelemetrySignalSnapshot };
 
-/**
- * Evalúa si el ecosistema está operando bajo el modo de desarrollo local.
- */
-export const isDevelopmentEnvironmentActiveBoolean = (): boolean => {
-  const configuration = ExtractTelemetryInfrastructureConfiguration();
-  return configuration.nodeExecutionEnvironmentLiteral === 'development';
-};
-
-/**
- * Orquesta la sincronización del buffer hacia la persistencia física.
- * SANEADO Zenith: Implementación de patrón 'Lock & Release' para integridad.
- */
-const synchronizeLogBufferToCloudAction = async (): Promise<void> => {
-  if (isSynchronizationActiveBoolean) {
-    return;
-  }
-
-  const signalsToTransmitCollection = FlushBufferSignals();
-
-  if (signalsToTransmitCollection.length === 0) {
-    return;
-  }
-
-  isSynchronizationActiveBoolean = true;
-
-  try {
-    // CASO A: Entorno de Desarrollo (Forensic console trace)
-    if (isDevelopmentEnvironmentActiveBoolean()) {
-      signalsToTransmitCollection.forEach((signalSnapshot) => {
-        console.warn(`[TELEMETRY_FORENSIC]: ${signalSnapshot.operationCode}`, signalSnapshot);
-      });
-      return;
-    }
-
-    // CASO B: Entorno de Producción (Cloud Sovereign persistence)
-    const {
-      cloudStorageUrlLiteral,
-      cloudStorageSecurityKeySecret
-    } = ExtractTelemetryInfrastructureConfiguration();
-
-    if (cloudStorageUrlLiteral && cloudStorageSecurityKeySecret) {
-      await TransmitSignalsToCloud(
-        signalsToTransmitCollection,
-        cloudStorageUrlLiteral,
-        cloudStorageSecurityKeySecret
+  // FASE 1: INTEGRIDAD CRIPTOGRÁFICA (Solo Cliente)
+  if (!isServerRuntimeBoolean) {
+    try {
+      const { currentHash } = await ExecuteMerkleChainCalculation(
+        validatedTelemetrySignalSnapshot,
+        lastEventHashFingerprintLiteral
       );
+
+      forensicTelemetrySignalSnapshot = {
+        ...forensicTelemetrySignalSnapshot,
+        contentHashFingerprint: currentHash,
+        previousEventHashFingerprint: lastEventHashFingerprintLiteral
+      };
+
+      lastEventHashFingerprintLiteral = currentHash;
+    } catch (_ignoredError) {
+      // Fallback: Prioridad a la observabilidad básica
     }
-  } finally {
-    /** Garantizamos la liberación del semáforo incluso ante colapsos de red */
-    isSynchronizationActiveBoolean = false;
   }
-};
 
-/**
- * Punto de entrada único para el transporte inteligente de telemetría.
- * Implementa despacho inmediato en servidores (Stateless) y agrupado en clientes.
- *
- * @param validatedSignalPayload - ADN de telemetría previamente validado.
- */
-export const QueueTelemetrySignalForTransport = (
-  validatedSignalPayload: ITelemetrySignal
-): void => {
-  AddSignalToBuffer(validatedSignalPayload);
+  // FASE 2: SALVAGUARDA FÍSICA
+  AddTelemetrySignalToBuffer(forensicTelemetrySignalSnapshot);
 
-  const isServerRuntimeBoolean = typeof window === 'undefined';
+  if (!isServerRuntimeBoolean) {
+    PersistTelemetrySignalsToLocalStorage([forensicTelemetrySignalSnapshot]);
+  }
 
-  /**
-   * FASE 1: Despacho Inmediato (Servidor/Edge/Node)
-   * Vercel congela los procesos al terminar el stream; no podemos esperar.
-   */
+  // FASE 3: ESTRATEGIA DE DESPACHO ASIMÉTRICO
   if (isServerRuntimeBoolean) {
-    void synchronizeLogBufferToCloudAction();
+    void SynchronizeTelemetryBufferAction();
     return;
   }
 
-  /**
-   * FASE 2: Despacho Agrupado (Navegador/Mobile)
-   * Optimización de consumo de energía y peticiones HTTP.
-   */
-  const currentBufferSizeQuantity = GetBufferSizeQuantity();
+  const currentBufferSizeQuantity = GetTelemetryBufferSizeQuantity();
 
   if (currentBufferSizeQuantity >= MAXIMUM_BUFFER_CAPACITY_QUANTITY) {
-    if (flushTimeoutReference) {
-      clearTimeout(flushTimeoutReference);
-    }
-    void synchronizeLogBufferToCloudAction();
+    if (flushTimeoutReference) clearTimeout(flushTimeoutReference);
+    void SynchronizeTelemetryBufferAction();
   } else if (!flushTimeoutReference) {
     flushTimeoutReference = setTimeout(() => {
       flushTimeoutReference = null;
-      void synchronizeLogBufferToCloudAction();
+      void SynchronizeTelemetryBufferAction();
     }, FLUSH_DELAY_MILLISECONDS_QUANTITY);
   }
 };
+
+/**
+ * 🛡️ FASE 4: ACTIVACIÓN DE SENSORES DE HARDWARE
+ * SANEADO Zenith: Uso del átomo isomórfico para evitar errores TS2304 en el servidor.
+ */
+RegisterSovereignLastBreathSensor(() => {
+  void SynchronizeTelemetryBufferAction();
+});

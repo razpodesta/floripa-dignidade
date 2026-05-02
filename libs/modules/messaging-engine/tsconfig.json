@@ -1,21 +1,20 @@
+/**
+ * @section tsconfig: Gatekeeper
+ * @description Proteccion de frontera fisica para el motor de mensajeria.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
+    "composite": false,
     "noEmit": true,
     "ignoreDeprecations": "5.0"
   },
-  /* 🛡️ LEY DEL ORQUESTADOR: Puentes físicos obligatorios para evitar errores TS6059/TS6307 */
   "files": [],
   "include": [],
   "references": [
-    { "path": "./tsconfig.lib.json" },
-    /* Infraestructura Core */
-    { "path": "../../core/telemetry" },
-    { "path": "../../core/exceptions" },
-    { "path": "../../core/environment-validator" },
-    /* Dominios de Dependencia */
-    { "path": "../identity" },
-    /* 🛡️ SANEADO: Referencia vital para el consumo de useGlobalStateStore en los Hooks */
-    { "path": "../../shared" }
+    {
+      "path": "./tsconfig.lib.json"
+    }
   ]
 }

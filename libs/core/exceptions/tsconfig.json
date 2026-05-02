@@ -1,13 +1,19 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
+    /**
+     * 🛡️ GATEKEEPER: Protege la frontera física.
+     * No compila, solo delega la emisión al tsconfig.lib.json.
+     */
+    "composite": false,
     "noEmit": true,
     "ignoreDeprecations": "5.0"
   },
-  /* 🛡️ LEY DEL ORQUESTADOR: No compilar nada aquí. Solo apuntar al emisor de ADN. */
   "files": [],
   "include": [],
-  "references": [
-    { "path": "./tsconfig.lib.json" }
+  "references":[
+    {
+      "path": "./tsconfig.lib.json"
+    }
   ]
 }

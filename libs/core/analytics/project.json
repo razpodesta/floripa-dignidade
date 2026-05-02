@@ -5,7 +5,7 @@
   "projectType": "library",
   "tags": [
     "scope:core",
-    "type:core",
+    "type:logic",
     "platform:web"
   ],
   "targets": {
@@ -22,8 +22,9 @@
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/core/analytics"],
       "options": {
-        "command": "tsc -p libs/core/analytics/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/core/analytics/tsconfig.lib.json"
       },
       "cache": true
     },

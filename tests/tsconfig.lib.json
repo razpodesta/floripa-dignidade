@@ -5,11 +5,11 @@
     "tsBuildInfoFile": "../dist/out-tsc/tests/tsconfig.lib.tsbuildinfo",
 
     /* --- INTEGRIDAD SOBERANA (QA Verifier) --- */
-    "composite": true,           /* Habilita la validación incremental de las aserciones */
-    "declaration": true,         /* Emite ADN de tipos de prueba si es necesario */
+    "composite": true /* Habilita la validación incremental de las aserciones */,
+    "declaration": true /* Emite ADN de tipos de prueba si es necesario */,
     "declarationMap": true,
-    "emitDeclarationOnly": true, /* Los tests son ejecutados por SWC-Jest */
-    "rootDir": "src",            /* Blindaje de frontera física para archivos .spec */
+    "emitDeclarationOnly": true /* Los tests son ejecutados por SWC-Jest */,
+    "rootDir": "src" /* Blindaje de frontera física para archivos .spec */,
 
     /* --- RESOLUCIÓN NEXT-GEN --- */
     "module": "Preserve",
@@ -21,20 +21,14 @@
     "jsx": "react-jsx",
 
     /* --- ADN DEL ENTORNO (QA Hybrid Context) --- */
-    "types": ["jest", "node"],   /* Soporte para el motor de aserción y APIs de sistema */
+    "types": ["jest", "node"] /* Soporte para el motor de aserción y APIs de sistema */,
     "lib": ["ES2022", "DOM", "DOM.Iterable"] /* Soporte para JSDOM y componentes React */
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.spec.ts",
-    "src/**/*.spec.tsx"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "out-tsc",
-    "../dist",
-    "../node_modules"
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"],
+  "exclude": ["node_modules", "dist", "out-tsc", "../dist", "../node_modules"],
+  "references": [
+    {
+      "path": "../libs/core/exceptions/tsconfig.lib.json"
+    }
   ]
 }

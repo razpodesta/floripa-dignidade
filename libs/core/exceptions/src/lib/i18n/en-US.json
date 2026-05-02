@@ -1,9 +1,9 @@
 {
-  "codes": {
-    "VALIDATION_FAILED": "The provided data does not meet security or format criteria.",
-    "UNAUTHORIZED_ACCESS": "Your identity does not have permissions to perform this action.",
-    "INTERNAL_SYSTEM_FAILURE": "An internal platform failure occurred. Our technical team has been notified.",
-    "RESOURCE_NOT_FOUND": "The requested resource does not exist or has been permanently removed.",
-    "EXTERNAL_SERVICE_TIMEOUT": "An external service took too long to respond. Please try again."
+  "localizedErrorMessagesMapping": {
+    "VALIDATION_FAILED": "The provided data does not meet the technical integrity or security criteria of the ecosystem.",
+    "UNAUTHORIZED_ACCESS": "Your identity does not possess sufficient institutional authority to perform this operation.",
+    "INTERNAL_SYSTEM_FAILURE": "An internal platform collapse has occurred. The Neural Sentinel has already notified the engineering team.",
+    "RESOURCE_NOT_FOUND": "The requested resource was not identified or has been permanently removed from the data Ledger.",
+    "EXTERNAL_SERVICE_TIMEOUT": "An external infrastructure provider exceeded the latency limit. Please try again."
   }
 }

@@ -6,8 +6,8 @@
  * sentimientos. Implementa 'Optimistic UI' para latencia cero percibida y
  * 'Sync Sentry' para el encolamiento de acciones en entornos sin red.
  *
- * Protocolo OEDP-V17.0 - High Performance SRE & Swarm Intelligence.
- * SANEADO Zenith: Inyección de Zustand (Shared) y Validación Isomórfica.
+ * Protocolo OEDP-V17.0 - High Performance SRE & Functional Atomicity.
+ * SANEADO Zenith: Atomización implacable y blindaje de tipado estricto (Fix TS7006).
  *
  * @author Raz Podestá - MetaShark Tech
  * @license UNLICENSED
@@ -17,25 +17,27 @@ import { useCallback, useState } from 'react';
 
 /* 1. Infraestructura Core & Shared (Sovereign Swarm) */
 import { useGlobalStateStore } from '@floripa-dignidade/shared';
+/** 🛡️ SANEADO Zenith: Importación explícita del tipo para prevenir colapso 'any' */
+import type { IGlobalSovereignStore } from '@floripa-dignidade/shared';
+
 import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier
 } from '@floripa-dignidade/telemetry';
 
-/* 2. ADN Estructural y Orquestador de Dominio */
+/* 2. ADN Estructural y Enjambre de Dominio */
 import type { IUserIdentity } from '@floripa-dignidade/identity';
 import { ProcessPublicReactionTransaction } from '../ProcessPublicReactionTransaction';
+import { BuildPublicReactionPayload } from '../atomic/BuildPublicReactionPayload';
+import { TransmitPublicReactionToCloud } from '../atomic/TransmitPublicReactionToCloud';
 
 /**
  * @interface IUsePublicReactionParameters
  * @description Contrato inmutable de parametrización para el orquestador visual.
  */
 export interface IUsePublicReactionParameters {
-  /** UUID de la entidad que recibe la interacción (Noticia, Denuncia, etc). */
   readonly targetEntityIdentifier: string;
-  /** Endpoint físico para la transacción Cloud-Native. */
   readonly targetApiEndpointLiteral: string;
-  /** Snapshot de identidad. Si es undefined, el sistema asume interacción anónima. */
   readonly activeCitizenIdentitySnapshot?: IUserIdentity;
 }
 
@@ -49,7 +51,6 @@ export interface IUsePublicReactionResult {
   readonly submitReactionAction: (polarityNumeric: number, emoticonIntentionLiteral?: string) => Promise<void>;
 }
 
-/** Identificador técnico del sensor para el Neural Sentinel. */
 const REACTION_HOOK_IDENTIFIER = 'PUBLIC_REACTION_CONNECTOR_HOOK';
 
 /**
@@ -64,22 +65,19 @@ export const usePublicReaction = (
 
   /**
    * @section Integración SRE (Sync Sentry)
-   * Extraemos el estado de la red y la capacidad de encolamiento de la memoria volátil.
+   * 🛡️ SANEADO Zenith: Tipado explícito de '(state: IGlobalSovereignStore)'
+   * Esto erradica el TS7006 incluso si el LSP del IDE sufre latencia.
    */
-  const { isNetworkOnlineBoolean, IncrementPendingQueueAction } = useGlobalStateStore((state) => ({
-    isNetworkOnlineBoolean: state.isNetworkOnlineBoolean,
-    IncrementPendingQueueAction: state.IncrementPendingQueueAction
-  }));
+  const { isNetworkOnlineBoolean, IncrementPendingQueueAction } = useGlobalStateStore(
+    (state: IGlobalSovereignStore) => ({
+      isNetworkOnlineBoolean: state.isNetworkOnlineBoolean,
+      IncrementPendingQueueAction: state.IncrementPendingQueueAction
+    })
+  );
 
   const [isExecutingBoolean, setIsExecutingBoolean] = useState(false);
-  const[optimisticPolarityNumeric, setOptimisticPolarityNumeric] = useState(0);
+  const [optimisticPolarityNumeric, setOptimisticPolarityNumeric] = useState(0);
 
-  /**
-   * Ejecuta la transacción de interacción.
-   *
-   * @param polarityNumeric - 1 (Like), -1 (Unlike), 0 (Neutral).
-   * @param emoticonIntentionLiteral - Etiqueta semántica ISO (Opcional).
-   */
   const submitReactionAction = useCallback(async (
     polarityNumeric: number,
     emoticonIntentionLiteral?: string
@@ -92,31 +90,20 @@ export const usePublicReaction = (
     setIsExecutingBoolean(true);
 
     try {
-      /**
-       * 2. ADUANA ISOMÓRFICA Y PONDERACIÓN
-       * Reutilizamos la lógica de servidor en el cliente para generar
-       * un payload purificado con peso preliminar.
-       */
-      const rawInteractionPayload = {
-        interactionIdentifier: crypto.randomUUID(),
-        targetEntityIdentifier: parameters.targetEntityIdentifier,
-        evaluatorIdentityIdentifier: parameters.activeCitizenIdentitySnapshot?.identityIdentifier ?? null,
-        interactionPolarityNumeric: polarityNumeric,
-        semanticEmoticonIntention: emoticonIntentionLiteral,
-        evaluatorPublicAliasLiteral: parameters.activeCitizenIdentitySnapshot?.anonymizedPublicNameLiteral ?? 'Cidadão Anônimo',
-        evaluatorAvatarSourceUrl: parameters.activeCitizenIdentitySnapshot?.avatarImageUniformResourceLocator ?? null,
-        territorialContextLiteral: 'FLORIANÓPOLIS_GLOBAL',
-        occurrenceTimestampISO: new Date().toISOString()
-      };
+      // 2. CONSTRUCCIÓN Y PONDERACIÓN (Delegación Atómica)
+      const rawInteractionPayload = BuildPublicReactionPayload(
+        parameters.targetEntityIdentifier,
+        polarityNumeric,
+        parameters.activeCitizenIdentitySnapshot,
+        emoticonIntentionLiteral
+      );
 
       const validatedReactionSnapshot = await ProcessPublicReactionTransaction(
         rawInteractionPayload,
         parameters.activeCitizenIdentitySnapshot
       );
 
-      /**
-       * 3. VIGILANCIA DE RED (Offline Mode Support)
-       */
+      // 3. VIGILANCIA DE RED (Offline Mode Support)
       if (!isNetworkOnlineBoolean) {
         IncrementPendingQueueAction();
 
@@ -132,18 +119,11 @@ export const usePublicReaction = (
         return;
       }
 
-      /**
-       * 4. TRANSMISIÓN FÍSICA (Cloud Sovereign Fetch)
-       */
-      const outgoingResponse = await fetch(parameters.targetApiEndpointLiteral, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(validatedReactionSnapshot)
-      });
-
-      if (!outgoingResponse.ok) {
-        throw new Error(`NETWORK_FAULT_STATUS_${outgoingResponse.status}`);
-      }
+      // 4. TRANSMISIÓN FÍSICA (Delegación Atómica)
+      await TransmitPublicReactionToCloud(
+        parameters.targetApiEndpointLiteral,
+        validatedReactionSnapshot
+      );
 
       // 5. REPORTE SRE (Success)
       void EmitTelemetrySignal({
@@ -159,10 +139,7 @@ export const usePublicReaction = (
       });
 
     } catch (caughtError: unknown) {
-      /**
-       * 6. RECUPERACIÓN FORENSE (Rollback)
-       * Si falla la transacción, deshacemos la interfaz visual.
-       */
+      // 6. RECUPERACIÓN FORENSE (Rollback)
       setOptimisticPolarityNumeric(previousPolarityNumeric);
 
       const errorDescriptionLiteral = caughtError instanceof Error

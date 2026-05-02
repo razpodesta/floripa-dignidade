@@ -1,35 +1,50 @@
+/**
+ * @section Exception DNA - Linguistic Integrity Schema
+ * @description Define el contrato soberano para los diccionarios de traducción
+ * del búnker de excepciones. Garantiza que cada código de error posea una
+ * representación humana validada antes de ser ensamblada por el Weaver.
+ *
+ * Protocolo OEDP-V17.0 - Sovereign Data & ReadOnly Integrity.
+ * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
+ */
+
 import { z } from 'zod';
 
 /**
- * @section Aduana Lingüística - Global Exceptions
- * Protocolo OEDP-V11.0 (Granular i18n & Dictionary Compilation)
+ * @name ExceptionsLinguisticDictionarySchema
+ * @description Aduana de validación para las almas lingüísticas (JSON).
+ * Implementa inmutabilidad absoluta para prevenir ruidos en el motor de renderizado.
  */
+export const ExceptionsLinguisticDictionarySchema = z.object({
 
-/**
- * Esquema Soberano para el diccionario de traducciones de excepciones.
- * Garantiza que cada código de error emitido por el sistema tenga una
- * representación textual obligatoria en todos los idiomas soportados.
- */
-export const ExceptionsI18nSchema = z.object({
-  codes: z.object({
+  /**
+   * Mapeo de Mensajes de Error Localizados.
+   * Cada llave debe corresponder a un literal del catálogo ErrorCode.
+   */
+  localizedErrorMessagesMapping: z.object({
+
     VALIDATION_FAILED: z.string()
-      .describe('Mensaje cuando los datos no cumplen los criterios de integridad'),
+      .describe('Mensaje emitido cuando los datos fallan la auditoría de esquema Zod.'),
 
     UNAUTHORIZED_ACCESS: z.string()
-      .describe('Mensaje cuando el usuario intenta acceder a un recurso sin permisos'),
+      .describe('Mensaje emitido ante violaciones de jerarquía de autoridad (RBAC).'),
 
     INTERNAL_SYSTEM_FAILURE: z.string()
-      .describe('Mensaje genérico para errores críticos de servidor (500)'),
+      .describe('Mensaje genérico de resiliencia para colapsos de infraestructura.'),
 
     RESOURCE_NOT_FOUND: z.string()
-      .describe('Mensaje cuando un recurso solicitado no existe en la base de datos'),
+      .describe('Mensaje emitido cuando una entidad solicitada no existe en el Ledger.'),
 
     EXTERNAL_SERVICE_TIMEOUT: z.string()
-      .describe('Mensaje cuando una API de terceros (ej: Resend) no responde a tiempo')
-  })
+      .describe('Mensaje emitido ante latencias críticas en proveedores (Resend/Meta/Supabase).')
+
+  }).readonly(),
+
 }).readonly();
 
 /**
- * Interfaz tipada del diccionario de excepciones para el compilador de i18n.
+ * @section ADN Tipado (Verbatim Module Syntax)
+ * Interfaz inmutable del diccionario para el compilador de internacionalización.
  */
-export type IExceptionsI18n = z.infer<typeof ExceptionsI18nSchema>;
+export type IExceptionsLinguisticDictionary = z.infer<typeof ExceptionsLinguisticDictionarySchema>;

@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/exceptions",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "private": true,
-  "description": "Búnker Core de gestión unificada de anomalías, códigos de error ISO y captura de snapshots forenses. Proporciona la infraestructura base para la resiliencia y auto-sanación del sistema mediante excepciones semánticas tipadas.",
+  "description": "ISO-Standard: Bunker Core de gestion unificada de anomalias, codigos de erro e captura de snapshots forenses.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {

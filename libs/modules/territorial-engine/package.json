@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/territorial-engine",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Búnker de Inteligência Territorial e Geográfica. Orquestra a sincronização com as bases de dados abertas do IBGE para a classificação de impacto social por distritos e bairros de Florianópolis, garantindo a integridade do mapeamento regional.",
+  "description": "ISO-Standard: Bunker de Inteligencia Territorial. Orquestra la sincronizacion con el IBGE y la normalizacion geografica para el mapeo de impacto social.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -15,6 +15,7 @@
     }
   },
   "dependencies": {
+    "@floripa-dignidade/environment-validator": "workspace:*",
     "@floripa-dignidade/exceptions": "workspace:*",
     "@floripa-dignidade/telemetry": "workspace:*",
     "@swc/helpers": "~0.5.18",

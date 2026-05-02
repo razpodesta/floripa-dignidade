@@ -1,0 +1,19 @@
+{
+  "logs": {
+    "SIMULATION_STARTED": "Adversarial simulation started against apparatus: {target}",
+    "SIMULATION_COMPLETED": "Security audit completed. Total vectors: {quantity}",
+    "BREACH_DETECTED": "🚨 BREACH DETECTED: Payload penetrated Zod aduana in {target}",
+    "DEFENSES_HELD": "🛡️ Nominal defenses in {target}. No attack vectors succeeded."
+  },
+  "threatLevels": {
+    "CRITICAL_COLLAPSE": "CRITICAL COLLAPSE: Risk of code execution or massive PII leak.",
+    "HIGH_RISK": "HIGH RISK: Possible authorization bypass or cryptographic integrity failure.",
+    "MODERATE_FLAW": "MODERATE FLAW: The schema accepts inconsistent data that could cause logic errors.",
+    "LOW_FRICTION": "LOW FRICTION: Unnecessary technical information exposed in error snapshots."
+  },
+  "audit": {
+    "reportHeadlineLiteral": "Forensic Audit Report - Floripa Dignidade Red Team",
+    "remediationPreambleLiteral": "To mitigate this vulnerability, the following action is recommended:",
+    "noVulnerabilitiesFoundLiteral": "The security swarm detected no breaches in the audited DNA contracts."
+  }
+}

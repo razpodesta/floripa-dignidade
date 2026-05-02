@@ -1,24 +1,37 @@
+/**
+ * @section tsconfig: Emitter
+ * @description Generador de ADN (.d.ts) para la fundicion visual.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc/libs/shared",
     "tsBuildInfoFile": "../../dist/out-tsc/libs/shared/tsconfig.lib.tsbuildinfo",
 
-    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
-    "composite": true,           /* Habilita la compilación incremental de la fundição visual */
-    "declaration": true,         /* Emite las firmas de tipos (.d.ts) para el Portal y CMS */
-    "declarationMap": true,      /* Mapeo para trazabilidad de componentes en el IDE */
-    "emitDeclarationOnly": true, /* Delega la lógica de ejecución al motor SWC/Turbopack */
-    "rootDir": "src",            /* Blindaje de frontera física absoluta (Fix TS6059) */
+    /* --- Integridad Soberana --- */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+    "noEmit": false,
+    "importHelpers": true,
 
-    /* --- GOBERNANZA DE RENDERIZADO (React 19 / Next.js 16) --- */
+    /* --- Redireccion de ADN (Solucion TS6059 / TS6305) --- */
+    "paths": {
+      "@floripa-dignidade/telemetry": ["../../dist/out-tsc/libs/core/telemetry/index.d.ts"],
+      "@floripa-dignidade/exceptions": ["../../dist/out-tsc/libs/core/exceptions/index.d.ts"]
+    },
+
+    /* --- Gobernanza de Renderizado --- */
     "jsx": "react-jsx",
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true, /* Fuerza la separación estricta entre ADN y Lógica */
+    "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- ADN DEL ENTORNO (Visual & State Context) --- */
+    /* --- ADN del Entorno (Web Context) --- */
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": []
   },
@@ -36,5 +49,9 @@
     "node_modules",
     "../../dist",
     "../../node_modules"
+  ],
+  "references": [
+    { "path": "../core/exceptions/tsconfig.lib.json" },
+    { "path": "../core/telemetry/tsconfig.lib.json" }
   ]
 }

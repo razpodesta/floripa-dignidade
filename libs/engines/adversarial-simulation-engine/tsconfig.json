@@ -1,0 +1,20 @@
+/**
+ * @section tsconfig: Gatekeeper
+ * @description Proteccion de frontera fisica para el motor de simulacion.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true,
+    "ignoreDeprecations": "5.0"
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.lib.json"
+    }
+  ]
+}

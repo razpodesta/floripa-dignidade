@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/interaction-engine",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
-  "description": "Búnker de Gestão de Reações e Sentimento Social. Orquestra pulsos de apoio popular e interações semânticas com ponderação baseada na autoridade da identidade, alimentando o termômetro de aceitação popular regional.",
+  "description": "ISO-Standard: Bunker de Gestion de Reacciones y Sentimiento Social. Orquestra pulsos de apoyo popular con ponderacion bayesiana.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -17,6 +17,7 @@
   "dependencies": {
     "@floripa-dignidade/exceptions": "workspace:*",
     "@floripa-dignidade/identity": "workspace:*",
+    "@floripa-dignidade/shared": "workspace:*",
     "@floripa-dignidade/telemetry": "workspace:*",
     "@swc/helpers": "~0.5.18",
     "zod": "^3.25.76"

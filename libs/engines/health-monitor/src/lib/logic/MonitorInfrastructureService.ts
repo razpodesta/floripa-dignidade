@@ -3,18 +3,20 @@
  * @description Aparato de vigilancia lógica para servicios externos del ecosistema.
  * Evalúa disponibilidad y latencia, reportando anomalías al sistema de telemetría.
  *
- * Protocolo OEDP-V14.0 - Verbatim Module Syntax.
- * @author Dirección de Ingeniería - Floripa Dignidade
+ * SANEADO Zenith: Sincronizacion de importacion PascalCase (Fix TS2724).
+ * Protocolo OEDP-V17.0 - Verbatim Module Syntax & ISO Technical Naming.
+ *
+ * @author Raz Podestá - MetaShark Tech
  */
 
-import { mapHttpErrorToException } from '@floripa-dignidade/exceptions';
+import { MapHttpErrorToException } from '@floripa-dignidade/exceptions'; // 🛡️ SANEADO
 import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier,
   ReportForensicException
 } from '@floripa-dignidade/telemetry';
 
-/** 🛡️ SANEAMIENTO Zenith: Importación de ADN como tipo puro */
+/* 1. ADN Estructural (Verbatim Module Syntax) */
 import type {
   HealthStatus,
   IInfrastructureCheck
@@ -28,7 +30,7 @@ const MONITOR_MODULE_IDENTIFIER = 'INFRASTRUCTURE_HEALTH_MONITOR';
  *
  * @param targetServiceNameLiteral - Nombre técnico del servicio.
  * @param executeHealthCheckAction - Acción encapsulada de validación.
- * @returns Reporte estructurado del estado de salud.
+ * @returns {Promise<IInfrastructureCheck>} Reporte estructurado del estado de salud.
  */
 export const MonitorInfrastructureService = async (
   targetServiceNameLiteral: string,
@@ -44,7 +46,8 @@ export const MonitorInfrastructureService = async (
   } catch (caughtError) {
     infrastructureHealthStatus = 'DOWN';
 
-    const infrastructureServiceException = mapHttpErrorToException(
+    // 🛡️ SANEADO: Uso del atomo nivelado en PascalCase
+    const infrastructureServiceException = MapHttpErrorToException(
       503,
       `FALLO_CRITICO_EN_SERVICIO_EXTERNO: ${targetServiceNameLiteral}`,
       {
@@ -72,15 +75,15 @@ export const MonitorInfrastructureService = async (
     lastCheckTimestamp: new Date().toISOString()
   };
 
-  EmitTelemetrySignal({
+  void EmitTelemetrySignal({
     severityLevel: infrastructureHealthStatus === 'DOWN' ? 'CRITICAL' :
                    infrastructureHealthStatus === 'DEGRADED' ? 'WARNING' : 'INFO',
     moduleIdentifier: MONITOR_MODULE_IDENTIFIER,
     operationCode: `HEALTH_PROBE_${targetServiceNameLiteral.toUpperCase()}_EXECUTED`,
     correlationIdentifier,
     message: `Sonda de salud finalizada para [${targetServiceNameLiteral}]: [${infrastructureHealthStatus}]`,
-    executionLatencyInMilliseconds,
-    contextMetadata: {
+    executionLatencyInMillisecondsQuantity: executionLatencyInMilliseconds, // 🛡️ Naming ISO
+    contextMetadataSnapshot: { // 🛡️ Naming ISO
       infrastructureStatus: infrastructureHealthStatus,
       isNominal: infrastructureHealthStatus === 'UP'
     }

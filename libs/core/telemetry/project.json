@@ -16,15 +16,15 @@
         "outputPath": "dist/libs/core/telemetry",
         "main": "libs/core/telemetry/src/index.ts",
         "tsConfig": "libs/core/telemetry/tsconfig.lib.json",
-        "swcrc": ".swcrc",
         "stripLeadingPaths": true
       },
       "cache": true
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/core/telemetry"],
       "options": {
-        "command": "tsc -p libs/core/telemetry/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/core/telemetry/tsconfig.lib.json"
       },
       "cache": true
     },

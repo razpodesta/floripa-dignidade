@@ -8,9 +8,8 @@
   "files": [],
   "include": [],
   "references": [
-    { "path": "./tsconfig.lib.json" },
-    /* --- ENLACES FÍSICOS AL ENJAMBRE (Consumidos por las herramientas) --- */
-    { "path": "../core/telemetry" },
-    { "path": "../core/exceptions" }
+    {
+      "path": "./tsconfig.lib.json"
+    }
   ]
 }

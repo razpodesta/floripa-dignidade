@@ -1,8 +1,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc/scripts",
-    "tsBuildInfoFile": "../../dist/out-tsc/scripts/tsconfig.lib.tsbuildinfo",
+    /* 🛡️ SANEADO Zenith: Corrección de profundidad de salida (1 nivel arriba) */
+    "outDir": "../dist/out-tsc/scripts",
+    "tsBuildInfoFile": "../dist/out-tsc/scripts/tsconfig.lib.tsbuildinfo",
 
     /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
     "composite": true,
@@ -13,12 +14,9 @@
 
     /*
        🛡️ SANEADO Zenith: Redirección de Grafo (Fix TS2307 / TS6059)
-       Se erradicó el segmento 'src' de la ruta de salida. Cuando el búnker 'tools'
-       emite su ADN, omite la carpeta base. La resolución ahora apunta a la
-       verdad física inmutable.
     */
     "paths": {
-      "@floripa-dignidade/tools":["../../dist/out-tsc/libs/tools/index.d.ts"]
+      "@floripa-dignidade/tools": ["../dist/out-tsc/libs/tools/index.d.ts"]
     },
 
     /* --- RESOLUCIÓN NEXT-GEN --- */
@@ -32,11 +30,16 @@
     "lib": ["ES2022"]
   },
   "include": ["src/**/*.ts"],
-  "exclude":[
-    "node_modules",
-    "dist",
-    "out-tsc",
-    "../../dist",
-    "../../node_modules"
+  "exclude": ["node_modules", "dist", "out-tsc", "../dist", "../node_modules"],
+  "references": [
+    {
+      "path": "../libs/core/exceptions/tsconfig.lib.json"
+    },
+    {
+      "path": "../libs/core/telemetry/tsconfig.lib.json"
+    },
+    {
+      "path": "../libs/tools/tsconfig.lib.json"
+    }
   ]
 }

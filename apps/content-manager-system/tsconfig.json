@@ -9,12 +9,8 @@
   /* --- SOVEREIGN PROJECT REFERENCES --- */
   /* 🛡️ LEY DEL GRAFO: Enlaces físicos a los búnkeres consumidos por el CMS */
   "references": [
-    { "path": "./tsconfig.app.json" },
-    /* Infraestructura Core */
-    { "path": "../../libs/core/environment-validator" },
-    { "path": "../../libs/core/telemetry" },
-    { "path": "../../libs/core/exceptions" },
-    /* Dominios de Negocio */
-    { "path": "../../libs/modules/identity" }
+    {
+      "path": "./tsconfig.app.json"
+    }
   ]
 }

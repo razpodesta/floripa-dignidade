@@ -1,13 +1,13 @@
 /**
  * @section Routing Logic - Global Request Swarm Orchestrator
- * @description Orquestador superior de frontera encargado de coordinar el enjambre 
- * de sensores cognitivos en el Edge Runtime. Gestiona el ciclo de vida de la 
- * solicitud entrante, inyectando trazabilidad forense, detectando la soberanía 
+ * @description Orquestador superior de frontera encargado de coordinar el enjambre
+ * de sensores cognitivos en el Edge Runtime. Gestiona el ciclo de vida de la
+ * solicitud entrante, inyectando trazabilidad forense, detectando la soberanía
  * lingüística y aplicando políticas de seguridad perimetral antes del renderizado.
- * 
+ *
+ * SANEADO Zenith: Sincronización de importación PascalCase (Fix TS2724).
  * Protocolo OEDP-V17.0 - Relentless Atomization & SRE Resilience.
- * SANEADO Zenith: Purga de Cronología (Next.js 16+), Resiliencia Catch-All y ISO Naming.
- * 
+ *
  * @author Raz Podestá - MetaShark Tech
  */
 
@@ -15,9 +15,9 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 /* 1. Infraestructura Core: Telemetría y Excepciones (Atmos PascalCase) */
-import { 
-  InternalSystemException, 
-  mapHttpErrorToException 
+import {
+  InternalSystemException,
+  MapHttpErrorToException // 🛡️ SANEADO: Sincronizado con el estándar PascalCase de Tier 0
 } from '@floripa-dignidade/exceptions';
 
 import {
@@ -27,7 +27,7 @@ import {
   TraceExecutionTime
 } from '@floripa-dignidade/telemetry';
 
-/* 2. Enjambre de Soporte y Registro de Sensores */
+/* 2. Enjambre de Soporte y Registro de Sensores (PascalCase Atoms) */
 import { InitializeRoutingContext } from './atomic/InitializeRoutingContext';
 import { SWARM_SENSORS_PIPELINE } from './constants/RoutingSensorRegistry';
 
@@ -37,7 +37,7 @@ const ROUTING_ORCHESTRATOR_IDENTIFIER = 'ROUTING_EDGE_ORCHESTRATOR';
 /**
  * Ejecuta el enjambre de sensores sobre la petición entrante en el Edge de Vercel.
  * Implementa un patrón de ejecución serial con capacidad de interrupción inmediata (Short-circuit).
- * 
+ *
  * @param incomingRequestSnapshot - Objeto de solicitud nativa capturado por el Middleware.
  * @returns {Promise<NextResponse>} Respuesta procesada, redirigida o autorizada para continuar.
  */
@@ -65,12 +65,12 @@ export const GlobalRequestOrchestrator = async (
          */
         for (const executeSensorAction of SWARM_SENSORS_PIPELINE) {
           const sensorResponseSignal = await executeSensorAction(
-            incomingRequestSnapshot, 
+            incomingRequestSnapshot,
             routingContext
           );
 
           if (sensorResponseSignal) {
-            /** 
+            /**
              * @section Inyección de Trazabilidad en Salidas Prematuras
              * Garantizamos que incluso los bloqueos de seguridad lleven el ID de rastreo.
              */
@@ -94,18 +94,18 @@ export const GlobalRequestOrchestrator = async (
       } catch (caughtExecutionError: unknown) {
         /**
          * @section Gestión de Resiliencia Perimetral (Panic Mode)
-         * Si el orquestador falla, capturamos el rastro forense antes de que 
+         * Si el orquestador falla, capturamos el rastro forense antes de que
          * el Edge Runtime emita un error no controlado.
          */
         const normalizedException = caughtExecutionError instanceof InternalSystemException
           ? caughtExecutionError
-          : mapHttpErrorToException(500, 'EDGE_ORCHESTRATION_COLLAPSE', {
-              originalErrorLiteral: caughtExecutionError instanceof Error 
-                ? caughtExecutionError.message 
+          : MapHttpErrorToException(500, 'EDGE_ORCHESTRATION_COLLAPSE', {
+              originalErrorLiteral: caughtExecutionError instanceof Error
+                ? caughtExecutionError.message
                 : String(caughtExecutionError)
             });
 
-        // Reporte automático al Neural Sentinel.
+        // Reporte automático al Neural Sentinel via Telemetry Core.
         ReportForensicException(normalizedException, correlationIdentifier);
 
         void EmitTelemetrySignal({
@@ -118,10 +118,10 @@ export const GlobalRequestOrchestrator = async (
         });
 
         /**
-         * Retornamos una respuesta de error estandarizada para evitar 
+         * Retornamos una respuesta de error estandarizada para evitar
          * exponer las "tripas" del servidor al cliente.
          */
-        return new NextResponse('INTERNAL_SERVICE_RELIABILITY_FAULT', { 
+        return new NextResponse('INTERNAL_SERVICE_RELIABILITY_FAULT', {
           status: 500,
           headers: { 'X-Floripa-Correlation-ID': correlationIdentifier }
         });

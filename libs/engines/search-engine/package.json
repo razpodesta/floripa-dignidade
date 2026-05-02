@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/search-engine",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Búnker de Descoberta Universal e Indexação Semântica. Orquestra a recuperação de informações mediante busca difusa (Fuzzy Search), garantindo o filtrado por níveis de autoridade institucional (RBAC) e rastreabilidade forense de intenção.",
+  "description": "ISO-Standard: Bunker de Descubrimiento Universal e Indexacion Semantica.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -15,6 +15,7 @@
     }
   },
   "dependencies": {
+    "@floripa-dignidade/exceptions": "workspace:*",
     "@floripa-dignidade/telemetry": "workspace:*",
     "@swc/helpers": "~0.5.18",
     "fuse.js": "^7.3.0",

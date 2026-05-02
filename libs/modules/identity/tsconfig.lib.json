@@ -1,42 +1,41 @@
+/**
+ * @section tsconfig: Emitter
+ * @description Generador de ADN (.d.ts) para el Juez de Paz del ecosistema.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    /* --- ESTRATEGIA DE SALIDA ZENITH --- */
     "outDir": "../../../dist/out-tsc/libs/modules/identity",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/modules/identity/tsconfig.lib.tsbuildinfo",
 
-    /* --- INTEGRIDADE SOBERANA (ADN Emitter) --- */
-    "composite": true,           /* Essencial para o Grafo de Referências */
-    "declaration": true,         /* Emite as assinaturas de ADN (.d.ts) */
-    "declarationMap": true,      /* Mapeamento para DX no VSCode */
-    "emitDeclarationOnly": true, /* Delega lógica ao SWC; TSC foca no ADN */
-    "rootDir": "src",            /* Fronteira física estrita (Fix TS6059) */
+    /* --- Integridad Soberana --- */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+    "noEmit": false,
+    "importHelpers": true,
 
-    /*
-     * 🛡️ MANOBRA DE ISOLAMENTO (OEDP-V17.0)
-     * Resetamos os 'paths' para garantir que o compilador utilize as 'references'
-     * físicas e os .d.ts já emitidos, impedindo a sucção de fontes externas.
-     */
-    "paths": {},
+    /* --- Redireccion de ADN (Solucion TS6059 / TS6305) --- */
+    "paths": {
+      "@floripa-dignidade/telemetry": ["../../../dist/out-tsc/libs/core/telemetry/index.d.ts"],
+      "@floripa-dignidade/exceptions": ["../../../dist/out-tsc/libs/core/exceptions/index.d.ts"],
+      "@floripa-dignidade/environment-validator": ["../../../dist/out-tsc/libs/core/environment-validator/index.d.ts"]
+    },
 
-    /* --- RESOLUÇÃO NEXT-GEN (Standard Next.js 16) --- */
+    /* --- Resolucion Next-Gen --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- ADN DO AMBIENTE (IAM Context) --- */
+    /* --- ADN del Entorno (IAM Context) --- */
     "types": ["node"],
     "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-
-  /* --- ESCOPO DE AUDITORIA --- */
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.json"
-  ],
-
-  /* --- ADUANA DE EXCLUSÃO (Anti-Contamination) --- */
+  "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
@@ -44,8 +43,12 @@
     "dist",
     "out-tsc",
     "node_modules",
-    /* Bloqueio físico de subida para garantir a soberania do rootDir */
     "../../../dist",
     "../../../node_modules"
+  ],
+  "references": [
+    { "path": "../../core/telemetry/tsconfig.lib.json" },
+    { "path": "../../core/exceptions/tsconfig.lib.json" },
+    { "path": "../../core/environment-validator/tsconfig.lib.json" }
   ]
 }

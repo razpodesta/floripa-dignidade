@@ -4,25 +4,30 @@
     "outDir": "../../../dist/out-tsc/libs/core/exceptions",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/exceptions/tsconfig.lib.tsbuildinfo",
 
-    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
-    "composite": true,           /* Habilita la compilación incremental en el grafo */
-    "declaration": true,         /* Emite las firmas de tipos (.d.ts) */
-    "declarationMap": true,      /* Mapeo para depuración en el IDE */
-    "emitDeclarationOnly": true, /* Delega la lógica a SWC/Turbopack */
-    "rootDir": "src",            /* Blindaje de frontera física */
+    /**
+     * 🛡️ EMITTER: Configuración activa de emisión de ADN.
+     * Se desactiva noEmit para obligar a TSC a generar las firmas físicas.
+     */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "rootDir": "src",
 
-    /* --- RESOLUCIÓN NEXT-GEN (Next.js 16 Ready) --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true, /* Fuerza la pureza de importación de tipos */
+    "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- ADN DEL ENTORNO --- */
     "types": [],
-    "lib": ["ES2022"]
+    "lib":["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["src/**/*.ts", "src/**/*.json"],
-  "exclude": [
+  "include":[
+    "src/**/*.ts",
+    "src/**/*.json"
+  ],
+  "exclude":[
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "jest.config.ts",

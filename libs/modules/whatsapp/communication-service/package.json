@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/whatsapp-communication-service",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "private": true,
-  "description": "Búnker de Integração com Meta e Gateway de Direitos Humanos. Orquestra a recepção criptográfica de Webhooks, a validação de assinaturas HMAC SHA256 e o triagem cognitivo de mensagens e evidências multimídia para a defesa da cidadania.",
+  "description": "ISO-Standard: Bunker de Integracion con Meta y Gateway de Direitos Humanos. Orquestra la recepcion criptografica de Webhooks.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -25,7 +25,7 @@
     "tags": [
       "scope:modules",
       "type:logic",
-      "platform:node"
+      "platform:isomorphic"
     ]
   }
 }

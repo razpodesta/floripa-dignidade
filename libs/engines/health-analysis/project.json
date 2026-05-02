@@ -16,15 +16,15 @@
         "outputPath": "dist/libs/engines/health-analysis",
         "main": "libs/engines/health-analysis/src/index.ts",
         "tsConfig": "libs/engines/health-analysis/tsconfig.lib.json",
-        "swcrc": ".swcrc",
         "stripLeadingPaths": true
       },
       "cache": true
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/engines/health-analysis"],
       "options": {
-        "command": "tsc -p libs/engines/health-analysis/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/engines/health-analysis/tsconfig.lib.json"
       },
       "cache": true
     },

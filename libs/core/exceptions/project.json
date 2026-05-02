@@ -3,24 +3,32 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/core/exceptions/src",
   "projectType": "library",
-  "tags": ["scope:core", "type:core", "platform:isomorphic"],
+  "tags":[
+    "scope:core",
+    "type:logic",
+    "platform:isomorphic"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:swc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/core/exceptions",
         "main": "libs/core/exceptions/src/index.ts",
         "tsConfig": "libs/core/exceptions/tsconfig.lib.json",
-        "swcrc": ".swcrc",
         "stripLeadingPaths": true
       },
       "cache": true
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs":[
+        "{workspaceRoot}/dist/out-tsc/libs/core/exceptions"
+      ],
       "options": {
-        "command": "tsc -p libs/core/exceptions/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/core/exceptions/tsconfig.lib.json"
       },
       "cache": true
     },

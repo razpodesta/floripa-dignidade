@@ -22,8 +22,9 @@
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/shared"],
       "options": {
-        "command": "tsc -p libs/shared/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/shared/tsconfig.lib.json"
       },
       "cache": true
     },

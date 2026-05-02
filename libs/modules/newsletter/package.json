@@ -2,10 +2,10 @@
   "name": "@floripa-dignidade/newsletter",
   "version": "1.1.0",
   "private": true,
-  "description": "Búnker de Gestão de Newsletters e Captação de Cidadãos. Orquestra o ciclo de vida de assinaturas via protocolo Double Opt-In, integrado com provedores de comunicação transacional e persistência Cloud-Sovereign para a rede de transparência.",
+  "description": "ISO-Standard: Bunker de Gestion de Newsletters y Captacion de Ciudadanos. Orquestra el ciclo de vida de suscripcion via Double Opt-In.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -15,6 +15,7 @@
     }
   },
   "dependencies": {
+    "@floripa-dignidade/environment-validator": "workspace:*",
     "@floripa-dignidade/exceptions": "workspace:*",
     "@floripa-dignidade/resend-provider": "workspace:*",
     "@floripa-dignidade/telemetry": "workspace:*",

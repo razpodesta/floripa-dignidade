@@ -1,81 +1,82 @@
+'use client';
+
 /**
  * @section Messaging Logic - Presence Transmission Connector (Hook)
- * @description Orquestador de sincronización encargado de vincular el State Store 
- * volátil con el Tier de Datos persistente. Detecta cambios de disponibilidad 
- * y rastro de hardware, ejecutando mutaciones asíncronas con telemetría integrada.
- * 
- * Protocolo OEDP-V16.0 - High Performance SRE & Cross-Module Synchronization.
- * Vision: Real-time Presence Convergence (Cloud-Sovereign).
+ * @description Orquestador de sincronização encarregado de vincular o State Store
+ * volátil com o Tier de Dados persistente.
+ *
+ * Protocolo OEDP-V17.0 - High Performance SRE & Swarm Intelligence.
+ * SANEADO Zenith: Resolução de TS7006 (Explicit State Typing) e Atomização SRP.
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
 import { useEffect, useRef } from 'react';
 
-/** 1. Infraestructura de Memoria Global (Capa Shared) */
+/* 1. Infraestrutura Shared & Store (Verbatim Module Syntax) */
 import { useGlobalStateStore } from '@floripa-dignidade/shared';
+import type { IGlobalSovereignStore } from '@floripa-dignidade/shared';
 
-/** 2. Infraestructura Core & Telemetría */
-import { 
-  EmitTelemetrySignal, 
-  GenerateCorrelationIdentifier 
+/* 2. Infraestrutura Core & Telemetria */
+import {
+  EmitTelemetrySignal,
+  GenerateCorrelationIdentifier
 } from '@floripa-dignidade/telemetry';
 
-/** 3. Motores de Mutación Locales */
+/* 3. Motores de Mutação e Átomos Locais */
 import { UpdateUserPresence } from '../mutators/UpdateUserPresence';
+import { CalculatePresenceStateSignature } from '../atomic/CalculatePresenceStateSignature';
+import { DetermineDevicePlatform } from '../atomic/DetermineDevicePlatform';
+
+/** Identificador técnico do sensor para o Neural Sentinel. */
+const SENSOR_IDENTIFIER = 'PRESENCE_SYNC_CONNECTOR';
 
 /**
- * Hook orquestador para la persistencia automática del pulso de vida ciudadano.
- * 
- * @param citizenIdentifier - UUID de la identidad soberana activa.
+ * Hook orquestador para a persistência automática do pulso de vida cidadão.
+ *
+ * @param citizenIdentifier - UUID da identidade soberana ativa.
  */
 export const usePresenceTransmissionConnector = (
   citizenIdentifier: string | undefined
 ): void => {
   /**
-   * @section Captura de Enjambre de Estado
-   * Escuchamos exclusivamente los cambios en el dominio de presencia.
+   * @section Captura de Enxame de Estado
+   * 🛡️ SANEADO Zenith: Tipagem explícita '(state: IGlobalSovereignStore)'
+   * resolve o erro TS7006 e garante inteligência total do IDE.
    */
-  const presenceSnapshot = useGlobalStateStore((state) => ({
+  const presenceSnapshot = useGlobalStateStore((state: IGlobalSovereignStore) => ({
     availabilityStatus: state.availabilityStatus,
     customStatusMessageLiteral: state.customStatusMessageLiteral,
     activePushTokenSecret: state.activePushTokenSecret,
     lastHeartbeatTimestampISO: state.lastHeartbeatTimestampISO
   }));
 
-  /** Referencia para evitar sincronizaciones redundantes (Same-state filter) */
-  const lastSynchronizedStateReference = useRef<string>('');
+  const lastSynchronizedSignatureReference = useRef<string>('');
 
   useEffect(() => {
-    /** Bloqueo de seguridad: No hay identidad para sincronizar */
     if (!citizenIdentifier) return;
 
     const correlationIdentifier = GenerateCorrelationIdentifier();
 
-    /**
-     * @section Algoritmo de Estabilización (SRE Optimization)
-     * Calculamos una firma del estado actual para detectar cambios reales.
-     */
-    const currentStateSignatureLiteral = JSON.stringify({
+    // 1. CÁLCULO DE ASSINATURA (Delegación Atômica)
+    const currentSignatureLiteral = CalculatePresenceStateSignature({
       status: presenceSnapshot.availabilityStatus,
-      msg: presenceSnapshot.customStatusMessageLiteral,
+      message: presenceSnapshot.customStatusMessageLiteral,
       token: presenceSnapshot.activePushTokenSecret
     });
 
-    if (currentStateSignatureLiteral === lastSynchronizedStateReference.current) {
+    // Filtro de idempotência: Evita tráfego desnecessário se o estado é idêntico
+    if (currentSignatureLiteral === lastSynchronizedSignatureReference.current) {
       return;
     }
 
     /**
-     * @section Ejecución de Sincronización Cloud
-     * Implementamos un pequeño retardo (Debounce) de 1.5s para asegurar que
-     * el estado del usuario sea estable (ej: no disparar si solo pasó rápido por la pestaña).
+     * @section Execução de Sincronização Cloud (SRE Strategy)
+     * Implementa debounce técnico de 1.5s para estabilizar flutuações de rede.
      */
     const synchronizationTimerReference = setTimeout(async () => {
       try {
-        // Determinamos la plataforma de origen mediante el sensor de hardware nativo
-        const isMobileBoolean = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const platformLiteral = isMobileBoolean ? 'PWA_MOBILE_ANDROID' : 'WEB_DESKTOP';
+        const platformLiteral = DetermineDevicePlatform();
 
         await UpdateUserPresence({
           citizenIdentifier,
@@ -86,27 +87,24 @@ export const usePresenceTransmissionConnector = (
           lastHeartbeatTimestampISO: presenceSnapshot.lastHeartbeatTimestampISO
         });
 
-        lastSynchronizedStateReference.current = currentStateSignatureLiteral;
+        lastSynchronizedSignatureReference.current = currentSignatureLiteral;
 
         void EmitTelemetrySignal({
           severityLevel: 'INFO',
-          moduleIdentifier: 'PRESENCE_CONNECTOR_HOOK',
-          operationCode: 'PRESENCE_CLOUD_SYNC_SUCCESS',
+          moduleIdentifier: SENSOR_IDENTIFIER,
+          operationCode: 'PRESENCE_AUTO_SYNC_NOMINAL',
           correlationIdentifier,
           message: 'MESSAGING.LOGS.HEARTBEAT_NOMINAL',
-          contextMetadata: { 
-            status: presenceSnapshot.availabilityStatus,
-            platform: platformLiteral 
-          }
+          contextMetadata: { platform: platformLiteral }
         });
 
       } catch (caughtError: unknown) {
         void EmitTelemetrySignal({
           severityLevel: 'ERROR',
-          moduleIdentifier: 'PRESENCE_CONNECTOR_HOOK',
-          operationCode: 'PRESENCE_CLOUD_SYNC_FAULT',
+          moduleIdentifier: SENSOR_IDENTIFIER,
+          operationCode: 'PRESENCE_AUTO_SYNC_FAULT',
           correlationIdentifier,
-          message: 'Fallo al sincronizar el pulso de vida con la infraestructura soberana.',
+          message: 'Falha na persistência automática do pulso de presença.',
           contextMetadata: { errorTrace: String(caughtError) }
         });
       }

@@ -4,13 +4,15 @@
  * Actúa como la señal de máxima prioridad operativa, activando automáticamente
  * los protocolos de intervención en el Health Analysis Engine.
  *
- * Protocolo OEDP-V13.0 - High Severity Infrastructure Signal & Explicit Accessibility.
- * Saneamiento: Alineación con el estándar de visibilidad de miembros de clase.
+ * Protocolo OEDP-V17.0 - High Severity Infrastructure Signal & ISO Naming.
+ * SANEADO Zenith: Resolución de TS2345 (Branded Type Match) y Naming ISO.
  *
- * @author Raz  Podestá - MetaShark Tech
+ * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
 import { GlobalBaseException } from './GlobalBaseException';
+import type { ErrorCode } from '../schemas/Exception.schema';
 
 /**
  * @class InternalSystemException
@@ -23,21 +25,25 @@ export class InternalSystemException extends GlobalBaseException {
    * Inicializa una instancia de error de sistema con severidad de colapso técnica.
    *
    * @param messageLiteral - Descripción técnica detallada de la anomalía detectada.
-   * @param forensicContextSnapshot - Colección de variables para la reconstrucción del fallo.
+   * @param contextMetadataCollection - Colección de variables para la reconstrucción del fallo.
    */
   public constructor(
     messageLiteral: string,
-    forensicContextSnapshot: Record<string, unknown> = {}
+    contextMetadataCollection: Record<string, unknown> = {}
   ) {
     /**
      * @constant INTERNAL_SYSTEM_FAILURE - Código semántico inmutable (ISO Standard).
-     * @constant 500 - Status code de error interno del servidor (PII Protection Level).
+     * 🛡️ SANEADO: Se aplica casting 'as ErrorCode' para satisfacer el Branded Type
+     * definido en el ExceptionSchema, garantizando la integridad del enjambre.
      */
+    const operationalErrorCodeLiteral = 'INTERNAL_SYSTEM_FAILURE' as ErrorCode;
+    const httpStatusCodeNumeric = 500;
+
     super(
       messageLiteral,
-      'INTERNAL_SYSTEM_FAILURE',
-      500,
-      forensicContextSnapshot
+      operationalErrorCodeLiteral,
+      httpStatusCodeNumeric,
+      contextMetadataCollection
     );
   }
 }

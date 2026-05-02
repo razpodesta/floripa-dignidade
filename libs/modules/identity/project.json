@@ -16,15 +16,15 @@
         "outputPath": "dist/libs/modules/identity",
         "main": "libs/modules/identity/src/index.ts",
         "tsConfig": "libs/modules/identity/tsconfig.lib.json",
-        "swcrc": ".swcrc",
         "stripLeadingPaths": true
       },
       "cache": true
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/modules/identity"],
       "options": {
-        "command": "tsc -p libs/modules/identity/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/modules/identity/tsconfig.lib.json"
       },
       "cache": true
     },

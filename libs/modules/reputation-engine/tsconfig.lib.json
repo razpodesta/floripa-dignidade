@@ -1,38 +1,52 @@
+/**
+ * @section tsconfig: Emitter
+ * @description Generador de ADN (.d.ts) con redireccion fisica de Grafo.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc/libs/modules/reputation-engine",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/modules/reputation-engine/tsconfig.lib.tsbuildinfo",
 
-    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
-    "composite": true,           /* Habilita la compilación incremental y el grafo de referencias */
-    "declaration": true,         /* Emite las firmas de tipos (.d.ts) para el impacto estadístico */
-    "declarationMap": true,      /* Mapeo para trazabilidad forense en el IDE */
-    "emitDeclarationOnly": true, /* Delega la lógica de ejecución al motor SWC/Turbopack */
-    "rootDir": "src",            /* Blindaje de frontera física absoluta (Fix TS6059) */
+    /* --- Integridad Soberana --- */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+    "noEmit": false,
+    "importHelpers": true,
 
-    /* --- RESOLUCIÓN NEXT-GEN (Next.js 16 Ready) --- */
+    /* --- Redireccion de ADN (Solucion TS6059 / TS6305) --- */
+    "paths": {
+      "@floripa-dignidade/exceptions": ["../../../dist/out-tsc/libs/core/exceptions/index.d.ts"],
+      "@floripa-dignidade/telemetry": ["../../../dist/out-tsc/libs/core/telemetry/index.d.ts"],
+      "@floripa-dignidade/health-analysis-engine": ["../../../dist/out-tsc/libs/engines/health-analysis/index.d.ts"]
+    },
+
+    /* --- Resolucion Next-Gen --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true, /* Fuerza la separación estricta entre tipos y lógica */
+    "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- ADN DEL ENTORNO (Isomorphic Logic Context) --- */
+    /* --- ADN del Entorno (Isomorphic Context) --- */
     "types": ["node"],
-    "lib": ["ES2022", "DOM", "DOM.Iterable"] /* Soporte para fetch y telemetría en el Edge */
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.json"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
     "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    "jest.config.ts",
     "dist",
     "out-tsc",
     "node_modules",
     "../../../dist",
     "../../../node_modules"
+  ],
+  "references": [
+    { "path": "../../core/exceptions/tsconfig.lib.json" },
+    { "path": "../../core/telemetry/tsconfig.lib.json" },
+    { "path": "../../engines/health-analysis/tsconfig.lib.json" }
   ]
 }

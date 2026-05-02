@@ -1,35 +1,52 @@
+/**
+ * @section tsconfig: Emitter
+ * @description Generador de ADN (.d.ts) para el motor territorial.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/libs/modules/social-media",
-    "tsBuildInfoFile": "../../../dist/out-tsc/libs/modules/social-media/tsconfig.lib.tsbuildinfo",
+    "outDir": "../../../dist/out-tsc/libs/modules/territorial-engine",
+    "tsBuildInfoFile": "../../../dist/out-tsc/libs/modules/territorial-engine/tsconfig.lib.tsbuildinfo",
 
-    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
-    "composite": true,           /* Habilita la compilación incremental del kernel social */
-    "declaration": true,         /* Emite las firmas de tipos (.d.ts) para el enjambre */
-    "declarationMap": true,      /* Mapeo para trazabilidad en el IDE */
-    "emitDeclarationOnly": true, /* Delega la lógica de ejecución al motor SWC */
-    "rootDir": "src",            /* Blindaje de frontera física absoluta (Fix TS6059) */
+    /* --- Integridad Soberana --- */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+    "noEmit": false,
+    "importHelpers": true,
 
-    /* --- RESOLUCIÓN NEXT-GEN (Next.js 16 Ready) --- */
+    /* --- Redireccion de ADN (Solucion TS6059 / TS6305) --- */
+    "paths": {
+      "@floripa-dignidade/telemetry": ["../../../dist/out-tsc/libs/core/telemetry/index.d.ts"],
+      "@floripa-dignidade/exceptions": ["../../../dist/out-tsc/libs/core/exceptions/index.d.ts"],
+      "@floripa-dignidade/environment-validator": ["../../../dist/out-tsc/libs/core/environment-validator/index.d.ts"]
+    },
+
+    /* --- Resolucion Next-Gen --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true, /* Fuerza la separación estricta entre tipos y lógica */
+    "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- ADN DEL ENTORNO (Isomorphic Context) --- */
+    /* --- ADN del Entorno --- */
     "types": [],
-    "lib": ["DOM", "DOM.Iterable", "ES2022"] /* Necesario para el uso de fetch hacia APIs sociales */
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
   "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
     "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    "jest.config.ts",
     "dist",
     "out-tsc",
     "node_modules",
     "../../../dist",
     "../../../node_modules"
+  ],
+  "references": [
+    { "path": "../../core/environment-validator/tsconfig.lib.json" },
+    { "path": "../../core/telemetry/tsconfig.lib.json" },
+    { "path": "../../core/exceptions/tsconfig.lib.json" }
   ]
 }

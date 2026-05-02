@@ -1,48 +1,58 @@
 /**
- * @section Core Exceptions - Package Entry Point
+ * @section Core Exceptions - Package Entry Point (Barrel)
  * @description Orquestador soberano para la gestión unificada de anomalías y contratos
- * de error del ecosistema. Proporciona la infraestructura necesaria para la
- * captura forense de fallos y el mapeo semántico de estados técnicos.
+ * de error del ecosistema. Centraliza la exportación de la gramática del fallo,
+ * capturas forenses y traductores de protocolo HTTP.
  *
- * Protocolo OEDP-V16.0 - Verbatim Module Syntax & High Performance Treeshaking.
+ * Protocolo OEDP-V17.0 - Verbatim Module Syntax & High Performance Treeshaking.
+ * SANEADO Zenith: Integración de esquemas atómicos y mappers de protocolo.
+ *
  * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
 /**
- * @section ADN Estructural (Schemas & Types)
- * @description Exportación de interfaces inmutables y contratos de validación.
- * Se utiliza 'export type' para garantizar que estos elementos desaparezcan
- * completamente durante la transpilación a JavaScript.
+ * @version 1.2.5
+ * Estatus: Nivelación Zenith completada. Grafo de tipos sincronizado.
  */
-export type {
-  ErrorCode,
-  IRuntimeSnapshot,
-} from './lib/schemas/Exception.schema';
+export const CORE_EXCEPTIONS_VERSION = '1.2.5';
 
+/**
+ * @section Capa 1: ADN Estructural (Schemas & Types)
+ * Exportación de contratos de validación y tipos nominales (Branded).
+ */
 export {
   ErrorCodeSchema,
   RuntimeSnapshotSchema,
+  ExceptionContractSchema,
+} from './lib/schemas/Exception.schema';
+
+export type {
+  ErrorCode,
+  IRuntimeSnapshot,
+  IExceptionContract,
 } from './lib/schemas/Exception.schema';
 
 /**
- * @section Almas Lingüísticas (Internationalization)
- * @description Definiciones para la traducción técnica de códigos de error.
+ * @section Capa 2: Almas Lingüísticas (Internationalization)
  */
-export type { IExceptionsI18n } from './lib/i18n/ExceptionsI18n.schema';
-export { ExceptionsI18nSchema } from './lib/i18n/ExceptionsI18n.schema';
+export {
+  ExceptionsLinguisticDictionarySchema
+} from './lib/i18n/ExceptionsI18n.schema';
+
+export type {
+  IExceptionsLinguisticDictionary
+} from './lib/i18n/ExceptionsI18n.schema';
 
 /**
- * @section Motores de Excepción (Logic & Classes)
- * @description Clases fundamentales para el sistema de excepciones.
- * Implementan captura de snapshot inmutable y rastro de pila (stack trace).
+ * @section Capa 3: Motores de Excepción (Logic & Classes)
  */
 export { GlobalBaseException } from './lib/codes/GlobalBaseException';
 export { InternalSystemException } from './lib/codes/InternalSystemException';
 export { ValidationException } from './lib/codes/ValidationException';
 
 /**
- * @section Adaptadores de Protocolo (Mapping)
- * @description Utilidades para transformar errores crudos (HTTP/Fetch) en
- * excepciones semánticas tipadas.
+ * @section Capa 4: Adaptadores de Protocolo (Mappers)
+ * Traductores atómicos para estados de red.
  */
-export { mapHttpErrorToException } from './lib/mappers/mapHttpErrorToException';
+export { MapHttpErrorToException } from './lib/mappers/MapHttpErrorToException';

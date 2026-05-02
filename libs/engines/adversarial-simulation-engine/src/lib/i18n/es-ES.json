@@ -1,0 +1,19 @@
+{
+  "logs": {
+    "SIMULATION_STARTED": "Simulación adversaria iniciada contra el aparato: {target}",
+    "SIMULATION_COMPLETED": "Auditoría de seguridad finalizada. Total de vectores: {quantity}",
+    "BREACH_DETECTED": "🚨 VIOLACIÓN DETECTADA: El payload penetró la aduana Zod en {target}",
+    "DEFENSES_HELD": "🛡️ Defensas nominales en {target}. Ningún vector de ataque tuvo éxito."
+  },
+  "threatLevels": {
+    "CRITICAL_COLLAPSE": "COLAPSO CRÍTICO: Riesgo de ejecución de código o fuga masiva de PII.",
+    "HIGH_RISK": "RIESGO ALTO: Posible bypass de autorización o falla de integridad criptográfica.",
+    "MODERATE_FLAW": "FALLA MODERADA: El esquema acepta datos inconsistentes que pueden generar errores de lógica.",
+    "LOW_FRICTION": "FRICCIÓN BAJA: Información técnica innecesaria expuesta en snapshots de error."
+  },
+  "audit": {
+    "reportHeadlineLiteral": "Reporte de Auditoría Forense - Floripa Dignidade Red Team",
+    "remediationPreambleLiteral": "Para mitigar esta vulnerabilidad, se recomienda la siguiente acción:",
+    "noVulnerabilitiesFoundLiteral": "El enjambre de seguridad no detectó brechas en los contratos de ADN auditados."
+  }
+}

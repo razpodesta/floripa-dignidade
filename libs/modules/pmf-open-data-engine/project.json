@@ -22,8 +22,9 @@
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/modules/pmf-open-data-engine"],
       "options": {
-        "command": "tsc -p libs/modules/pmf-open-data-engine/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/modules/pmf-open-data-engine/tsconfig.lib.json"
       },
       "cache": true
     },

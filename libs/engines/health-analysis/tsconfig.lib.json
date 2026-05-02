@@ -1,25 +1,38 @@
+/**
+ * @section tsconfig: Emitter
+ * @description Generador de ADN (.d.ts) para el cerebro de IA.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc/libs/engines/health-analysis",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/engines/health-analysis/tsconfig.lib.tsbuildinfo",
 
-    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
-    "composite": true,           /* Habilita la compilación incremental del motor de IA */
-    "declaration": true,         /* Emite las firmas de tipos (.d.ts) para el resto del enjambre */
-    "declarationMap": true,      /* Mapeo para depuración cognitiva en el IDE */
-    "emitDeclarationOnly": true, /* Delega la lógica de ejecución al motor SWC/Turbopack */
-    "rootDir": "src",            /* Blindaje de frontera física absoluta */
+    /* --- Integridad Soberana --- */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+    "noEmit": false,
+    "importHelpers": true,
 
-    /* --- RESOLUCIÓN NEXT-GEN (Next.js 16 Ready) --- */
+    /* --- Redireccion de ADN (Solucion TS6059) --- */
+    "paths": {
+      "@floripa-dignidade/exceptions": ["../../../dist/out-tsc/libs/core/exceptions/index.d.ts"],
+      "@floripa-dignidade/telemetry": ["../../../dist/out-tsc/libs/core/telemetry/index.d.ts"]
+    },
+
+    /* --- Resolucion Next-Gen --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true, /* Fuerza la separación estricta entre tipos y lógica */
+    "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- ADN DEL ENTORNO (Isomorphic AI Context) --- */
+    /* --- ADN del Entorno (Isomorphic Context) --- */
     "types": [],
-    "lib": ["DOM", "DOM.Iterable", "ES2022", "WebWorker"] /* Soporte para fetch y procesamiento asíncrono */
+    "lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"]
   },
   "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
@@ -31,5 +44,9 @@
     "node_modules",
     "../../../dist",
     "../../../node_modules"
+  ],
+  "references": [
+    { "path": "../../core/exceptions/tsconfig.lib.json" },
+    { "path": "../../core/telemetry/tsconfig.lib.json" }
   ]
 }

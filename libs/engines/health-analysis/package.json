@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/health-analysis-engine",
-  "version": "1.0.0",
+  "version": "1.4.0",
   "private": true,
-  "description": "Búnker de Inteligência Artificial (Neural Sentinel) encarregado da inferência preditiva, auditoria lógica e orquestração de protocolos de auto-saneamento (Self-Healing). Atua como o cérebro cognitivo para a detecção de anomalias no fluxo sanguíneo digital.",
+  "description": "ISO-Standard: Bunker de Inteligencia Artificial (Neural Sentinel) encargado de la inferencia predictiva y protocolos de auto-saneamiento.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -15,6 +15,7 @@
     }
   },
   "dependencies": {
+    "@floripa-dignidade/exceptions": "workspace:*",
     "@floripa-dignidade/telemetry": "workspace:*",
     "@swc/helpers": "~0.5.18",
     "zod": "^3.25.76"

@@ -1,0 +1,36 @@
+{
+  "name": "@floripa-dignidade/adversarial-simulation-engine",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/engines/adversarial-simulation-engine/src",
+  "projectType": "library",
+  "tags": [
+    "scope:engines",
+    "type:tool",
+    "platform:node"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/engines/adversarial-simulation-engine",
+        "main": "libs/engines/adversarial-simulation-engine/src/index.ts",
+        "tsConfig": "libs/engines/adversarial-simulation-engine/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/engines/adversarial-simulation-engine"],
+      "options": {
+        "command": "tsc -p libs/engines/adversarial-simulation-engine/tsconfig.lib.json"
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
-  "signals": {
-    "START_PROCESS": "Starting atomic processing.",
-    "END_PROCESS": "Processing finished successfully.",
-    "LATENCY_REPORT": "Execution latency measured in milliseconds."
+  "telemetrySignalsMapping": {
+    "START_PROCESS": "Initiating atomic execution in the system core.",
+    "END_PROCESS": "Execution completed successfully. Nominal signal detected.",
+    "LATENCY_REPORT": "Execution latency captured in milliseconds (Forensic Audit)."
   }
 }

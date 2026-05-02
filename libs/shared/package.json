@@ -2,10 +2,10 @@
   "name": "@floripa-dignidade/shared",
   "version": "1.5.0",
   "private": true,
-  "description": "Búnker de Fundição Visual e Gestão de Estado. Centraliza Design Tokens, UI Primitives, Orquestradores de Layout e a infraestrutura de Memória Soberana do ecossistema Floripa Dignidade. Implementa o padrão de Deep Exports para otimização de bundle em Next.js 16.",
+  "description": "ISO-Standard: Bunker de Fundicion Visual y Gestion de Estado Soberano.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {

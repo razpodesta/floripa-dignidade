@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/environment-validator",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
-  "description": "Búnker Core de auditoría de infraestructura y validación proactiva de secretos de entorno. Actúa como la Aduana de ADN para garantizar la integridad de la ejecución Cloud-Sovereign y prevenir estados de inconsistencia técnica.",
+  "description": "ISO-Standard: Bunker Core de auditoria de infraestructura y validacion proactiva de secretos de entorno.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {

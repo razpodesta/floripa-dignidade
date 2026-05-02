@@ -1,34 +1,40 @@
 /**
- * @section Telemetry Engine - Performance Metrics Apparatus
- * @description Orquestador de rendimiento cognitivo y trazabilidad de latencia.
- * Mide con precisión de microsegundos la ejecución de acciones asíncronas,
- * gestiona el rastro lingüístico soberano y despacha los resultados al
- * flujo sanguíneo digital.
+ * @section Telemetry Logic - Performance Metrics Apparatus
+ * @description Átomo encargado de medir con precisión de microsegundos la ejecución
+ * de acciones asíncronas. Gestiona el rastro lingüístico soberano y despacha
+ * los resultados de latencia al flujo sanguíneo digital.
  *
- * Protocolo OEDP-V16.0 - Atomic Functional & Zero Abbreviations.
+ * Protocolo OEDP-V17.0 - High Performance SRE & ISO Technical Naming.
+ * SANEADO Zenith: Resolución de error de Linter (sort-imports).
+ *
  * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
 import { EmitTelemetrySignal } from './EmitTelemetrySignal';
+import type {
+  CorrelationIdentifier,
+  ModuleIdentifier,
+  OperationCode,
+} from '../../schemas/TelemetrySignal.schema';
 
 /**
  * Identificador técnico para reportes de métricas internas del sistema nervioso central.
- * SANEADO: Nomenclatura ISO descriptiva.
+ * Cumple con la norma ISO de nomenclatura prosaica.
  */
-const PERFORMANCE_MONITOR_IDENTIFIER = 'TELEMETRY_PERFORMANCE_MONITOR';
+const PERFORMANCE_MONITOR_IDENTIFIER = 'TELEMETRY_PERFORMANCE_MONITOR' as ModuleIdentifier;
 
 /**
  * Ejecuta una acción atómica asíncrona, midiendo su tiempo de ejecución
- * y reportando el resultado automáticamente al sistema de telemetría
- * mediante señales internacionalizadas.
+ * y reportando el resultado automáticamente al sistema de telemetría.
  *
  * @template TExecutionResult - Tipo de retorno esperado de la acción encapsulada.
- * @param moduleIdentifierLiteral - Nombre técnico del aparato emisor.
- * @param operationCodeLiteral - Código semántico de la operación (ej: PERSIST_USER_DATA).
- * @param correlationIdentifier - UUID v4 para trazabilidad forense cross-module.
- * @param asynchronousActionFunction - Lógica de negocio a ser envuelta y medida.
- * @returns {Promise<TExecutionResult>} El resultado inalterado de la función proporcionada.
- * @throws Relanza cualquier excepción capturada para preservar la burbuja original del llamante.
+ * @param moduleIdentifierLiteral - Nombre técnico del búnker emisor.
+ * @param operationCodeLiteral - Código semántico de la operación.
+ * @param correlationIdentifier - Identificador para trazabilidad forense.
+ * @param asynchronousActionFunction - Lógica de negocio a ser medida.
+ * @returns {Promise<TExecutionResult>} El resultado inalterado de la función.
+ * @throws Relanza cualquier excepción capturada para preservar el flujo original.
  */
 export const TraceExecutionTime = async <TExecutionResult>(
   moduleIdentifierLiteral: string,
@@ -36,64 +42,66 @@ export const TraceExecutionTime = async <TExecutionResult>(
   correlationIdentifier: string,
   asynchronousActionFunction: () => Promise<TExecutionResult>,
 ): Promise<TExecutionResult> => {
-
-  // 1. CAPTURA DE MARCA TEMPORAL INICIAL (Alta Precisión ISO)
-  const executionStartTimestampInMilliseconds = performance.now();
+  /**
+   * @section Captura de Marca Temporal Inicial
+   * Utilizamos el hardware de alta resolución para precisión de grado industrial.
+   */
+  const executionStartTimestampInMillisecondsQuantity = performance.now();
 
   try {
-    // 2. EJECUCIÓN DE LA LÓGICA DE NEGOCIO (Wrapper Pattern)
+    // 1. EJECUCIÓN DE LA LÓGICA DE NEGOCIO (Wrapper Pattern)
     const resultingExecutionData = await asynchronousActionFunction();
 
-    // 3. CÁLCULO DE LATENCIA NOMINAL
-    const executionEndTimestampInMilliseconds = performance.now();
-    const totalExecutionLatencyInMilliseconds =
-      executionEndTimestampInMilliseconds - executionStartTimestampInMilliseconds;
+    // 2. CÁLCULO DE LATENCIA NOMINAL
+    const executionEndTimestampInMillisecondsQuantity = performance.now();
+    const totalExecutionLatencyInMillisecondsQuantity =
+      executionEndTimestampInMillisecondsQuantity - executionStartTimestampInMillisecondsQuantity;
 
-    // 4. EMISIÓN DE SEÑAL DE RENDIMIENTO POSITIVO (SANEADO: i18n Key Usage)
+    // 3. EMISIÓN DE SEÑAL DE RENDIMIENTO POSITIVO
     EmitTelemetrySignal({
-      severityLevel: 'INFO',
-      moduleIdentifier: PERFORMANCE_MONITOR_IDENTIFIER,
-      operationCode: `${operationCodeLiteral}_PERFORMANCE_SUCCESS`,
-      correlationIdentifier,
-      /** 🛡️ SANEADO: Uso de la clave de diccionario 'signals.LATENCY_REPORT' */
-      message: 'TELEMETRY.SIGNALS.LATENCY_REPORT',
-      executionLatencyInMilliseconds: totalExecutionLatencyInMilliseconds,
-      contextMetadata: {
+      severityLevelLiteral: 'INFO',
+      moduleIdentifierLiteral: PERFORMANCE_MONITOR_IDENTIFIER,
+      operationCodeLiteral: `${operationCodeLiteral}_PERFORMANCE_SUCCESS` as OperationCode,
+      correlationIdentifier: correlationIdentifier as CorrelationIdentifier,
+      messageContentLiteral: 'TELEMETRY.SIGNALS.LATENCY_REPORT',
+      executionLatencyInMillisecondsQuantity: totalExecutionLatencyInMillisecondsQuantity,
+      contextMetadataSnapshot: {
         targetModuleLiteral: moduleIdentifierLiteral,
         targetOperationLiteral: operationCodeLiteral,
-        statusLiteral: 'SUCCESS'
-      }
+        statusLiteral: 'SUCCESS',
+      },
     });
 
     return resultingExecutionData;
-
   } catch (caughtError: unknown) {
-    // 5. GESTIÓN FORENSE DE FALLO CON MEDICIÓN DE LATENCIA
-    const executionEndTimestampInMilliseconds = performance.now();
-    const totalExecutionLatencyInMilliseconds =
-      executionEndTimestampInMilliseconds - executionStartTimestampInMilliseconds;
+    /**
+     * @section Gestión Forense de Fallo con Medición de Latencia
+     * Incluso en caso de error, el rastro de tiempo es vital para detectar
+     * ataques de denegación de servicio o cuellos de botella.
+     */
+    const executionEndTimestampInMillisecondsQuantity = performance.now();
+    const totalExecutionLatencyInMillisecondsQuantity =
+      executionEndTimestampInMillisecondsQuantity - executionStartTimestampInMillisecondsQuantity;
 
-    /** 🛡️ SANEADO: Extracción segura de mensaje de error de tipo 'unknown' */
-    const errorDescriptionLiteral = caughtError instanceof Error
-      ? caughtError.message
-      : String(caughtError);
+    const errorDescriptionLiteral =
+      caughtError instanceof Error ? caughtError.message : String(caughtError);
 
     EmitTelemetrySignal({
-      severityLevel: 'ERROR',
-      moduleIdentifier: PERFORMANCE_MONITOR_IDENTIFIER,
-      operationCode: `${operationCodeLiteral}_PERFORMANCE_FAILURE`,
-      correlationIdentifier,
-      message: 'TELEMETRY.SIGNALS.LATENCY_REPORT',
-      executionLatencyInMilliseconds: totalExecutionLatencyInMilliseconds,
-      contextMetadata: {
+      severityLevelLiteral: 'ERROR',
+      moduleIdentifierLiteral: PERFORMANCE_MONITOR_IDENTIFIER,
+      operationCodeLiteral: `${operationCodeLiteral}_PERFORMANCE_FAILURE` as OperationCode,
+      correlationIdentifier: correlationIdentifier as CorrelationIdentifier,
+      messageContentLiteral: 'TELEMETRY.SIGNALS.LATENCY_REPORT',
+      executionLatencyInMillisecondsQuantity: totalExecutionLatencyInMillisecondsQuantity,
+      contextMetadataSnapshot: {
         errorTraceLiteral: errorDescriptionLiteral,
         targetModuleLiteral: moduleIdentifierLiteral,
         targetOperationLiteral: operationCodeLiteral,
-        statusLiteral: 'FAILURE'
-      }
+        statusLiteral: 'FAILURE',
+      },
     });
 
-    // 6. PROPAGACIÓN DE BURBUJA DE ERROR
+    // Propagación de burbuja de error inalterada.
     throw caughtError;
   }
 };

@@ -1,33 +1,44 @@
+/**
+ * @section tsconfig: Emitter
+ * @description Generador de ADN (.d.ts) con redireccion fisica de Grafo.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc/libs/modules/interaction-engine",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/modules/interaction-engine/tsconfig.lib.tsbuildinfo",
 
-    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
+    /* --- Integridad Soberana --- */
     "composite": true,
     "declaration": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
     "rootDir": "src",
+    "noEmit": false,
+    "importHelpers": true,
 
-    /* 🛡️ SANEADO Zenith: Redirección de Grafo (Fix TS6059 / TS6307) */
+    /* --- Redireccion de ADN (Solucion TS6059 / TS6305) --- */
     "paths": {
-      "@floripa-dignidade/shared":["../../../dist/out-tsc/libs/shared/src/index.d.ts"]
+      "@floripa-dignidade/telemetry": ["../../../dist/out-tsc/libs/core/telemetry/index.d.ts"],
+      "@floripa-dignidade/exceptions": ["../../../dist/out-tsc/libs/core/exceptions/index.d.ts"],
+      "@floripa-dignidade/identity": ["../../../dist/out-tsc/libs/modules/identity/index.d.ts"],
+      "@floripa-dignidade/shared": ["../../../dist/out-tsc/libs/shared/index.d.ts"]
     },
 
-    /* --- RESOLUCIÓN NEXT-GEN (Next.js 16 Ready) --- */
+    /* --- Resolucion Next-Gen (Soporte para Hooks React) --- */
+    "jsx": "react-jsx",
     "module": "Preserve",
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- ADN DEL ENTORNO (Isomorphic Interaction Context) --- */
-    "types":[],
+    /* --- ADN del Entorno (Isomorphic Context) --- */
+    "types": [],
     "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include":["src/**/*.ts", "src/**/*.json"],
-  "exclude":[
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"],
+  "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
     "jest.config.ts",
@@ -36,5 +47,11 @@
     "node_modules",
     "../../../dist",
     "../../../node_modules"
+  ],
+  "references": [
+    { "path": "../../core/telemetry/tsconfig.lib.json" },
+    { "path": "../../core/exceptions/tsconfig.lib.json" },
+    { "path": "../identity/tsconfig.lib.json" },
+    { "path": "../../shared/tsconfig.lib.json" }
   ]
 }

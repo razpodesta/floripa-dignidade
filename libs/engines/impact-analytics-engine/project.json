@@ -22,8 +22,9 @@
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/engines/impact-analytics-engine"],
       "options": {
-        "command": "tsc -p libs/engines/impact-analytics-engine/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/engines/impact-analytics-engine/tsconfig.lib.json"
       },
       "cache": true
     },

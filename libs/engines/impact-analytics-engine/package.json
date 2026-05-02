@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/impact-analytics-engine",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
-  "description": "Búnker de Inteligência Estatística e Agregação Bayesiana. Orquestra a transformação de pulsos de reputação e dados de transparência em indicadores de impacto social e aceitação popular de grau forense, neutralizando ruído e ataques de automação.",
+  "description": "ISO-Standard: Bunker de Inteligencia Estadistica y Agregacion Bayesiana. Orquestra la transformacion de pulsos en indicadores de impacto social.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -15,6 +15,7 @@
     }
   },
   "dependencies": {
+    "@floripa-dignidade/environment-validator": "workspace:*",
     "@floripa-dignidade/exceptions": "workspace:*",
     "@floripa-dignidade/reputation-engine": "workspace:*",
     "@floripa-dignidade/telemetry": "workspace:*",

@@ -1,9 +1,9 @@
 {
-  "codes": {
-    "VALIDATION_FAILED": "Os dados fornecidos não atendem aos critérios de segurança ou formato.",
-    "UNAUTHORIZED_ACCESS": "Sua identidade não possui permissões para realizar esta ação.",
-    "INTERNAL_SYSTEM_FAILURE": "Ocorreu uma falha interna na plataforma. Nossa equipe técnica foi notificada.",
-    "RESOURCE_NOT_FOUND": "O recurso solicitado não existe ou foi removido permanentemente.",
-    "EXTERNAL_SERVICE_TIMEOUT": "Um serviço externo demorou muito para responder. Por favor, tente novamente."
+  "localizedErrorMessagesMapping": {
+    "VALIDATION_FAILED": "Os dados fornecidos não atendem aos critérios de integridade ou segurança técnica do ecossistema.",
+    "UNAUTHORIZED_ACCESS": "Sua identidade não possui autoridade institucional suficiente para realizar esta operação.",
+    "INTERNAL_SYSTEM_FAILURE": "Ocorreu um colapso interno na plataforma. O Neural Sentinel já notificou a equipe de engenharia.",
+    "RESOURCE_NOT_FOUND": "O recurso solicitado não foi identificado ou foi removido permanentemente do Ledger de dados.",
+    "EXTERNAL_SERVICE_TIMEOUT": "Um provedor de infraestrutura externo excedeu o limite de latência. Por favor, tente novamente."
   }
 }

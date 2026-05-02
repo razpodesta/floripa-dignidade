@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/health-monitor",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "private": true,
-  "description": "Búnker de vigilância lógica e monitoramento de pulso vital da infraestrutura (SRE). Realiza sondas de disponibilidade e latência de serviços externos e internos, reportando o estado de saúde operativa ao sistema nervoso central para prevenir degradações de serviço.",
+  "description": "ISO-Standard: Bunker de vigilancia logica y monitoreo de pulso vital de la infraestructura (SRE).",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {

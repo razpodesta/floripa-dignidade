@@ -16,15 +16,15 @@
         "outputPath": "dist/libs/engines/search-engine",
         "main": "libs/engines/search-engine/src/index.ts",
         "tsConfig": "libs/engines/search-engine/tsconfig.lib.json",
-        "swcrc": ".swcrc",
         "stripLeadingPaths": true
       },
       "cache": true
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/engines/search-engine"],
       "options": {
-        "command": "tsc -p libs/engines/search-engine/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/engines/search-engine/tsconfig.lib.json"
       },
       "cache": true
     },

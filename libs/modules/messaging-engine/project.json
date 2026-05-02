@@ -1,35 +1,36 @@
 {
-"name": "@floripa-dignidade/messaging-engine",
-"$schema": "../../../node_modules/nx/schemas/project-schema.json",
-"sourceRoot": "libs/modules/messaging-engine/src",
-"projectType": "library",
-"tags": [
-"scope:modules",
-"type:logic",
-"platform:isomorphic"
-],
-"targets": {
-"build": {
-"executor": "@nx/js:swc",
-"outputs": ["{options.outputPath}"],
-"options": {
-"outputPath": "dist/libs/modules/messaging-engine",
-"main": "libs/modules/messaging-engine/src/index.ts",
-"tsConfig": "libs/modules/messaging-engine/tsconfig.lib.json",
-"stripLeadingPaths": true
-},
-"cache": true
-},
-"typecheck": {
-"executor": "nx:run-commands",
-"options": {
-"command": "tsc -p libs/modules/messaging-engine/tsconfig.lib.json --noEmit"
-},
-"cache": true
-},
-"lint": {
-"executor": "@nx/eslint:lint",
-"cache": true
-}
-}
+  "name": "@floripa-dignidade/messaging-engine",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/modules/messaging-engine/src",
+  "projectType": "library",
+  "tags": [
+    "scope:modules",
+    "type:logic",
+    "platform:isomorphic"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/modules/messaging-engine",
+        "main": "libs/modules/messaging-engine/src/index.ts",
+        "tsConfig": "libs/modules/messaging-engine/tsconfig.lib.json",
+        "stripLeadingPaths": true
+      },
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/modules/messaging-engine"],
+      "options": {
+        "command": "tsc -p libs/modules/messaging-engine/tsconfig.lib.json"
+      },
+      "cache": true
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    }
+  }
 }

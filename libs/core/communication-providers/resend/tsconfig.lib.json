@@ -1,33 +1,48 @@
+/**
+ * @section tsconfig: Emitter
+ * @description Generador de ADN (.d.ts) con profundidad de 4 niveles hacia dist.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../../dist/out-tsc/libs/core/communication-providers/resend",
     "tsBuildInfoFile": "../../../../dist/out-tsc/libs/core/communication-providers/resend/tsconfig.lib.tsbuildinfo",
 
-    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
+    /* --- Integridad Soberana --- */
     "composite": true,
     "declaration": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
     "rootDir": "src",
+    "noEmit": false,
 
-    /* --- RESOLUCIÓN NEXT-GEN --- */
+    /* --- Redireccion de ADN (Solucion TS6059) --- */
+    "paths": {
+      "@floripa-dignidade/exceptions": ["../../../../dist/out-tsc/libs/core/exceptions/index.d.ts"],
+      "@floripa-dignidade/telemetry": ["../../../../dist/out-tsc/libs/core/telemetry/index.d.ts"]
+    },
+
+    /* --- Resolucion Next-Gen --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- ADN DEL ENTORNO (Node.js I/O) --- */
     "types": ["node"],
     "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
     "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    "jest.config.ts",
     "dist",
     "out-tsc",
-    "node_modules"
+    "node_modules",
+    "../../../../dist",
+    "../../../../node_modules"
+  ],
+  "references": [
+    { "path": "../../exceptions/tsconfig.lib.json" },
+    { "path": "../../telemetry/tsconfig.lib.json" }
   ]
 }

@@ -1,17 +1,20 @@
+/**
+ * @section tsconfig: Gatekeeper
+ * @description Proteccion de frontera fisica para el servicio de WhatsApp.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "../../../../tsconfig.base.json",
   "compilerOptions": {
+    "composite": false,
     "noEmit": true,
     "ignoreDeprecations": "5.0"
   },
-  /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí para evitar colisiones de grafo. */
   "files": [],
   "include": [],
   "references": [
-    { "path": "./tsconfig.lib.json" },
-    /* --- ENLACES FÍSICOS AL ENJAMBRE (Consumidos por el Sensor de WhatsApp) --- */
-    { "path": "../../../core/telemetry" },
-    { "path": "../../../core/exceptions" },
-    { "path": "../../../core/environment-validator" }
+    {
+      "path": "./tsconfig.lib.json"
+    }
   ]
 }

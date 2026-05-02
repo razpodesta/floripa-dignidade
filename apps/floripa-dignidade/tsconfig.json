@@ -20,27 +20,8 @@
    * para resolver las declaraciones (.d.ts) antes de procesar la App.
    */
   "references": [
-    { "path": "./tsconfig.app.json" },
-
-    /* --- CAPA 1: INFRAESTRUCTURA CORE (Cimientos) --- */
-    { "path": "../../libs/core/telemetry" },
-    { "path": "../../core/exceptions" },
-    { "path": "../../core/environment-validator" },
-    { "path": "../../core/routing" },
-
-    /* --- CAPA 2: MOTORES DE INTELIGENCIA (Engines) --- */
-    { "path": "../../libs/engines/impact-analytics-engine" },
-
-    /* --- CAPA 3: DOMINIOS DE NEGOCIO (Modules) --- */
-    { "path": "../../libs/modules/identity" },
-    { "path": "../../libs/modules/pmf-open-data-engine" },
-    /**
-     * 🛡️ SANEADO Zenith: Inyección de referencia territorial.
-     * Necesaria para la resolución de tipos de geolocalización en la App.
-     */
-    { "path": "../../libs/modules/territorial-engine" },
-
-    /* --- CAPA 4: FUNDICIÓN VISUAL (Shared UI & State) --- */
-    { "path": "../../libs/shared" }
+    {
+      "path": "./tsconfig.app.json"
+    }
   ]
 }

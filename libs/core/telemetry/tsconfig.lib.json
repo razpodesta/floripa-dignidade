@@ -1,45 +1,39 @@
+/**
+ * @section tsconfig: Emitter
+ * @description Generador de ADN (.d.ts) con soporte para WebWorkers y redireccion de Grafo.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    /* --- ESTRATEGIA DE SALIDA ZENITH (Out-of-Source) --- */
     "outDir": "../../../dist/out-tsc/libs/core/telemetry",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/telemetry/tsconfig.lib.tsbuildinfo",
 
-    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
-    "composite": true,           /* Habilita la participación en el Grafo Incremental */
-    "declaration": true,         /* Emite las firmas de tipos (.d.ts) para el enjambre */
-    "declarationMap": true,      /* DX: Mapeo para salto al código fuente en el IDE */
-    "emitDeclarationOnly": true, /* El motor SWC cuida la lógica; TSC valida la pureza del ADN */
-    "rootDir": "src",            /* Blindaje de frontera física absoluta (Fix TS6059) */
+    /* --- Integridad Soberana --- */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+    "noEmit": false,
+    "importHelpers": true,
 
-    /**
-     * 🛡️ MANOBRA DE REDIRECCIÓN DE ADN (OEDP-V17.0)
-     * Sobreescribimos los paths globales para obligar al compilador a usar
-     * las declaraciones (.d.ts) en lugar de succionar código fuente externo.
-     * Esto extingue el error TS6059 de forma definitiva.
-     */
+    /* --- Redireccion de ADN (Solucion TS6059 / TS6305) --- */
     "paths": {
-      "@floripa-dignidade/exceptions": ["../../../dist/out-tsc/libs/core/exceptions/src/index.d.ts"]
+      "@floripa-dignidade/exceptions": ["../../../dist/out-tsc/libs/core/exceptions/index.d.ts"]
     },
 
-    /* --- RESOLUCIÓN NEXT-GEN (Standard Next.js 16 & Turbopack) --- */
+    /* --- Resolucion Next-Gen --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true, /* Fuerza la separación estricta entre tipos y lógica */
+    "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- ADN DEL ENTORNO (System Nervous Context) --- */
+    /* --- ADN del Entorno (Shadow Threading Support) --- */
     "types": ["node"],
-    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"]
   },
-
-  /* --- ESCOPO DE AUDITORÍA ATÔMICA --- */
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.json"
-  ],
-
-  /* --- ADUANA DE EXCLUSIÓN (Anti-Contamination) --- */
+  "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
@@ -47,8 +41,10 @@
     "dist",
     "out-tsc",
     "node_modules",
-    /* 🛡️ SANEADO Zenith: Bloqueo de directorios de salida para evitar redundancia */
     "../../../dist",
     "../../../node_modules"
+  ],
+  "references": [
+    { "path": "../exceptions/tsconfig.lib.json" }
   ]
 }

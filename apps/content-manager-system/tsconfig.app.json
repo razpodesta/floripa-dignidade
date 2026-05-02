@@ -28,18 +28,20 @@
     /* Soporte para el rastro de hardware de Node.js (Payload context) */
     "types": ["node"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "index.d.ts",
-    "next-env.d.ts",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    ".next",
-    "**/*.spec.ts",
-    "**/*.test.ts"
+  "include": ["src/**/*.ts", "src/**/*.tsx", "index.d.ts", "next-env.d.ts", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", "dist", ".next", "**/*.spec.ts", "**/*.test.ts"],
+  "references": [
+    {
+      "path": "../../libs/core/exceptions/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/modules/identity/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/core/telemetry/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/core/environment-validator/tsconfig.lib.json"
+    }
   ]
 }

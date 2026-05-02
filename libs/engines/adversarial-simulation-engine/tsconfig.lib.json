@@ -1,0 +1,52 @@
+/**
+ * @section tsconfig: Emitter
+ * @description Generador de ADN (.d.ts) con redireccion de grafo hacia dist.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc/libs/engines/adversarial-simulation-engine",
+    "tsBuildInfoFile": "../../../dist/out-tsc/libs/engines/adversarial-simulation-engine/tsconfig.lib.tsbuildinfo",
+
+    /* --- Integridad Soberana --- */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+    "noEmit": false,
+    "importHelpers": true,
+
+    /* --- Redireccion de ADN (Solucion TS6059 / TS6305) --- */
+    "paths": {
+      "@floripa-dignidade/telemetry": ["../../../dist/out-tsc/libs/core/telemetry/index.d.ts"],
+      "@floripa-dignidade/exceptions": ["../../../dist/out-tsc/libs/core/exceptions/index.d.ts"]
+    },
+
+    /* --- Resolucion Next-Gen --- */
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    /* --- ADN del Entorno (Node.js Scripting) --- */
+    "types": ["node"],
+    "lib": ["ES2022"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.json"],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "jest.config.ts",
+    "dist",
+    "out-tsc",
+    "node_modules",
+    "../../../dist",
+    "../../../node_modules"
+  ],
+  "references": [
+    { "path": "../../core/telemetry/tsconfig.lib.json" },
+    { "path": "../../core/exceptions/tsconfig.lib.json" }
+  ]
+}
