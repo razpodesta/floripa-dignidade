@@ -1,39 +1,65 @@
 /**
- * @section tsconfig: Emitter
- * @description Generador de ADN (.d.ts) con soporte para WebWorkers y redireccion de Grafo.
+ * @section tsconfig: Emitter (Telemetry Engine)
+ * @description Orquestador de emision de ADN (.d.ts) para el sistema nervioso central.
+ * Implementa la Maniobra de Redireccion de Grafo para erradicar el error TS6059.
+ *
  * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ * SANEADO Zenith: Optimizacion de resolucion de firmas fisicas (Fix TS2307 / TS6305).
+ *
+ * @author Raz Podestá - MetaShark Tech
  */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    /* --- ESTRATEGIA DE SALIDA ZENITH (Flattened Output) --- */
     "outDir": "../../../dist/out-tsc/libs/core/telemetry",
     "tsBuildInfoFile": "../../../dist/out-tsc/libs/core/telemetry/tsconfig.lib.tsbuildinfo",
 
-    /* --- Integridad Soberana --- */
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
-    "rootDir": "src",
-    "noEmit": false,
-    "importHelpers": true,
+    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
+    "composite": true,           /* Habilita la participacion en el Grafo de Nx */
+    "declaration": true,         /* Emite las firmas fisicas para el resto del enjambre */
+    "declarationMap": true,      /* DX: Permite el salto al codigo fuente desde el IDE */
+    "emitDeclarationOnly": true, /* El motor SWC cuida la logica; TSC valida la pureza del ADN */
+    "rootDir": "src",            /* Blindaje de frontera fisica absoluta (Fix TS6059) */
 
-    /* --- Redireccion de ADN (Solucion TS6059 / TS6305) --- */
+    /**
+     * 🛡️ SANEADO Zenith: Desbloqueo de Emision (Fix TS6310)
+     * Sobreescribimos la herencia del Gatekeeper. Este bunker DEBE emitir
+     * su ADN ya que es el sistema nervioso del cual todos dependen.
+     */
+    "noEmit": false,
+    "importHelpers": true,       /* Optimizacion de bundle usando @swc/helpers */
+
+    /**
+     * 🛡️ MANIOBRA DE REDIRECCIÓN DE ADN (OEDP-V17.0)
+     * SANEADO Zenith: Redireccion forzada hacia las firmas fisicas (.d.ts).
+     * Se elimina el segmento '/src/' de la ruta de resolucion para coincidir
+     * con el aplanamiento de TSC (Flattening Strategy).
+     */
     "paths": {
-      "@floripa-dignidade/exceptions": ["../../../dist/out-tsc/libs/core/exceptions/index.d.ts"]
+      "@floripa-dignidade/exceptions": [
+        "../../../dist/out-tsc/libs/core/exceptions/index.d.ts"
+      ],
+      "@floripa-dignidade/exceptions/*": [
+        "../../../dist/out-tsc/libs/core/exceptions/*"
+      ]
     },
 
-    /* --- Resolucion Next-Gen --- */
+    /* --- RESOLUCIÓN NEXT-GEN (Standard Next.js 16 Ready) --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- ADN del Entorno (Shadow Threading Support) --- */
+    /* --- ADN DEL ENTORNO (Shadow Threading Context) --- */
     "types": ["node"],
     "lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"]
   },
+
+  /* --- ESCOPO DE AUDITORÍA ATÔMICA --- */
   "include": ["src/**/*.ts", "src/**/*.json"],
+
+  /* --- ADUANA DE EXCLUSIÓN (Anti-Contamination) --- */
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
@@ -41,10 +67,18 @@
     "dist",
     "out-tsc",
     "node_modules",
+    /* 🛡️ SANEADO Zenith: Bloqueo de directorios de salida raíz para evitar redundancia */
     "../../../dist",
     "../../../node_modules"
   ],
+
+  /**
+   * @section Grafo de Referencias Soberanas
+   * Sincronizacion fisica con el emisor de ADN de la dependencia Exceptions.
+   */
   "references": [
-    { "path": "../exceptions/tsconfig.lib.json" }
+    {
+      "path": "../exceptions/tsconfig.lib.json"
+    }
   ]
 }

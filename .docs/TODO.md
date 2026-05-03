@@ -73,6 +73,41 @@ Por favor, proporcione el código base del siguiente archivo:
 Archivo solicitado: libs/modules/interaction-engine/src/index.ts
 (Desde aquí inyectaremos el nuevo Hook para que sea accesible por la Frontpage).
 
+---
+
+He realizado un análisis forense del snapshot del proyecto BR-ACC (Brazilian Anti-Corruption Graph Tool). Confirmo que he leído los protocolos ADR 0007 y ADR 0008.
+Este proyecto es una pieza de ingeniería de datos masiva especializada en la detección de corrupción mediante Análisis de Grafos (Neo4j) y Reconocimiento de Patrones. Aunque el stack es híbrido (Python/FastAPI en el backend y React en el frontend), su lógica de "Soberanía de Datos" y "Auditoría Forense" es directamente transferible a nuestro ecosistema Floripa Dignidade.
+A continuación, presento la Transferencia Tecnológica de Élite que podemos adaptar a nuestra arquitectura Zenith (OEDP-V17.0) para elevar el impacto social del proyecto:
+1. Transferencia de Inteligencia: "The Pattern Engine"
+BR-ACC utiliza un motor de detección de anomalías (ej. "Self-dealing", "Split contracts").
+Adaptación Zenith: Debemos crear un libs/engines/social-anomaly-engine.
+Misión: Detectar si los recursos públicos de la PMF están llegando realmente a los barrios vulnerables o si existen "islas de inversión" sin impacto social reportado.
+Átomo a crear: DetectImpactDiscrepancy.ts (Comparar Gasto PMF vs Sentimiento Ciudadano en ese territorio).
+2. Blindaje de Privacidad: "Isomorphic PII Masking"
+BR-ACC implementa un middleware de enmascaramiento de CPF (cpf_masking.py) altamente sofisticado que distingue entre ciudadanos comunes y Personas Expuestas Políticamente (PEP).
+Adaptación Zenith: Crear un átomo en libs/core/shared/utility llamado MaskSovereignIdentity.ts.
+Mejora: Implementar esta lógica de forma isométrica (Server/Client) para que el Neural Sentinel oculte automáticamente documentos de ciudadanos, pero mantenga visibles los de funcionarios públicos auditados, cumpliendo con la LGPD.
+3. Infraestructura de Reportes: "Forensic PDF Architect"
+BR-ACC tiene un servicio robusto de generación de informes forenses con Jinja2 y WeasyPrint.
+Adaptación Zenith: Evolucionar nuestro libs/engines/impact-analytics-engine para incluir un orquestador de exportación: GenerateForensicImpactReport.ts.
+Misión: Permitir que los ciudadanos descarguen "Certificados de Transparencia Territorial" en PDF con firma de integridad Merkle (telemetría).
+4. Resolución de Entidades: "The Entity Linker"
+BR-ACC utiliza lógica para unir "Personas" de diferentes bases de datos (TSE, CNPJ, etc.).
+Adaptación Zenith: Implementar en libs/modules/territorial-engine un átomo de ResolveSocialEntity.ts.
+Uso: Vincular un "Contratista de la PMF" con sus otras apariciones en el ecosistema social para mapear su red de influencia en Florianópolis.
+📋 Diagnóstico de Aparatos Prioritarios para Refactorización (Inspirado en BR-ACC)
+Basado en la visión holística de ambos proyectos, he identificado los siguientes aparatos en Floripa Dignidade que deben ser nivelados para alcanzar esta nueva capacidad:
+Aparato Objetivo	Diagnóstico Forense	Acción SRE
+libs/core/shared/utility/logic/MaskSovereignIdentity.ts	Inexistente. Necesitamos el blindaje de PII para escalar denuncias.	Crear Átomo (Fase 9.1)
+libs/engines/impact-analytics-engine/src/lib/logic/atomic/DetectSocialAnomaly.ts	Lógica simplista. Solo mide promedios, no detecta patrones adversarios.	Refactorizar (Fase 9.2)
+libs/modules/territorial-engine/src/lib/logic/atomic/ResolveGeographicEntity.ts	Falta de cruzamiento. No vincula datos de la PMF con el rastro social del ciudadano.	Refactorizar (Fase 9.3)
+🔄 Activación del Protocolo de Resolución (Paso 1)
+Para iniciar esta evolución inspirada en la robustez de BR-ACC, debemos empezar por el Cimiento de Privacidad, que es lo que permitirá que el sistema de denuncias y el observatorio de gastos operen bajo la ley LGPD sin comprometer a los ciudadanos.
+Aparato Objetivo: libs/core/shared/src/lib/utility/logic/MaskSovereignIdentity.ts
+Estado: Este aparato no existe en tu snapshot actual. Es necesario crearlo como un Átomo de Seguridad Isomórfico.
+
+---
+
 
 
 

@@ -1,18 +1,30 @@
 /**
  * @section Quality Assurance - Mirror Test
- * @description Valida la integridad de la clase base de excepciones.
- * Protocolo OEDP-V10.0 - Mirror Testing Architecture.
+ * @description Valida la integridad de la clase base de excepciones y su 
+ * capacidad para capturar snapshots inmutables de memoria.
+ *
+ * Protocolo OEDP-V17.0 - Mirror Testing Architecture & Sovereign Data.
+ * SANEADO Zenith: Inyección de Branding de Error (ErrorCode).
+ *
+ * @author Raz Podestá - MetaShark Tech
  */
 
 import { GlobalBaseException } from '@floripa-dignidade/exceptions';
 
+/** 🛡️ SANEADO Zenith: Importación del tipo nominal para la firma del constructor */
+import type { ErrorCode } from '@floripa-dignidade/exceptions';
+
 /**
- * Mock institucional para instanciar una clase abstracta.
- * SANEADO: Se añade modificador 'public' para cumplimiento ISO 25010.
+ * Mock institucional para instanciar la clase abstracta bajo el rigor de pruebas.
+ * SANEADO: Modificador 'public' explícito y Casting Soberano de ErrorCode.
  */
 class TestableException extends GlobalBaseException {
-  public constructor(message: string) {
-    super(message, 'INTERNAL_SYSTEM_FAILURE', 500);
+  public constructor(messageLiteral: string) {
+    super(
+      messageLiteral, 
+      'INTERNAL_SYSTEM_FAILURE' as ErrorCode, 
+      500
+    );
   }
 }
 
@@ -21,8 +33,14 @@ describe('Aparato: GlobalBaseException', () => {
     const errorMessageLiteral = 'ERROR_DE_PRUEBA_TECNICA';
     const exceptionInstance = new TestableException(errorMessageLiteral);
 
+    // 1. Validación de Mensaje
     expect(exceptionInstance.message).toBe(errorMessageLiteral);
+    
+    // 2. Validación de Inmutabilidad y Entorno
     expect(exceptionInstance.runtimeContextSnapshot).toBeDefined();
     expect(exceptionInstance.runtimeContextSnapshot['httpStatusCodeNumeric']).toBe(500);
+    
+    // 3. Validación de Identidad de Fallo
+    expect(exceptionInstance.operationalErrorCodeLiteral).toBe('INTERNAL_SYSTEM_FAILURE');
   });
 });

@@ -361,10 +361,6 @@ importers:
       zod:
         specifier: ^3.25.76
         version: 3.25.76
-    devDependencies:
-      '@types/node':
-        specifier: 20.19.9
-        version: 20.19.9
 
   libs/core/environment-validator:
     dependencies:
@@ -467,6 +463,9 @@ importers:
 
   libs/engines/impact-analytics-engine:
     dependencies:
+      '@floripa-dignidade/environment-validator':
+        specifier: workspace:*
+        version: link:../../core/environment-validator
       '@floripa-dignidade/exceptions':
         specifier: workspace:*
         version: link:../../core/exceptions
@@ -551,6 +550,9 @@ importers:
       '@floripa-dignidade/identity':
         specifier: workspace:*
         version: link:../identity
+      '@floripa-dignidade/shared':
+        specifier: workspace:*
+        version: link:../../shared
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../../core/telemetry
@@ -563,6 +565,9 @@ importers:
 
   libs/modules/newsletter:
     dependencies:
+      '@floripa-dignidade/environment-validator':
+        specifier: workspace:*
+        version: link:../../core/environment-validator
       '@floripa-dignidade/exceptions':
         specifier: workspace:*
         version: link:../../core/exceptions
@@ -590,6 +595,9 @@ importers:
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../../core/telemetry
+      '@floripa-dignidade/territorial-engine':
+        specifier: workspace:*
+        version: link:../territorial-engine
       '@swc/helpers':
         specifier: ~0.5.18
         version: 0.5.21
@@ -602,6 +610,9 @@ importers:
       '@floripa-dignidade/exceptions':
         specifier: workspace:*
         version: link:../../core/exceptions
+      '@floripa-dignidade/health-analysis-engine':
+        specifier: workspace:*
+        version: link:../../engines/health-analysis
       '@floripa-dignidade/telemetry':
         specifier: workspace:*
         version: link:../../core/telemetry
@@ -620,6 +631,9 @@ importers:
 
   libs/modules/territorial-engine:
     dependencies:
+      '@floripa-dignidade/environment-validator':
+        specifier: workspace:*
+        version: link:../../core/environment-validator
       '@floripa-dignidade/exceptions':
         specifier: workspace:*
         version: link:../../core/exceptions

@@ -1,24 +1,20 @@
 /**
  * @section API Route Handler - Newsletter Subscription Gateway
- * @description Punto de entrada físico para la captación de ciudadanos en la red
- * de transparencia. Actúa como puente entre la interacción de la interfaz y
- * los átomos de lógica de dominio, gestionando validación y rastro forense.
+ * @description Orquestador soberano para la captación de ciudadanos.
+ * Actúa como puente entre la UI y los átomos de lógica de dominio.
  *
- * Protocolo OEDP-V16.0 - High Performance Edge Architecture.
- * Vision: Hyper-Holistic Resilience & Cloud Sovereign Integration.
+ * Protocolo OEDP-V17.0 - High Performance Edge & Swarm Orchestration.
+ * SANEADO Zenith: Sincronización PascalCase (Fix TS2724) y Atomización SRP.
  *
  * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-/* 1. Infraestructura Core (PascalCase Atoms - Sorted Alphabetically) */
-import {
-  GlobalBaseException,
-  mapHttpErrorToException,
-} from '@floripa-dignidade/exceptions';
-
+/* 1. Infraestructura Core (Atmos PascalCase) */
+import { GlobalBaseException, MapHttpErrorToException } from '@floripa-dignidade/exceptions';
 import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier,
@@ -29,20 +25,21 @@ import {
 /* 2. Lógica de Dominio (Modular Lego) */
 import { ProcessNewsletterSubscriptionRequest } from '@floripa-dignidade/newsletter';
 
+/* 3. Enjambre Atómico Local (UI/Logic Bridge) */
+import { ExtractIncomingSubscriptionPayload } from './logic/ExtractIncomingSubscriptionPayload';
+import { BuildSubscriptionSuccessResponse } from './logic/BuildSubscriptionSuccessResponse';
+
 /**
  * @section Gobernanza de Ejecución
- * Cumplimiento ADR 0015: Ejecución Stateless en el Edge de Vercel para latencia < 50ms.
+ * ADR 0015: Ejecución Stateless en el Edge de Vercel (Latencia < 50ms).
  */
 export const runtime = 'edge';
 
-/** Identificador técnico del sensor de frontera para el Neural Sentinel. */
+/** Identificador técnico del sensor de frontera. */
 const GATEWAY_IDENTIFIER = 'API_NEWSLETTER_SUBSCRIBE_GATEWAY';
 
 /**
- * Manejador de solicitudes POST para el inicio del embudo de suscripción.
- *
- * @param incomingRequest - Objeto de solicitud nativa del motor Next.js.
- * @returns {Promise<NextResponse>} Respuesta estandarizada con rastro forense.
+ * Manejador POST: Inicio del embudo de suscripción ciudadana.
  */
 export const POST = async (incomingRequest: NextRequest): Promise<NextResponse> => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
@@ -53,41 +50,29 @@ export const POST = async (incomingRequest: NextRequest): Promise<NextResponse> 
     correlationIdentifier,
     async () => {
       try {
-        // 1. EXTRACCIÓN DE ADN DE LA PETICIÓN
-        const incomingRequestPayload = await incomingRequest.json();
+        // 1. EXTRACCIÓN DE ADN (Delegación Atómica)
+        const requestPayloadSnapshot = await ExtractIncomingSubscriptionPayload(incomingRequest);
 
-        if (!incomingRequestPayload) {
-          throw mapHttpErrorToException(400, 'PAYLOAD_VACIO_DETECTADO');
-        }
-
-        // 2. INVOCACIÓN DEL ORQUESTADOR LÓGICO
-        // Delega la validación Zod, persistencia en Supabase y despacho de Resend.
+        // 2. INVOCACIÓN DE LÓGICA DE NEGOCIO (Domain Orchestrator)
+        // Valida esquemas, persiste en Supabase y dispara notificaciones.
         const processResultCorrelationId = await ProcessNewsletterSubscriptionRequest(
-          incomingRequestPayload
+          requestPayloadSnapshot
         );
 
-        // 3. RESPUESTA DE ÉXITO ZENITH
-        return NextResponse.json(
-          {
-            isOperationSuccessfulBoolean: true,
-            /** 🛡️ SANEADO: Uso de identificador semántico para i18n en el cliente */
-            messageIdentifierLiteral: 'SUBSCRIPTION_REQUEST_PENDING_VERIFICATION',
-            trackingIdentifier: processResultCorrelationId,
-            occurrenceTimestampISO: new Date().toISOString(),
-          },
-          {
-            status: 202, // Accepted: El proceso de verificación ha comenzado.
-            headers: { 'X-Floripa-Correlation-ID': correlationIdentifier },
-          }
-        );
+        // 3. CONSTRUCCIÓN DE SALIDA NOMINAL (Delegación Atómica)
+        const successPayload = BuildSubscriptionSuccessResponse(processResultCorrelationId);
+
+        return NextResponse.json(successPayload, {
+          status: 202, // Accepted
+          headers: { 'X-Floripa-Correlation-ID': correlationIdentifier },
+        });
 
       } catch (caughtExecutionError: unknown) {
         // 4. GESTIÓN FORENSE DE FALLOS (Resilience Layer)
 
-        /** 🛡️ SANEADO: Normalización de excepción con soporte para tipos 'unknown' */
         const normalizedException = caughtExecutionError instanceof GlobalBaseException
           ? caughtExecutionError
-          : mapHttpErrorToException(500, 'UNEXPECTED_GATEWAY_FAILURE', {
+          : MapHttpErrorToException(500, 'UNEXPECTED_GATEWAY_FAILURE', {
               originalErrorLiteral: caughtExecutionError instanceof Error
                 ? caughtExecutionError.message
                 : String(caughtExecutionError),
@@ -96,26 +81,26 @@ export const POST = async (incomingRequest: NextRequest): Promise<NextResponse> 
         // Reporte automático al Neural Sentinel
         ReportForensicException(normalizedException, correlationIdentifier);
 
-        // Alerta de severidad crítica para errores de servidor (>= 500)
-        if (normalizedException.httpStatusCode >= 500) {
-          EmitTelemetrySignal({
+        // Vigilancia de Severidad Crítica
+        if (normalizedException.httpStatusCodeNumeric >= 500) {
+          void EmitTelemetrySignal({
             severityLevel: 'CRITICAL',
             moduleIdentifier: GATEWAY_IDENTIFIER,
-            operationCode: 'GATEWAY_PROCESS_CRITICAL_FAULT',
+            operationCode: 'GATEWAY_PROCESS_COLAPSE',
             correlationIdentifier,
             message: 'TELEMETRY.SIGNALS.PROCESS_FAULT_DETECTED',
-            contextMetadata: { ...normalizedException.runtimeContextSnapshot },
+            contextMetadataSnapshot: { ...normalizedException.runtimeContextSnapshot },
           });
         }
 
         return NextResponse.json(
           {
             isOperationSuccessfulBoolean: false,
-            errorIdentifierLiteral: normalizedException.operationalErrorCode,
+            errorIdentifierLiteral: normalizedException.operationalErrorCodeLiteral,
             forensicSnapshot: normalizedException.runtimeContextSnapshot,
           },
           {
-            status: normalizedException.httpStatusCode,
+            status: normalizedException.httpStatusCodeNumeric,
             headers: { 'X-Floripa-Correlation-ID': correlationIdentifier },
           }
         );

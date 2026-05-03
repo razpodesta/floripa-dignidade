@@ -36,8 +36,9 @@
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/scripts"],
       "options": {
-        "command": "tsc -p scripts/tsconfig.lib.json --noEmit"
+        "command": "tsc -p scripts/tsconfig.lib.json"
       },
       "cache": true
     },

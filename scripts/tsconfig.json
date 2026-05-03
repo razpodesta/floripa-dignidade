@@ -1,13 +1,18 @@
+/**
+ * @section tsconfig: Gatekeeper
+ * @description Proteccion de frontera fisica para los disparadores CLI.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    /* 🛡️ ESTRATEGIA GATEKEEPER: Bloqueo de emisión y orquestación de puentes físicos. */
+    "composite": false,
     "noEmit": true,
     "ignoreDeprecations": "5.0"
   },
   "files": [],
   "include": [],
-  "references":[
+  "references": [
     {
       "path": "./tsconfig.lib.json"
     }

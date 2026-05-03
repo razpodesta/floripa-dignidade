@@ -11,7 +11,7 @@
   "targets": {
     "build": {
       "executor": "@nx/js:swc",
-      "outputs": ["{workspaceRoot}/dist/libs/tools"],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/tools",
         "main": "libs/tools/src/index.ts",
@@ -22,8 +22,9 @@
     },
     "typecheck": {
       "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/out-tsc/libs/tools"],
       "options": {
-        "command": "tsc -p libs/tools/tsconfig.lib.json --noEmit"
+        "command": "tsc -p libs/tools/tsconfig.lib.json"
       },
       "cache": true
     },

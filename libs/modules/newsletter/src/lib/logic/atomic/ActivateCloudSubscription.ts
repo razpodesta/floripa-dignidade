@@ -1,132 +1,111 @@
 /**
- * @section Newsletter Logic - Cloud Activation Atom
- * @description Valida el desafío de identidad en Supabase y transiciona el estado
- * del ciudadano de 'PENDING_VERIFICATION' a 'ACTIVE'.
+ * @section Newsletter Logic - Cloud Activation Orchestrator
+ * @description Orquestador soberano encargado de la transicion de estado
+ * del ciudadano (PENDING -> ACTIVE). Implementa el patron Swarm Orchestration
+ * delegando en atomos especializados para seguridad, I/O y parseo.
  *
- * Protocolo OEDP-V16.0 - Cloud Sovereign & Atomic Conversion.
- * SANEADO Zenith: Erradicación de process.env mediante la Aduana de Entorno (ADR 0016).
+ * Protocolo OEDP-V17.0 - High Performance SRE & Swarm Intelligence.
+ * SANEADO Zenith: Erradicacion de TS2307, TS2724 y Atomizacion SRP.
  *
  * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
 import { ValidateEnvironmentAduana } from '@floripa-dignidade/environment-validator';
-import { InternalSystemException } from '@floripa-dignidade/exceptions';
+import { MapHttpErrorToException } from '@floripa-dignidade/exceptions';
 import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier,
-  TraceExecutionTime
+  TraceExecutionTime,
 } from '@floripa-dignidade/telemetry';
 
-/** 🛡️ SANEAMIENTO Zenith: Importación exclusiva de ADN como tipos */
+/* 1. ADN Estructural de Salida */
 export interface IActivationResult {
   readonly isActivationSuccessfulBoolean: boolean;
   readonly activatedCitizenEmailLiteral?: string;
+  readonly metadataSnapshot?: Record<string, unknown>;
 }
 
-/** Identificador técnico del átomo para el Neural Sentinel. */
-const ACTIVATION_ATOM_IDENTIFIER = 'NEWSLETTER_ACTIVATION_ATOM';
+/* 2. Enjambre Atomico Local (Internal Swarm) */
+import { BuildCloudPatchHeaders } from './BuildCloudPatchHeaders';
+import { ExecuteCloudActivationRequest } from './ExecuteCloudActivationRequest';
+import { ParseSubscriberActivationResult } from './ParseSubscriberActivationResult';
+
+/** Identificador tecnico del aparato para el Neural Sentinel. */
+const ACTIVATION_ORCHESTRATOR_IDENTIFIER = 'NEWSLETTER_ACTIVATION_ENGINE';
 
 /**
- * Ejecuta la transición de estado en la base de datos de Supabase.
- * Filtra por token y estado pendiente para garantizar la idempotencia.
+ * Ejecuta el ciclo integral de activacion de soberania en la nube.
  *
- * @param verificationTokenLiteral - Token secreto de 36 caracteres (UUID).
- * @returns {Promise<IActivationResult>} Resultado inmutable de la activación.
- * @throws {InternalSystemException} Si la conexión con el Tier Cloud falla.
+ * @param verificationTokenLiteral - Token secreto capturado de la URL.
+ * @returns {Promise<IActivationResult>} Resultado validado y auditado.
  */
 export const ActivateCloudSubscription = async (
-  verificationTokenLiteral: string
+  verificationTokenLiteral: string,
 ): Promise<IActivationResult> => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
-  /**
-   * 1. CAPTURA SEGURA DE INFRAESTRUCTURA (Aislamiento de Hardware)
-   * SANEADO: Invocamos la aduana central para garantizar que los secretos existan
-   * y heredar los Branded Types (Tipado Criptográfico).
-   */
+  // 1. CAPTURA DE SOBERANÍA DE HARDWARE (Aduana de Entorno)
   const {
-    SUPABASE_URL: supabaseUrlLiteral,
-    SUPABASE_SERVICE_ROLE_KEY: supabaseServiceRoleKeySecret
+    SUPABASE_URL: cloudUrlLiteral,
+    SUPABASE_SERVICE_ROLE_KEY: cloudSecurityKeySecret,
   } = ValidateEnvironmentAduana();
 
   return await TraceExecutionTime(
-    ACTIVATION_ATOM_IDENTIFIER,
-    'ACTIVATE_SUBSCRIPTION_IN_CLOUD',
+    ACTIVATION_ORCHESTRATOR_IDENTIFIER,
+    'EXECUTE_CITIZEN_ACTIVATION_FLOW',
     correlationIdentifier,
     async () => {
       try {
-        /**
-         * Ejecutamos una actualización filtrada (Security Enforcement).
-         * 'Prefer: return=representation' nos permite capturar el email sin una segunda query.
-         */
-        const outgoingResponse = await fetch(
-          `${supabaseUrlLiteral}/rest/v1/newsletter_subscribers?verification_token=eq.${verificationTokenLiteral}&status=eq.PENDING_VERIFICATION`,
-          {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'apikey': supabaseServiceRoleKeySecret,
-              'Authorization': `Bearer ${supabaseServiceRoleKeySecret}`,
-              'Prefer': 'return=representation'
-            },
-            body: JSON.stringify({
-              status: 'ACTIVE',
-              verified_at: new Date().toISOString(),
-              activation_correlation_id: correlationIdentifier
-            })
-          }
+        // 2. CONSTRUCCIÓN DE SEGURIDAD (Delegación Atómica)
+        const securityHeaders = BuildCloudPatchHeaders(cloudSecurityKeySecret);
+
+        // 3. DESPACHO FÍSICO A LA NUBE (Delegación Atómica)
+        const networkResponse = await ExecuteCloudActivationRequest(
+          cloudUrlLiteral,
+          securityHeaders,
+          verificationTokenLiteral,
+          correlationIdentifier
         );
 
-        if (!outgoingResponse.ok) {
-          throw new Error(`Cloud_Provider_HTTP_Error: ${outgoingResponse.statusText}`);
+        if (!networkResponse.ok) {
+          throw MapHttpErrorToException(networkResponse.status, 'ACTIVATION_CLOUD_I/O_FAULT');
         }
 
-        const updatedDataCollection = await outgoingResponse.json();
+        const rawJsonPayloadSnapshot = await networkResponse.json();
 
-        // 2. VALIDACIÓN DE AFECTACIÓN (Aduana de Resultado)
-        const isAfectedRowMissingBoolean = !Array.isArray(updatedDataCollection) || updatedDataCollection.length === 0;
+        // 4. ADUANA DE ADN Y VEREDICTO (Delegación Atómica)
+        const activationResult = ParseSubscriberActivationResult(rawJsonPayloadSnapshot);
 
-        if (isAfectedRowMissingBoolean) {
-          EmitTelemetrySignal({
-            severityLevel: 'WARNING',
-            moduleIdentifier: ACTIVATION_ATOM_IDENTIFIER,
-            operationCode: 'INVALID_ACTIVATION_TOKEN_DETECTED',
-            correlationIdentifier,
-            message: 'Intento de activación fallido: El token no existe o el ciudadano ya está activo.',
-            contextMetadata: { tokenPrefixSnapshot: verificationTokenLiteral.substring(0, 5) }
-          });
-
-          return { isActivationSuccessfulBoolean: false };
-        }
-
-        const activatedSubscriberSnapshot = updatedDataCollection[0];
-
-        // 3. REPORTE DE ÉXITO OPERACIONAL
-        EmitTelemetrySignal({
-          severityLevel: 'INFO',
-          moduleIdentifier: ACTIVATION_ATOM_IDENTIFIER,
-          operationCode: 'CITIZEN_CONVERSION_SUCCESS',
+        // 5. REPORTE DE ESTADO (SRE Visibility)
+        void EmitTelemetrySignal({
+          severityLevel: activationResult.isActivationSuccessfulBoolean ? 'INFO' : 'WARNING',
+          moduleIdentifier: ACTIVATION_ORCHESTRATOR_IDENTIFIER,
+          operationCode: activationResult.isActivationSuccessfulBoolean ? 'CONVERSION_SUCCESS' : 'INVALID_TOKEN',
           correlationIdentifier,
-          message: 'Suscripción consolidada exitosamente en la nube.',
-          contextMetadata: {
-            subscriberId: activatedSubscriberSnapshot.id,
-            locale: activatedSubscriberSnapshot.preferred_locale
-          }
+          message: 'Proceso de activacion de ciudadania finalizado.',
+          contextMetadataSnapshot: { ...activationResult.metadataSnapshot },
         });
 
-        return {
-          isActivationSuccessfulBoolean: true,
-          activatedCitizenEmailLiteral: activatedSubscriberSnapshot.email_address
-        };
+        return activationResult;
 
-      } catch (caughtError) {
-        // 4. GESTIÓN DE FALLO DE INFRAESTRUCTURA
-        throw new InternalSystemException('FALLO_CRITICO_EN_CONSOLIDACION_NUBE', {
-          providerLiteral: 'SUPABASE',
-          errorTraceLiteral: caughtError instanceof Error ? caughtError.message : String(caughtError),
-          correlationIdentifier
+      } catch (caughtError: unknown) {
+        // 6. GESTIÓN FORENSE DE COLAPSO (Resilience Layer)
+        const errorDescriptionLiteral = caughtError instanceof Error
+          ? caughtError.message
+          : String(caughtError);
+
+        void EmitTelemetrySignal({
+          severityLevel: 'CRITICAL',
+          moduleIdentifier: ACTIVATION_ORCHESTRATOR_IDENTIFIER,
+          operationCode: 'ACTIVATION_PIPELINE_COLLAPSE',
+          correlationIdentifier,
+          message: 'Error catastrofico en el orquestador de activacion.',
+          contextMetadataSnapshot: { errorTrace: errorDescriptionLiteral },
         });
+
+        throw caughtError;
       }
-    }
+    },
   );
 };

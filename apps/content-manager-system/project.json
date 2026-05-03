@@ -1,0 +1,41 @@
+{
+  "name": "@floripa-dignidade/content-manager-system",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/content-manager-system/src",
+  "projectType": "application",
+  "tags": [
+    "scope:app",
+    "type:app",
+    "platform:node"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "root": "apps/content-manager-system",
+        "outputPath": "dist/apps/content-manager-system"
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "@floripa-dignidade/content-manager-system:build",
+        "dev": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "cache": true
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p apps/content-manager-system/tsconfig.app.json --noEmit"
+      },
+      "cache": true
+    }
+  }
+}

@@ -2,10 +2,10 @@
   "name": "@floripa-dignidade/scripts",
   "version": "1.1.0",
   "private": true,
-  "description": "Búnker de Gatilhos CLI e Orquestração de Infraestrutura Técnica. Atua como o ponto de entrada para disparadores de automação, pré-compilação linguística e auditoria técnica do ecossistema Floripa Dignidade.",
+  "description": "ISO-Standard: Bunker de Gatilhos CLI e Orquestracion de Infraestructura Tecnica.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -18,10 +18,6 @@
     "@floripa-dignidade/telemetry": "workspace:*",
     "@floripa-dignidade/exceptions": "workspace:*",
     "tsx": "^4.19.0"
-  },
-  "devDependencies": {
-    "@types/node": "20.19.9",
-    "typescript": "~5.9.2"
   },
   "nx": {
     "tags": [

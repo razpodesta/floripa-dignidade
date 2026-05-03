@@ -1,115 +1,117 @@
 'use client';
 
 /**
- * @section Messaging Logic - Presence Transmission Connector (Hook)
- * @description Orquestador de sincronização encarregado de vincular o State Store
- * volátil com o Tier de Dados persistente.
+ * @section Messaging Logic - Presence Transmission Orchestrator (Hook)
+ * @description Orquestador de sincronización de presencia entre el State Store
+ * y el Ledger de Persistencia. Gestiona idempotencia y resiliencia SRE.
  *
- * Protocolo OEDP-V17.0 - High Performance SRE & Swarm Intelligence.
- * SANEADO Zenith: Resolução de TS7006 (Explicit State Typing) e Atomização SRP.
- *
- * @author Raz Podestá - MetaShark Tech
+ * Protocolo OEDP-V17.0 - Swarm Intelligence & High Performance.
  */
 
 import { useEffect, useRef } from 'react';
-
-/* 1. Infraestrutura Shared & Store (Verbatim Module Syntax) */
 import { useGlobalStateStore } from '@floripa-dignidade/shared';
 import type { IGlobalSovereignStore } from '@floripa-dignidade/shared';
+import { EmitTelemetrySignal, GenerateCorrelationIdentifier } from '@floripa-dignidade/telemetry';
 
-/* 2. Infraestrutura Core & Telemetria */
-import {
-  EmitTelemetrySignal,
-  GenerateCorrelationIdentifier
-} from '@floripa-dignidade/telemetry';
-
-/* 3. Motores de Mutação e Átomos Locais */
+/* Enjambre Atómico de Dominio */
 import { UpdateUserPresence } from '../mutators/UpdateUserPresence';
-import { CalculatePresenceStateSignature } from '../atomic/CalculatePresenceStateSignature';
-import { DetermineDevicePlatform } from '../atomic/DetermineDevicePlatform';
+import { CalculatePresenceSovereignSignature } from '../atomic/CalculatePresenceSovereignSignature';
+import { IdentifyHardwarePlatform } from '../atomic/IdentifyHardwarePlatform';
 
-/** Identificador técnico do sensor para o Neural Sentinel. */
-const SENSOR_IDENTIFIER = 'PRESENCE_SYNC_CONNECTOR';
+const SENSOR_IDENTIFIER = 'PRESENCE_SYNC_CONNECTOR_HOOK';
 
-/**
- * Hook orquestador para a persistência automática do pulso de vida cidadão.
- *
- * @param citizenIdentifier - UUID da identidade soberana ativa.
- */
 export const usePresenceTransmissionConnector = (
-  citizenIdentifier: string | undefined
+  citizenIdentifierLiteral: string | undefined
 ): void => {
   /**
-   * @section Captura de Enxame de Estado
-   * 🛡️ SANEADO Zenith: Tipagem explícita '(state: IGlobalSovereignStore)'
-   * resolve o erro TS7006 e garante inteligência total do IDE.
+   * 🛡️ OPTIMIZACIÓN: Selector granular para evitar re-ejecuciones innecesarias.
+   * Extraemos los valores primitivos para que la comparación de dependencias sea estable.
    */
-  const presenceSnapshot = useGlobalStateStore((state: IGlobalSovereignStore) => ({
-    availabilityStatus: state.availabilityStatus,
-    customStatusMessageLiteral: state.customStatusMessageLiteral,
-    activePushTokenSecret: state.activePushTokenSecret,
-    lastHeartbeatTimestampISO: state.lastHeartbeatTimestampISO
-  }));
+  const availabilityStatus = useGlobalStateStore((state: IGlobalSovereignStore) => state.availabilityStatus);
+  const customStatusMessageLiteral = useGlobalStateStore((state: IGlobalSovereignStore) => state.customStatusMessageLiteral);
+  const activePushTokenSecret = useGlobalStateStore((state: IGlobalSovereignStore) => state.activePushTokenSecret);
+  const lastHeartbeatTimestampISO = useGlobalStateStore((state: IGlobalSovereignStore) => state.lastHeartbeatTimestampISO);
 
   const lastSynchronizedSignatureReference = useRef<string>('');
+  const isComponentMountedReference = useRef<boolean>(true);
 
   useEffect(() => {
-    if (!citizenIdentifier) return;
+    isComponentMountedReference.current = true;
+    
+    // 1. ADUANA DE IDENTIDAD
+    if (!citizenIdentifierLiteral) return;
 
     const correlationIdentifier = GenerateCorrelationIdentifier();
 
-    // 1. CÁLCULO DE ASSINATURA (Delegación Atômica)
-    const currentSignatureLiteral = CalculatePresenceStateSignature({
-      status: presenceSnapshot.availabilityStatus,
-      message: presenceSnapshot.customStatusMessageLiteral,
-      token: presenceSnapshot.activePushTokenSecret
+    /**
+     * 🛡️ FIX TS2379: Saneamiento de nulidad para exactOptionalPropertyTypes.
+     * Forzamos a que el token sea un string (aunque sea vacío) para cumplir el contrato del átomo,
+     * o aseguramos que el esquema acepte el tipo exacto.
+     */
+    const currentStatusSignature = CalculatePresenceSovereignSignature({
+      status: availabilityStatus,
+      customMessage: customStatusMessageLiteral ?? '',
+      pushToken: activePushTokenSecret ?? '' // Normalización para evitar el error de asignación
     });
 
-    // Filtro de idempotência: Evita tráfego desnecessário se o estado é idêntico
-    if (currentSignatureLiteral === lastSynchronizedSignatureReference.current) {
+    // 2. FILTRO DE IDEMPOTENCIA: Evita saturación del Data Lake
+    if (currentStatusSignature === lastSynchronizedSignatureReference.current) {
       return;
     }
 
-    /**
-     * @section Execução de Sincronização Cloud (SRE Strategy)
-     * Implementa debounce técnico de 1.5s para estabilizar flutuações de rede.
-     */
+    // 3. ESTRATEGIA DE PERSISTENCIA (Debounce SRE)
     const synchronizationTimerReference = setTimeout(async () => {
       try {
-        const platformLiteral = DetermineDevicePlatform();
+        const platformIdentifierLiteral = IdentifyHardwarePlatform();
+
+        // Verificación de integridad de montaje (Evita fugas de memoria y errores de estado)
+        if (!isComponentMountedReference.current) return;
 
         await UpdateUserPresence({
-          citizenIdentifier,
-          currentAvailabilityStatus: presenceSnapshot.availabilityStatus,
-          customStatusMessageLiteral: presenceSnapshot.customStatusMessageLiteral,
-          lastActivePlatformLiteral: platformLiteral,
-          activePushSubscriptionTokenSecret: presenceSnapshot.activePushTokenSecret,
-          lastHeartbeatTimestampISO: presenceSnapshot.lastHeartbeatTimestampISO
+          citizenIdentifier: citizenIdentifierLiteral,
+          currentAvailabilityStatus: availabilityStatus,
+          customStatusMessageLiteral,
+          lastActivePlatformLiteral: platformIdentifierLiteral,
+          activePushSubscriptionTokenSecret: activePushTokenSecret,
+          lastHeartbeatTimestampISO
         });
 
-        lastSynchronizedSignatureReference.current = currentSignatureLiteral;
+        lastSynchronizedSignatureReference.current = currentStatusSignature;
 
         void EmitTelemetrySignal({
           severityLevel: 'INFO',
           moduleIdentifier: SENSOR_IDENTIFIER,
-          operationCode: 'PRESENCE_AUTO_SYNC_NOMINAL',
+          operationCode: 'PRESENCE_SYNC_NOMINAL',
           correlationIdentifier,
-          message: 'MESSAGING.LOGS.HEARTBEAT_NOMINAL',
-          contextMetadata: { platform: platformLiteral }
+          message: 'Sincronización de presencia exitosa.',
+          contextMetadataSnapshot: { platformLiteral: platformIdentifierLiteral }
         });
 
       } catch (caughtError: unknown) {
+        if (!isComponentMountedReference.current) return;
+
         void EmitTelemetrySignal({
           severityLevel: 'ERROR',
           moduleIdentifier: SENSOR_IDENTIFIER,
-          operationCode: 'PRESENCE_AUTO_SYNC_FAULT',
+          operationCode: 'PRESENCE_SYNC_COLLAPSE',
           correlationIdentifier,
-          message: 'Falha na persistência automática do pulso de presença.',
-          contextMetadata: { errorTrace: String(caughtError) }
+          message: 'Fallo en la sincronización de presencia.',
+          contextMetadataSnapshot: { 
+            errorDescriptionLiteral: caughtError instanceof Error ? caughtError.message : String(caughtError)
+          }
         });
       }
     }, 1500);
 
-    return () => clearTimeout(synchronizationTimerReference);
-  }, [presenceSnapshot, citizenIdentifier]);
+    return () => {
+      clearTimeout(synchronizationTimerReference);
+      isComponentMountedReference.current = false;
+    };
+  }, [
+    citizenIdentifierLiteral,
+    availabilityStatus,
+    customStatusMessageLiteral,
+    activePushTokenSecret,
+    lastHeartbeatTimestampISO
+  ]);
 };

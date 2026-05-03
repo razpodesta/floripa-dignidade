@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/tools",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Búnker de Ferramentas e Automação. Orquestra os scripts de suporte ao desenvolvimento, o compilador linguístico (Internationalization Weaver) e os processos de auditoria forense do monorepo Floripa Dignidade.",
+  "description": "ISO-Standard: Bunker de Herramientas y Automatizacion. Orquestra el Internationalization Weaver y procesos de auditoria forense.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -15,8 +15,10 @@
     }
   },
   "dependencies": {
+    "@floripa-dignidade/exceptions": "workspace:*",
+    "@floripa-dignidade/telemetry": "workspace:*",
     "@swc/helpers": "~0.5.18",
-    "tslib": "^2.3.0"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "20.19.9"

@@ -1,167 +1,115 @@
 /**
  * @section Messaging Logic - Communication Group Orchestrator
  * @description Orquestador de élite encargado de la creación y registro de Action Hubs.
- * Realiza la validación de autoridad institucional, purificación de ADN estructural 
- * mediante la aduana Zod y persistencia en el Data Lake soberano.
- * 
- * Protocolo OEDP-V17.0 - Swarm Intelligence & ISO Standards.
- * SANEADO Zenith: Resolución definitiva de TS6059, TS6307 y Purga de Cronología.
- * 
- * @author Raz Podestá - MetaShark Tech
+ * Implementa el patrón Swarm Orchestration, delegando la lógica en átomos especializados.
+ *
+ * Protocolo OEDP-V17.0 - Swarm Intelligence & High Performance.
  */
 
 import { ValidateEnvironmentAduana } from '@floripa-dignidade/environment-validator';
 import { InternalSystemException, ValidationException } from '@floripa-dignidade/exceptions';
-
-/** 
- * 🛡️ SANEADO Zenith: Separación estricta de ADN y Lógica.
- * Al usar Project References, la importación de 'identity' es ahora nominal y segura.
- */
-import { USER_ROLES } from '@floripa-dignidade/identity';
 import type { IUserIdentity } from '@floripa-dignidade/identity';
-
 import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier,
   TraceExecutionTime,
 } from '@floripa-dignidade/telemetry';
 
-/* 1. ADN Estructural del Dominio de Mensajería */
-import { CommunicationGroupSchema } from '../../schemas/CommunicationGroup.schema';
+/* 1. ADN Estructural */
 import type { ICommunicationGroup } from '../../schemas/CommunicationGroup.schema';
 
-/* 2. Enjambre Atómico Interno (Responsabilidad Única) */
+/* 2. Enjambre Atómico Local (Internal Swarm) */
+// 🛡️ Nota: Se asume corrección de rutas físicas para resolver TS2307.
+import { ValidateGroupCreationAuthority } from '../atomic/ValidateGroupCreationAuthority';
+import { ValidateCommunicationGroupAdn } from '../atomic/ValidateCommunicationGroupAdn';
 import { MapCommunicationGroupToPersistence } from '../mappers/MapCommunicationGroupToPersistence';
 import { PersistCommunicationGroup } from '../dispatchers/PersistCommunicationGroup';
 
-/** Identificador técnico del aparato para el Neural Sentinel. */
-const GROUP_CREATOR_IDENTIFIER = 'MESSAGING_GROUP_CREATOR_ORCHESTRATOR';
+const ORCHESTRATOR_IDENTIFIER = 'MESSAGING_GROUP_CREATOR_ORCHESTRATOR';
 
 /**
- * Ejecuta la creación integral de un Círculo de Comunicación (Action Hub).
- * Valida que el actor posea la jerarquía necesaria para alterar el ecosistema.
+ * Ejecuta el flujo integral de creación de un Action Hub.
  * 
- * @param unvalidatedGroupPayload - Datos propuestos para el grupo (slug, nombre, descripción).
- * @param activeActorIdentitySnapshot - ADN de la identidad que solicita la operación.
- * @returns {Promise<ICommunicationGroup>} Instancia del grupo validada, persistida y auditada.
- * @throws {ValidationException} Si el contrato de datos es inválido o la autoridad es insuficiente.
- * @throws {InternalSystemException} Si la infraestructura cloud colapsa durante la persistencia.
+ * @param unvalidatedPayload - Datos crudos del nuevo grupo.
+ * @param actorIdentity - Identidad soberana que ejecuta la acción.
  */
 export const CreateCommunicationGroup = async (
-  unvalidatedGroupPayload: unknown,
-  activeActorIdentitySnapshot: IUserIdentity
+  unvalidatedPayload: unknown,
+  actorIdentity: IUserIdentity
 ): Promise<ICommunicationGroup> => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
-
-  /**
-   * 1. CAPTURA DE INFRAESTRUCTURA (Hardware Isolation)
-   * SANEADO: La aduana garantiza la existencia de secretos de Supabase y Resend.
-   */
+  
+  // 1. ADUANA DE INFRAESTRUCTURA
   const {
-    SUPABASE_URL: cloudUrlLiteral,
-    SUPABASE_SERVICE_ROLE_KEY: cloudSecurityKeySecret,
+    SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY,
   } = ValidateEnvironmentAduana();
 
   return await TraceExecutionTime(
-    GROUP_CREATOR_IDENTIFIER,
-    'EXECUTE_ACTION_HUB_CREATION_FLOW',
+    ORCHESTRATOR_IDENTIFIER,
+    'EXECUTE_ACTION_HUB_CREATION',
     correlationIdentifier,
     async () => {
       try {
-        /**
-         * 2. AUDITORÍA DE AUTORIDAD (Identity Enforcement)
-         * Se restringe la creación de hubs a roles con capacidad de orquestación global.
-         */
-        const authorizedRolesCollection: string[] = [
-          USER_ROLES.INFRASTRUCTURE_SOVEREIGN_AUDITOR,
-          USER_ROLES.PLATFORM_GLOBAL_MANAGER,
-          USER_ROLES.ORGANIZATION_ADMINISTRATOR
-        ];
+        // 2. VALIDACIÓN DE AUTORIDAD (Aduana de Seguridad)
+        // Se delega al átomo la responsabilidad de lanzar UnauthorizedException si falla.
+        ValidateGroupCreationAuthority(actorIdentity.assignedAuthorityRoleLiteral);
 
-        const activeAuthorityRoleLiteral = activeActorIdentitySnapshot.assignedAuthorityRoleLiteral;
-        
-        /** 🛡️ SANEADO: Verificación de autoridad contra el catálogo soberano */
-        const isActorAuthorizedBoolean = authorizedRolesCollection.includes(
-          activeAuthorityRoleLiteral as string
-        );
+        // 3. VALIDACIÓN DE ADN (Aduana de Integridad)
+        const validatedGroupData = ValidateCommunicationGroupAdn(unvalidatedPayload);
 
-        if (!isActorAuthorizedBoolean) {
-          throw new ValidationException('MESSAGING.ERRORS.UNAUTHORIZED_THREAD_ACCESS', {
-            activeRoleLiteral: activeAuthorityRoleLiteral,
-            requiredRolesCollection: authorizedRolesCollection,
-            actionAttemptedLiteral: 'CREATE_COMMUNICATION_GROUP'
-          });
-        }
-
-        /**
-         * 3. ADUANA DE ADN (Safe Parsing)
-         * Purificación de los datos de entrada según el esquema de grupo inmutable.
-         */
-        const validationResult = CommunicationGroupSchema.safeParse(unvalidatedGroupPayload);
-
-        if (!validationResult.success) {
-          throw new ValidationException('MESSAGING.ERRORS.MESSAGE_ADN_CORRUPTED', {
-            structuralIssuesCollection: validationResult.error.flatten(),
-            apparatusIdentifierLiteral: 'CommunicationGroupSchema'
-          });
-        }
-
-        const validatedGroupData: ICommunicationGroup = validationResult.data;
-
-        /**
-         * 4. TRANSFORMACIÓN Y PERSISTENCIA (Delegación Atómica)
-         * Se delega el mapeo de columnas y la transacción física a átomos especializados.
-         */
-        const databasePersistencePayload = MapCommunicationGroupToPersistence(
+        // 4. MAPEO DE PERSISTENCIA
+        const persistencePayload = MapCommunicationGroupToPersistence(
           validatedGroupData,
-          activeActorIdentitySnapshot.identityIdentifier,
+          actorIdentity.identityIdentifier,
           correlationIdentifier
         );
 
+        // 5. DESPACHO A PERSISTENCIA CLOUD
         await PersistCommunicationGroup(
-          cloudUrlLiteral, 
-          cloudSecurityKeySecret, 
-          databasePersistencePayload
+          SUPABASE_URL,
+          SUPABASE_SERVICE_ROLE_KEY,
+          persistencePayload
         );
 
-        // 5. REPORTE DE ÉXITO (SRE Cognitive Analytics)
+        // 6. REPORTE SRE (Alineación Semántica)
         void EmitTelemetrySignal({
           severityLevel: 'INFO',
-          moduleIdentifier: GROUP_CREATOR_IDENTIFIER,
-          operationCode: 'ACTION_HUB_CREATED_SUCCESSFULLY',
+          moduleIdentifier: ORCHESTRATOR_IDENTIFIER,
+          operationCode: 'ACTION_HUB_CREATED',
           correlationIdentifier,
-          message: 'MESSAGING.LOGS.NOTIFICATION_BROADCAST_SUCCESS',
-          contextMetadata: { 
+          message: 'Nuevo Círculo de Comunicación registrado exitosamente.',
+          contextMetadataSnapshot: {
             groupIdentifier: validatedGroupData.groupIdentifier,
-            technicalSlugLiteral: validatedGroupData.technicalSlugLiteral,
-            creatorIdentityIdentifier: activeActorIdentitySnapshot.identityIdentifier
+            creatorIdentity: actorIdentity.identityIdentifier,
+            technicalSlug: validatedGroupData.technicalSlugLiteral
           },
         });
 
         return validatedGroupData;
 
-      } catch (caughtExecutionError: unknown) {
-        // 6. GESTIÓN FORENSE DE FALLO (Resilience Layer)
-        if (caughtExecutionError instanceof ValidationException) {
-          throw caughtExecutionError;
+      } catch (caughtError: unknown) {
+        // Gestión de excepciones de negocio (No relanzar como Internal si ya son conocidas)
+        if (caughtError instanceof ValidationException) {
+          throw caughtError;
         }
 
-        const errorDescriptionLiteral = caughtExecutionError instanceof Error 
-          ? caughtExecutionError.message 
-          : String(caughtExecutionError);
+        const errorMessage = caughtError instanceof Error ? caughtError.message : String(caughtError);
 
+        // Alerta Crítica para el Neural Sentinel
         void EmitTelemetrySignal({
           severityLevel: 'CRITICAL',
-          moduleIdentifier: GROUP_CREATOR_IDENTIFIER,
-          operationCode: 'GROUP_CREATION_FLOW_COLAPSE',
+          moduleIdentifier: ORCHESTRATOR_IDENTIFIER,
+          operationCode: 'GROUP_CREATION_COLLAPSE',
           correlationIdentifier,
-          message: 'Error crítico en el orquestador de creación de grupos institucionales.',
-          contextMetadata: { errorTraceLiteral: errorDescriptionLiteral },
+          message: 'Colapso crítico en la creación de Action Hub.',
+          contextMetadataSnapshot: { errorTrace: errorMessage },
         });
 
-        throw new InternalSystemException('FALLO_EN_ORQUESTACION_DE_GRUPO_SRE', {
-          originalErrorLiteral: errorDescriptionLiteral,
+        throw new InternalSystemException('ACTION_HUB_ORCHESTRATION_FAILURE', {
+          originalError: errorMessage,
           correlationIdentifier,
+          actorId: actorIdentity.identityIdentifier
         });
       }
     }

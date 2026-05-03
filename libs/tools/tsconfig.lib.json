@@ -1,25 +1,52 @@
+/**
+ * @section tsconfig: Emitter (Tools & CLI)
+ * @description Generador de ADN (.d.ts) para procesos de automatización y Weaver.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard (Bundler Alignment).
+ * SANEADO Zenith: Unificación de moduleResolution a 'bundler' para erradicar 
+ * el error TS2835 y restaurar la visibilidad del Grafo Core.
+ */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc/libs/tools",
     "tsBuildInfoFile": "../../dist/out-tsc/libs/tools/tsconfig.lib.tsbuildinfo",
 
-    /* --- INTEGRIDAD SOBERANA (ADN Emitter) --- */
-    "composite": true /* Habilita la compilación incremental de herramientas */,
-    "declaration": true /* Emite las firmas de tipos (.d.ts) para los disparadores CLI */,
-    "declarationMap": true /* Mapeo para trazabilidad en el IDE */,
-    "emitDeclarationOnly": true /* Delega la ejecución a TSX/Node */,
-    "rootDir": "src" /* Blindaje de frontera física absoluta */,
+    /* --- INTEGRIDAD SOBERANA (Project References) --- */
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+    "noEmit": false,
+    
+    /** 
+     * 🛡️ PROTECCIÓN DE HERENCIA
+     * Silenciamos avisos de baseUrl para asegurar compatibilidad con TS 6.0/7.0.
+     */
+    "ignoreDeprecations": "5.0",
 
-    /* --- RESOLUCIÓN NEXT-GEN --- */
+    /* --- RESOLUCIÓN ZENITH (Isomorphic Bundler Strategy) --- */
+    /**
+     * 🛡️ FIX TS2307 & TS2835: Alineación con Next.js 16.
+     * Al usar 'bundler', TypeScript permite rutas limpias (sin .js) y 
+     * resuelve correctamente los búnkeres core desde el código fuente.
+     */
     "module": "Preserve",
-    "moduleResolution": "bundler",
-    "verbatimModuleSyntax": true /* Fuerza la pureza de importación de tipos */,
+    "moduleResolution": "bundler", 
+    "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- ADN DEL ENTORNO (Node.js Automation Context) --- */
-    "types": ["node"] /* Acceso mandatorio a fs, path y process */,
-    "lib": ["ES2022"] /* Contexto de ejecución de servidor */
+    /* --- ESPEJO DE SOBERANÍA LOCAL --- */
+    "paths": {
+      "@floripa-dignidade/telemetry": ["../core/telemetry/src/index.ts"],
+      "@floripa-dignidade/telemetry/*": ["../core/telemetry/src/*"],
+      "@floripa-dignidade/exceptions": ["../core/exceptions/src/index.ts"],
+      "@floripa-dignidade/exceptions/*": ["../core/exceptions/src/*"]
+    },
+
+    /* --- ADN DEL ENTORNO (Node.js Logic) --- */
+    "types": ["node"],
+    "lib": ["ES2022"]
   },
   "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": [
@@ -33,11 +60,7 @@
     "../../node_modules"
   ],
   "references": [
-    {
-      "path": "../core/exceptions/tsconfig.lib.json"
-    },
-    {
-      "path": "../core/telemetry/tsconfig.lib.json"
-    }
+    { "path": "../core/exceptions/tsconfig.lib.json" },
+    { "path": "../core/telemetry/tsconfig.lib.json" }
   ]
 }

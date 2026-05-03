@@ -1,34 +1,73 @@
+/**
+ * @section tsconfig: Emitter (QA Mirror)
+ * @description Generador de ADN para las aserciones de calidad.
+ * Redirige la resolución de tipos hacia el código fuente (Source-First) para
+ * evitar bloqueos de compilación limpios en entornos CI/CD (Vercel).
+ * 
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ * SANEADO: Implementación de Double Mirror Paths y supresión de depreciaciones.
+ */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../dist/out-tsc/tests",
     "tsBuildInfoFile": "../dist/out-tsc/tests/tsconfig.lib.tsbuildinfo",
 
-    /* --- INTEGRIDAD SOBERANA (QA Verifier) --- */
-    "composite": true /* Habilita la validación incremental de las aserciones */,
-    "declaration": true /* Emite ADN de tipos de prueba si es necesario */,
+    /* --- Integridad Soberana (QA Verifier) --- */
+    "composite": true,
+    "declaration": true,
     "declarationMap": true,
-    "emitDeclarationOnly": true /* Los tests son ejecutados por SWC-Jest */,
-    "rootDir": "src" /* Blindaje de frontera física para archivos .spec */,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+    "noEmit": false,
+    
+    /** 
+     * 🛡️ PROTECCIÓN DE HERENCIA
+     * Mantenemos el blindaje contra avisos de baseUrl para TS 6.0/7.0.
+     */
+    "ignoreDeprecations": "5.0",
 
-    /* --- RESOLUCIÓN NEXT-GEN --- */
+    /* --- Redirección de ADN Maestro (Source-First Strategy) --- */
+    /**
+     * 🛡️ FIX TS2307 & TS6059: Apuntamos al origen (src) e inyectamos comodines (/*).
+     * Esto permite a Jest y TSC compilar sin importar si la carpeta dist está vacía.
+     */
+    "paths": {
+      "@floripa-dignidade/exceptions":["../libs/core/exceptions/src/index.ts"],
+      "@floripa-dignidade/exceptions/*": ["../libs/core/exceptions/src/*"]
+      /**
+       * @future_expansion
+       * Aquí se inyectarán los paths de cada búnker que requiera ser probado.
+       */
+    },
+
+    /* --- Resolución Next-Gen (Mantenemos Bundler para compatibilidad con SWC/Jest) --- */
     "module": "Preserve",
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* --- GOBERNANZA DE RENDERIZADO (Testing Components) --- */
+    /* --- Gobernanza de Renderizado (Component Testing) --- */
     "jsx": "react-jsx",
 
-    /* --- ADN DEL ENTORNO (QA Hybrid Context) --- */
-    "types": ["jest", "node"] /* Soporte para el motor de aserción y APIs de sistema */,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"] /* Soporte para JSDOM y componentes React */
+    /* --- ADN del Entorno (QA Hybrid Context) --- */
+    "types": ["jest", "node"],
+    "lib":["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"],
-  "exclude": ["node_modules", "dist", "out-tsc", "../dist", "../node_modules"],
-  "references": [
-    {
-      "path": "../libs/core/exceptions/tsconfig.lib.json"
-    }
+  "include":[
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx"
+  ],
+  "exclude":[
+    "node_modules",
+    "dist",
+    "out-tsc",
+    "../dist",
+    "../node_modules"
+  ],
+  "references":[
+    { "path": "../libs/core/exceptions/tsconfig.lib.json" }
   ]
 }

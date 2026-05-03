@@ -2,9 +2,9 @@
   "name": "@floripa-dignidade/content-manager-system",
   "version": "1.1.0",
   "private": true,
-  "description": "Búnker de Gestión de Contenidos Soberano basado en Payload 3.0. Orquesta la persistencia multimedia, gobernanza institucional y el rastro de identidad civil.",
+  "description": "ISO-Standard: Bunker de Gestion de Contenidos Soberano basado en Payload 3.0.",
   "type": "module",
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "nx": {
     "tags": [

@@ -1,10 +1,9 @@
 /**
  * @section Messaging Logic - User Presence Heartbeat Mutator
- * @description Átomo encargado de actualizar el pulso de vida y el estado
- * de disponibilidad del ciudadano. Gestiona el registro de tokens de 
- * dispositivos para la entrega de notificaciones Push (PWA).
+ * @description Orquestador encargado de validar y persistir el pulso de vida.
+ * Asegura la integridad del contrato de presencia antes del volcado al Ledger.
  *
- * Protocolo OEDP-V16.0 - High Performance & Real-time SRE.
+ * Protocolo OEDP-V17.0 - High Performance & Atomic Responsibility.
  */
 
 import { ValidateEnvironmentAduana } from '@floripa-dignidade/environment-validator';
@@ -15,92 +14,95 @@ import {
   TraceExecutionTime,
 } from '@floripa-dignidade/telemetry';
 
-/* 1. ADN de Presencia (Verbatim Module Syntax) */
 import { UserPresenceSchema } from '../../schemas/UserPresence.schema';
 import type { IUserPresence } from '../../schemas/UserPresence.schema';
 
-/** Identificador técnico del sensor de vida. */
-const PRESENCE_MUTATOR_IDENTIFIER = 'CITIZEN_PRESENCE_HEARTBEAT_MUTATOR';
+const MUTATOR_IDENTIFIER = 'CITIZEN_PRESENCE_HEARTBEAT_MUTATOR';
 
 /**
- * Ejecuta la actualización del estado de presencia en el Tier de Datos.
- * Implementa una estrategia 'Upsert' para mantener un único registro por ciudadano.
- *
- * @param unvalidatedPresencePayloadSnapshot - Snapshot del estado actual del cliente.
- * @returns {Promise<boolean>} Verdadero si el pulso fue recibido por la nube.
+ * Ejecuta la actualización soberana del estado de presencia.
+ * @param unvalidatedPayload - Datos crudos provenientes del pulso del cliente.
  */
 export const UpdateUserPresence = async (
-  unvalidatedPresencePayloadSnapshot: unknown
+  unvalidatedPayload: unknown
 ): Promise<boolean> => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
-
-  // 1. CAPTURA DE INFRAESTRUCTURA
-  const {
-    SUPABASE_URL: cloudUrl,
-    SUPABASE_SERVICE_ROLE_KEY: cloudKey,
-  } = ValidateEnvironmentAduana();
+  const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = ValidateEnvironmentAduana();
 
   return await TraceExecutionTime(
-    PRESENCE_MUTATOR_IDENTIFIER,
-    'EXECUTE_PRESENCE_HEARTBEAT_UPDATE',
+    MUTATOR_IDENTIFIER,
+    'PRESENCE_HEARTBEAT_SYNC',
     correlationIdentifier,
     async () => {
+      // 1. ADUANA DE ADN (Validación de Contrato)
+      const validation = UserPresenceSchema.safeParse(unvalidatedPayload);
+
+      if (!validation.success) {
+        throw new InternalSystemException('PRESENCE_DNA_VIOLATION', {
+          correlationIdentifier,
+          validationErrors: validation.error.format(),
+          intent: 'VALIDATE_PRESENCE_PAYLOAD'
+        });
+      }
+
+      const validatedData = validation.data;
+
       try {
-        // 2. ADUANA DE ADN (Safe Parsing)
-        const validationResult = UserPresenceSchema.safeParse(unvalidatedPresencePayloadSnapshot);
-
-        if (!validationResult.success) {
-          throw new Error('PRESENCE_CONTRACT_VIOLATION');
-        }
-
-        const validatedPresenceData: IUserPresence = validationResult.data;
-
-        /**
-         * 3. PERSISTENCIA CLOUD (PostgREST Upsert Protocol)
-         * Actualiza el estado y el token de dispositivo. El campo 'on_conflict' 
-         * asegura que solo exista un registro de presencia por ciudadano.
-         */
-        const cloudResponse = await fetch(`${cloudUrl}/rest/v1/user_presence_ledger`, {
+        // 2. PERSISTENCIA (Protocolo PostgREST Upsert)
+        // Atomizamos la construcción del recurso para evitar errores de mapeo.
+        const ledgerPayload = MapPresenceToLedger(validatedData, correlationIdentifier);
+        
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/user_presence_ledger`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'apikey': cloudKey,
-            'Authorization': `Bearer ${cloudKey}`,
+            'apikey': SUPABASE_SERVICE_ROLE_KEY,
+            'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
             'Prefer': 'resolution=merge-duplicates',
           },
-          body: JSON.stringify({
-            citizen_id: validatedPresenceData.citizenIdentifier,
-            availability_status: validatedPresenceData.currentAvailabilityStatus,
-            custom_status_text: validatedPresenceData.customStatusMessageLiteral,
-            platform_type: validatedPresenceData.lastActivePlatformLiteral,
-            push_token: validatedPresenceData.activePushSubscriptionTokenSecret,
-            last_heartbeat_at: validatedPresenceData.lastHeartbeatTimestampISO,
-            correlation_id: correlationIdentifier,
-          }),
+          body: JSON.stringify(ledgerPayload),
         });
 
-        if (!cloudResponse.ok) {
-          throw new Error(`DATABASE_PROVIDER_FAULT_${cloudResponse.status}`);
+        if (!response.ok) {
+          throw new Error(`LEDGER_REJECTION_HTTP_${response.status}`);
         }
 
-        // 4. REPORTE SRE (Vigilancia de Conectividad)
-        EmitTelemetrySignal({
-          severityLevel: 'DEBUG',
-          moduleIdentifier: PRESENCE_MUTATOR_IDENTIFIER,
-          operationCode: 'HEARTBEAT_NOMINAL',
+        // 3. REPORTE SRE
+        void EmitTelemetrySignal({
+          severityLevel: 'INFO',
+          moduleIdentifier: MUTATOR_IDENTIFIER,
+          operationCode: 'HEARTBEAT_ACKNOWLEDGED',
           correlationIdentifier,
-          message: `Ciudadano [${validatedPresenceData.citizenIdentifier}] sincronizado en [${validatedPresenceData.currentAvailabilityStatus}].`,
-          contextMetadata: { platform: validatedPresenceData.lastActivePlatformLiteral }
+          message: 'Pulso de vida sincronizado con el Ledger.',
+          contextMetadataSnapshot: { 
+            citizenId: validatedData.citizenIdentifier,
+            status: validatedData.currentAvailabilityStatus 
+          }
         });
 
         return true;
 
       } catch (caughtError: unknown) {
-        throw new InternalSystemException('FALLO_EN_SINCRONIZACION_DE_PRESENCIA_SRE', {
-          originalErrorLiteral: caughtError instanceof Error ? caughtError.message : String(caughtError),
+        throw new InternalSystemException('PRESENCE_SYNC_FAILED', {
           correlationIdentifier,
+          originalError: caughtError instanceof Error ? caughtError.message : String(caughtError),
+          citizenId: validatedData.citizenIdentifier
         });
       }
     }
   );
 };
+
+/**
+ * 🔒 ATOMIZACIÓN PRIVADA: Mapeador de Infraestructura.
+ * Traduce el modelo de dominio al modelo de persistencia (snake_case).
+ */
+const MapPresenceToLedger = (data: IUserPresence, correlationId: string) => ({
+  citizen_id: data.citizenIdentifier,
+  availability_status: data.currentAvailabilityStatus,
+  custom_status_text: data.customStatusMessageLiteral,
+  platform_type: data.lastActivePlatformLiteral,
+  push_token: data.activePushSubscriptionTokenSecret,
+  last_heartbeat_at: data.lastHeartbeatTimestampISO,
+  correlation_id: correlationId,
+});

@@ -1,61 +1,68 @@
 /**
  * @section Identity Module - Sovereign Package Entry Point (Barrel)
- * @description Único ponto de exportação autorizado para o búnker de identidade.
- * Orquestra a visibilidade dos contratos de ADN, lógica de autoridade e
- * configurações de segurança para o ecossistema Floripa Dignidade.
+ * @description Único punto de exportación autorizado para el búnker de identidad.
+ * Orquestra la visibilidad de los contratos de ADN, lógica de autoridad y
+ * configuraciones de seguridad para el ecosistema Floripa Dignidade.
  *
  * Protocolo OEDP-V17.0 - Single Source Resolution & SSOT Alignment.
- * SANEADO Zenith: Purga de exportações obsoletas e sincronização com a nova hierarquia.
+ * SANEADO Zenith: Sincronización de exportaciones nominales (Fix TS2305 / TS2724).
  *
  * @author Raz Podestá - MetaShark Tech
  * @license UNLICENSED
  */
 
 /**
- * @version 1.3.0
- * Estatus: Nivelamento Zenith completo. Suporte para Hierarquia Bayeseana,
- * Persistência Cloud (SyncIdentityAuthority) e Blindagem Criptográfica.
+ * @version 1.3.1
+ * Estatus: Nivelación Zenith completada. Grafo de visibilidad sanado para
+ * los motores de mensajería e interacción.
  */
-export const MODULE_IDENTITY_VERSION = '1.3.0';
+export const MODULE_IDENTITY_VERSION = '1.3.1';
 
 /**
- * @section Camada 1: ADN Estrutural (Schemas & Types)
- * Exportação de contratos inalteráveis para validação de perfis e papéis.
+ * @section Capa 1: ADN Estructural (Schemas & Types)
+ * @description Exportación de contratos inalterables para validación de perfiles y roles.
  */
 export {
+  SocialIdentityProviderSchema,
   UserIdentifierSchema,
   UserIdentitySchema,
-  SocialIdentityProviderSchema
 } from './lib/schemas/UserIdentity.schema';
 
 export type {
+  SocialIdentityProvider, // 🛡️ SANEADO: Desbloquea el tipado en mappers externos.
   UserIdentifier,
-  IUserIdentity
+  IUserIdentity,
 } from './lib/schemas/UserIdentity.schema';
 
 export {
   UserAccessRoleSchema,
-  USER_ACCESS_ROLES_COLLECTION
+  USER_ACCESS_ROLES_COLLECTION,
+  /**
+   * 🛡️ SANEADO Zenith: Alias de compatibilidad institucional.
+   * Evita la ruptura del 'messaging-engine' mientras se completa la
+   * migración hacia la nueva nomenclatura ISO.
+   */
+  USER_ACCESS_ROLES_COLLECTION as USER_ROLES,
 } from './lib/schemas/UserAccessRole.schema';
 
 export type {
-  UserAccessRole
+  UserAccessRole,
 } from './lib/schemas/UserAccessRole.schema';
 
 /**
- * @section Camada 2: Infraestrutura e Segurança
- * Definições técnicas de resiliência e governança criptográfica.
+ * @section Capa 2: Infraestructura y Seguridad
+ * @description Definiciones técnicas de resiliencia y gobernanza criptográfica.
  */
 export {
-  IDENTITY_SECURITY_CONFIG
+  IDENTITY_SECURITY_CONFIG,
 } from './lib/constants/IdentitySecurityConfiguration';
 
 /**
- * @section Camada 3: Motores de Lógica e Orquestração
- * Unidades funcionais para gestão de acesso e soberania.
+ * @section Capa 3: Motores de Lógica y Orquestación (Atoms & Orchestrators)
+ * @description Unidades funcionales para la gestión de acceso y soberanía de autoridad.
  */
 
-// Orquestradores Principais (RBAC Sentry & Persistência)
+// Orquestadores Principales (RBAC Sentry & Persistencia Cloud)
 export { ValidateUserAccess } from './lib/logic/ValidateUserAccess';
 export { SyncIdentityAuthority } from './lib/logic/SyncIdentityAuthority';
 
@@ -65,18 +72,19 @@ export { CalculateIdentityAuthority } from './lib/logic/atomic/CalculateIdentity
 export { ValidateInfrastructureSovereignAuthority } from './lib/logic/atomic/ValidateInfrastructureSovereignAuthority';
 
 /**
- * @section Camada 4: Contratos de Átomos (Sub-Schemas)
- * Necessário para aplicações que realizam triagem de formulários ou auditoria.
+ * @section Capa 4: Contratos de Átomos (Specific Parameters)
+ * @description Tipado necesario para aplicaciones que realizan triaje de
+ * formularios o auditoría forense de parámetros.
  */
 export type {
-  IAnonymizeCitizenNameParameters
+  IAnonymizeCitizenNameParameters,
 } from './lib/logic/atomic/schemas/AnonymizeCitizenName.schema';
 
 export type {
   ICalculateIdentityAuthorityParameters,
-  IIdentityAuthorityResult
+  IIdentityAuthorityResult,
 } from './lib/logic/atomic/schemas/CalculateIdentityAuthority.schema';
 
 export type {
-  IValidateInfrastructureSovereignAuthorityParameters
+  IValidateInfrastructureSovereignAuthorityParameters,
 } from './lib/logic/atomic/schemas/ValidateInfrastructureSovereignAuthority.schema';

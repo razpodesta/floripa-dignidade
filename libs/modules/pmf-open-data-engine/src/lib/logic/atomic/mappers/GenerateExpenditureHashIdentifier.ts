@@ -1,12 +1,11 @@
 /**
  * @section PMF Engine Logic - Expenditure Hash Generator
- * @description Átomo de lógica pura encargado de la integridad forense. Genera un
- * identificador único determinista utilizando el algoritmo SHA-256. Asegura que
- * cada registro de gasto sea inalterable y previene la duplicidad de datos en el
- * Data Lake ante múltiples sincronizaciones.
+ * @description Átomo encargado de la integridad forense. Genera un
+ * identificador único determinista garantizando que cada registro 
+ * de gasto sea inalterable ante múltiples sincronizaciones.
  *
  * Protocolo OEDP-V17.0 - High Performance SRE & Cryptographic Integrity.
- * Vision: Immutable Civic Audit Trail.
+ * SANEADO Zenith: Atomización de sub-rutinas criptográficas y blindaje TS2724.
  *
  * @author Raz Podestá - MetaShark Tech
  */
@@ -17,7 +16,11 @@ import {
 } from '@floripa-dignidade/telemetry';
 
 /* 1. ADN de Destino (Branded Type) */
-import type { ExpenditureIdentifier } from '../../../schemas/sovereign/PublicExpenditure.schema';
+/** 
+ * 🛡️ FIX TS2724 & ESM: Sincronización de nomenclatura con el prefijo 'T' 
+ * e inyección de extensión '.js' obligatoria.
+ */
+import type { TPublicExpenditureIdentifier } from '../../../schemas/sovereign/PublicExpenditure.schema.js';
 
 /** Identificador técnico del aparato para el Neural Sentinel. */
 const CRYPTO_HASHER_IDENTIFIER = 'EXPENDITURE_FORENSIC_HASHER';
@@ -33,71 +36,68 @@ interface IHashSourceMetadata {
 }
 
 /**
+ * 🔒 ATOMIZACIÓN PRIVADA: Motor Criptográfico
+ * Aísla la complejidad de la Web Crypto API y la manipulación de Buffers.
+ * Función pura: (String) -> (String Hexadecimal).
+ */
+const ComputeSha256HexLiteral = async (sourceLiteral: string): Promise<string> => {
+  const encoderInstance = new TextEncoder();
+  const dataBuffer = encoderInstance.encode(sourceLiteral);
+
+  const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+
+  const hashArrayCollection = Array.from(new Uint8Array(hashBuffer));
+  return hashArrayCollection
+    .map(byte => byte.toString(16).padStart(2, '0'))
+    .join('');
+};
+
+/**
  * Genera un identificador único basado en una suma de comprobación criptográfica.
  * Implementa ejecución asíncrona optimizada para el Edge de Vercel.
  *
  * @param metadata - Datos inmutables del registro gubernamental.
  * @param correlationIdentifier - ID de trazabilidad forense.
- * @returns {Promise<ExpenditureIdentifier>} Hash en formato hexadecimal con marca institucional.
+ * @returns {Promise<TPublicExpenditureIdentifier>} Hash en formato hexadecimal con marca institucional.
  */
 export const GenerateExpenditureHashIdentifier = async (
   metadata: IHashSourceMetadata,
   correlationIdentifier: string = GenerateCorrelationIdentifier()
-): Promise<ExpenditureIdentifier> => {
+): Promise<TPublicExpenditureIdentifier> => {
 
   try {
-    /**
-     * 1. CONSTRUCCIÓN DE LA CADENA DE IDENTIDAD
-     * Combinamos los factores que definen la unicidad del gasto.
-     */
-    const identityStringSource = [
+    // 1. CONSTRUCCIÓN DE LA CADENA DE IDENTIDAD (Business Logic)
+    const identityStringSourceLiteral =[
       metadata.municipalitySlugLiteral.toLowerCase(),
       metadata.fiscalYearNumeric.toString(),
       metadata.governmentReferenceLiteral.trim()
     ].join('|');
 
-    /**
-     * 2. PROCESAMIENTO CRIPTOGRÁFICO (SHA-256)
-     * Utilizamos la Web Crypto API nativa para garantizar latencia cero
-     * y evitar dependencias de Node.js en el Edge.
-     */
-    const encoderInstance = new TextEncoder();
-    const dataBuffer = encoderInstance.encode(identityStringSource);
+    // 2. PROCESAMIENTO CRIPTOGRÁFICO (Delegación Atómica)
+    const hexDigestLiteral = await ComputeSha256HexLiteral(identityStringSourceLiteral);
 
-    const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+    // 3. SELLADO INSTITUCIONAL
+    const finalSovereignIdentifierLiteral = `FD-${hexDigestLiteral.substring(0, 16).toUpperCase()}`;
 
-    // Transformación del buffer a cadena hexadecimal técnica
-    const hashArrayCollection = Array.from(new Uint8Array(hashBuffer));
-    const hexDigestLiteral = hashArrayCollection
-      .map(byte => byte.toString(16).padStart(2, '0'))
-      .join('');
-
-    /**
-     * 3. SELLADO INSTITUCIONAL
-     * El prefijo FD- (Floripa Dignidade) marca la autoridad del dato.
-     */
-    const finalSovereignIdentifier = `FD-${hexDigestLiteral.substring(0, 16).toUpperCase()}`;
-
-    return finalSovereignIdentifier as ExpenditureIdentifier;
+    /** 🛡️ CASTING SOBERANO: Elevación del string al tipo bridado requerido */
+    return finalSovereignIdentifierLiteral as TPublicExpenditureIdentifier;
 
   } catch (caughtError: unknown) {
-    /**
-     * @section Gestión de Fallo Crítico (Resilience)
-     * Si la API de criptografía falla, emitimos señal de emergencia.
-     */
+    // 4. GESTIÓN DE FALLO CRÍTICO (Resilience)
     void EmitTelemetrySignal({
       severityLevel: 'CRITICAL',
       moduleIdentifier: CRYPTO_HASHER_IDENTIFIER,
       operationCode: 'CRYPTOGRAPHIC_ALGORITHM_FAULT',
       correlationIdentifier,
       message: 'No se pudo generar la firma de integridad del gasto público.',
-      contextMetadata: { errorTrace: String(caughtError) }
+      /** 🛡️ SANEADO: Alineación con el estándar OEDP-V17 (Snapshot) */
+      contextMetadataSnapshot: { errorTrace: String(caughtError) }
     });
 
     /**
      * Fallback de seguridad: ID aleatorio pero marcado como no-determinista
      * para evitar detención del sistema, aunque requiere auditoría manual.
      */
-    return `TEMP-UNCERTIFIED-${GenerateCorrelationIdentifier()}` as ExpenditureIdentifier;
+    return `TEMP-UNCERTIFIED-${GenerateCorrelationIdentifier()}` as TPublicExpenditureIdentifier;
   }
 };

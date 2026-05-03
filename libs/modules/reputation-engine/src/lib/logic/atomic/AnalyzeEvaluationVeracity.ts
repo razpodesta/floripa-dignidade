@@ -1,71 +1,36 @@
 /**
- * @section Reputation Logic - Evaluation Veracity Analyzer
- * @description Átomo de inteligencia encargado de la auditoría de veracidad
- * cualitativa. Orquesta la comunicación con el Neural Sentinel para detectar
- * sesgos o falsedades en los testimonios ciudadanos.
+ * @section Reputation Logic - Evaluation Veracity Analyzer (Orchestrator)
+ * @description Orquestador de inteligencia encargado de la auditoría de veracidad
+ * cualitativa. Coordina la comunicación con el Neural Sentinel para detectar
+ * sesgos o falsedades en testimonios ciudadanos.
  *
- * Protocolo OEDP-V17.0 - High Performance SRE & Swarm Intelligence.
- * SANEADO Zenith: Resolución TS2307 (Corrección de alias del motor),
- * atomización de la aduana de fallback y purga de variables flotantes (void).
+ * Protocolo OEDP-V17.0 - Swarm Intelligence & High Performance SRE.
+ * SANEADO Zenith: Sincronización PascalCase, Resolución de Ceguera (TS2307) y SRP.
  *
  * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
-import { InternalSystemException } from '@floripa-dignidade/exceptions';
-/** 🛡️ SANEADO Zenith: Corrección de alias del paquete (health-analysis -> health-analysis-engine) */
+import { MapHttpErrorToException } from '@floripa-dignidade/exceptions';
 import { AnalyzeSystemHealthInference } from '@floripa-dignidade/health-analysis-engine';
 import { EmitTelemetrySignal, TraceExecutionTime } from '@floripa-dignidade/telemetry';
 
-/* 1. ADN Estructural (Verbatim Module Syntax) */
-import { VeracityAnalysisSchema } from '../../schemas/VeracityAnalysis.schema';
+/* 1. ADN Estructural */
 import type { IVeracityAnalysis } from '../../schemas/VeracityAnalysis.schema';
+
+/* 2. Enjambre Atómico Local (Internal Swarm) */
+import { BuildVeracityAuditPayload } from './BuildVeracityAuditPayload';
+import { ValidateCognitiveVeracityAdn } from './ValidateCognitiveVeracityAdn';
 
 /** Identificador técnico para el Neural Sentinel. */
 const VERACITY_ANALYZER_IDENTIFIER = 'REPUTATION_VERACITY_ANALYZER';
 
 /**
- * @section Átomo Interno: Aduana de Fallback Resiliente
- * @description Separa la lógica de validación Zod y el manejo de contingencias
- * (cuando la IA alucina o el formato cambia) del orquestador principal.
- */
-const validateCognitiveOutputAndHandleFallback = (
-  unvalidatedAuditOutput: unknown,
-  correlationIdentifier: string
-): IVeracityAnalysis => {
-  const veracityValidationResult = VeracityAnalysisSchema.safeParse(unvalidatedAuditOutput);
-
-  if (!veracityValidationResult.success) {
-    /** Fallback resiliente: Si la IA falla, marcamos para revisión humana. */
-    void EmitTelemetrySignal({
-      severityLevel: 'WARNING',
-      moduleIdentifier: VERACITY_ANALYZER_IDENTIFIER,
-      operationCode: 'COGNITIVE_ADN_INCONSISTENCY',
-      correlationIdentifier,
-      message: 'REPUTATION.LOGS.ANOMALY_DETECTED',
-      contextMetadata: {
-        fallbackTriggered: true,
-        structuralIssuesCollection: veracityValidationResult.error.flatten()
-      }
-    });
-
-    return {
-      veracityConfidenceScoreNumeric: 0.5,
-      semanticFlagsCollection:['LOGICAL_INCONSISTENCY'],
-      moderationActionSuggestion: 'FLAG_FOR_REVIEW',
-      inferenceReasoningLiteral: 'Auditoría automática inconsistente; requiere triaje humano.'
-    };
-  }
-
-  return veracityValidationResult.data;
-};
-
-/**
- * Ejecuta una auditoría cognitiva sobre el contenido textual de una evaluación.
+ * Ejecuta una auditoría cognitiva integral sobre el contenido de una evaluación.
  *
  * @param qualitativeCommentaryLiteral - El texto argumentativo del ciudadano.
- * @param correlationIdentifier - Identificador de trazabilidad del flujo de origen.
- * @returns {Promise<IVeracityAnalysis>} Resultado de la auditoría validado por Zod.
- * @throws {InternalSystemException} Si el enjambre de IA no responde.
+ * @param correlationIdentifier - Identificador de trazabilidad forense.
+ * @returns {Promise<IVeracityAnalysis>} Resultado de la auditoría purificado.
  */
 export const AnalyzeEvaluationVeracity = async (
   qualitativeCommentaryLiteral: string,
@@ -74,41 +39,35 @@ export const AnalyzeEvaluationVeracity = async (
 
   return await TraceExecutionTime(
     VERACITY_ANALYZER_IDENTIFIER,
-    'EXECUTE_COGNITIVE_VERACITY_AUDIT',
+    'EXECUTE_COGNITIVE_VERACITY_AUDIT_TRANSACTION',
     correlationIdentifier,
     async () => {
       try {
-        /**
-         * @section Inferencia de Inteligencia (Swarm Sync)
-         * Se utiliza el motor de análisis de salud como proveedor de inferencia
-         * para asegurar la soberanía del dato (ADR 0015).
-         */
-        const intelligencePayloadSnapshot = {
-          targetTextToAudit: qualitativeCommentaryLiteral,
-          auditTaskIdentifier: 'VERACITY_AND_ETHICS_SCAN'
-        };
+        // 1. CONSTRUCCIÓN DE CONTRATO (Delegación Atómica)
+        const intelligencePayloadSnapshot = BuildVeracityAuditPayload(qualitativeCommentaryLiteral);
 
-        const rawInferenceResponse = await AnalyzeSystemHealthInference(
+        // 2. INFERENCIA COGNITIVA (Health Analysis Engine Synergy)
+        const rawInferenceResponseSnapshot = await AnalyzeSystemHealthInference(
           intelligencePayloadSnapshot,
           'HUGGING_FACE'
         );
 
-        // 1. ADUANA DE ADN (Delegación Atómica)
-        const validatedVeracityResult = validateCognitiveOutputAndHandleFallback(
-          rawInferenceResponse.metadata['veracityAuditOutput'],
+        // 3. ADUANA DE ADN Y GESTIÓN DE FALLBACK (Delegación Atómica)
+        const validatedVeracityResult = ValidateCognitiveVeracityAdn(
+          rawInferenceResponseSnapshot.metadata['veracityAuditOutput'],
           correlationIdentifier
         );
 
-        // 2. REPORTE DE ESTADO (SRE Visibility)
+        // 4. REPORTE DE RESULTADO (SRE Visibility)
         void EmitTelemetrySignal({
           severityLevel: validatedVeracityResult.moderationActionSuggestion === 'REJECT' ? 'WARNING' : 'INFO',
           moduleIdentifier: VERACITY_ANALYZER_IDENTIFIER,
           operationCode: 'VERACITY_SCAN_COMPLETED',
           correlationIdentifier,
-          message: 'REPUTATION.LOGS.SUBMISSION_NOMINAL',
-          contextMetadata: {
-            confidenceScore: validatedVeracityResult.veracityConfidenceScoreNumeric,
-            suggestion: validatedVeracityResult.moderationActionSuggestion
+          message: 'Auditoria de veracidad finalizada exitosamente.',
+          contextMetadataSnapshot: {
+            confidenceScoreNumeric: validatedVeracityResult.veracityConfidenceScoreNumeric,
+            moderationActionLiteral: validatedVeracityResult.moderationActionSuggestion
           }
         });
 
@@ -119,7 +78,7 @@ export const AnalyzeEvaluationVeracity = async (
           ? caughtError.message
           : String(caughtError);
 
-        throw new InternalSystemException('FALLO_EN_AUDITORIA_DE_VERACIDAD_SRE', {
+        throw MapHttpErrorToException(500, 'FALLO_EN_AUDITORIA_DE_VERACIDAD_COGNITIVA', {
           originalErrorLiteral: errorDescriptionLiteral,
           correlationIdentifier
         });

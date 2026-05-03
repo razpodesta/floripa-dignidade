@@ -33,7 +33,7 @@
     "typecheck": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc -p apps/floripa-dignidade/tsconfig.json --noEmit"
+        "command": "tsc -p apps/floripa-dignidade/tsconfig.app.json --noEmit"
       },
       "cache": true
     }

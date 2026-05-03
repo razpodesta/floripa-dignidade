@@ -3,18 +3,19 @@
  * @description Único punto de exportación autorizado para el búnker de inteligencia
  * de datos abiertos. Orquesta la visibilidad de los contratos de ADN.
  *
- * Protocolo OEDP-V17.0 - Single Source Resolution & Verbatim Module Syntax.
- * SANEADO Zenith: Separación estricta entre ADN (tipos) y Cuerpo (lógica).
+ * Protocolo OEDP-V17.0 - Single Source Resolution & Bundler-Ready Syntax.
+ * SANEADO Zenith: Remoción de extensiones .js para compatibilidad con Turbopack,
+ * alineación de nomenclatura ISO y soberanía de tipos bridados.
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
 /**
- * @version 1.2.1
- * Estatus: Nivelación Zenith completada. Soporte para Identificadores
- * Territoriales Nominales y resolución de Grafo de Tipos.
+ * @version 1.2.3
+ * Estatus: Nivelación Zenith completada. Resolución de colisiones con Next.js 16.
+ * Sincronización de Identificadores Bridados y Limpieza de Rastro ESM.
  */
-export const MODULE_PMF_OPEN_DATA_ENGINE_VERSION = '1.2.1';
+export const MODULE_PMF_OPEN_DATA_ENGINE_VERSION = '1.2.3';
 
 /**
  * @section Capa 1: ADN Estructural (Schemas & Types)
@@ -35,18 +36,22 @@ export type {
 } from './lib/schemas/protocol/EPublicaExpense.schema';
 
 // 1.2. Contratos Soberanos (Sovereign Data Normalized)
+/**
+ * 🛡️ INTEGRIDAD SOBERANA: Sincronización de Identidades (Branded Types).
+ * Los nombres reflejan la jerarquía de tipado nominal del ecosistema.
+ */
 export {
-  ExpenditureIdentifierSchema,
+  PublicExpenditureIdentifierSchema,
   ProviderCnpjSchema,
   PublicExpenditureSchema,
   TerritorialTechnicalIdentifierSchema,
 } from './lib/schemas/sovereign/PublicExpenditure.schema';
 
 export type {
-  ExpenditureIdentifier,
+  TPublicExpenditureIdentifier,
   IPublicExpenditure,
-  ProviderCnpj,
-  TerritorialTechnicalIdentifier,
+  TProviderCnpj,
+  TTerritorialTechnicalIdentifier,
 } from './lib/schemas/sovereign/PublicExpenditure.schema';
 
 /**

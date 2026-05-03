@@ -1,53 +1,59 @@
 /**
  * @section Territorial Logic - IBGE Data Mapper
- * @description Átomo encargado de transformar el esquema crudo de la API del IBGE
- * en el ADN soberano de TerritorialEntity. Delega la limpieza de nombres al
- * atomo de saneamiento toponímico.
+ * @description Átomo encargado de transformar el ADN crudo gubernamental (IBGE)
+ * en entidades territoriales soberanas con identidad brindada.
  *
- * Protocolo OEDP-V16.0 - High Performance & Separation of Concerns (SRP).
- * SANEADO Zenith: Inyección de SanitizeTerritoryName y rigor de tipos.
- *
- * @author Raz Podestá - MetaShark Tech
+ * Protocolo OEDP-V17.0 - Functional Atomicity & Branded Type Integrity.
  */
 
-import { SanitizeTerritoryName } from './SanitizeTerritoryName';
+/** 
+ * 🛡️ RIGOR ESM: Extensiones .js requeridas para el motor de resolución Node16.
+ */
+import { SanitizeTerritoryName } from './SanitizeTerritoryName.js';
 
-/* 1. ADN Estructural (Verbatim Module Syntax) */
-import type { ITerritorialEntity } from '../../schemas/TerritorialEntity.schema';
-import type { IIbgeDistrictRawResponse } from '../../schemas/IbgeTerritorialProtocols.schema';
+/* 1. ADN Estructural y Tipos Nominales */
+import type { 
+  ITerritorialEntity, 
+  TTerritorialTechnicalIdentifier 
+} from '../../schemas/TerritorialEntity.schema.js';
+import type { IIbgeDistrictRawResponse } from '../../schemas/IbgeTerritorialProtocols.schema.js';
 
 /**
- * Transforma una respuesta de distrito del IBGE en una entidad soberana.
- *
- * @param incomingIbgeDistrictSnapshot - Objeto crudo del proveedor gubernamental.
- * @returns {ITerritorialEntity} Entidad purificada e integrada.
+ * Transforma un registro de distrito del IBGE en una entidad purificada.
+ * ⚡ PERFORMANCE: Operación sincrónica pura para procesamiento masivo de arrays.
+ * 
+ * @param rawDistrict - Snapshot crudo del proveedor externo.
+ * @returns {ITerritorialEntity} Entidad con identidad brindada y nombre saneado.
  */
 export const MapIbgeToTerritorialEntity = (
-  incomingIbgeDistrictSnapshot: IIbgeDistrictRawResponse
+  rawDistrict: IIbgeDistrictRawResponse
 ): ITerritorialEntity => {
   /**
-   * @section Saneamiento de Identidad Geográfica
-   * Delegamos la responsabilidad de normalización para asegurar que
-   * "Florianópolis" siempre se mapee como "FLORIANOPOLIS".
+   * @section SANEAMIENTO TOPONÍMICO
+   * Delegación atómica para asegurar la pureza lingüística (Uppercase/ASCII).
    */
-  const officialTerritoryNameLiteral = SanitizeTerritoryName(
-    incomingIbgeDistrictSnapshot.nome
-  );
+  const officialName = SanitizeTerritoryName(rawDistrict.nome);
+
+  /**
+   * @section IDENTIDAD SOBERANA
+   * Transformamos el ID numérico del IBGE en una firma técnica.
+   */
+  const technicalIdLiteral = rawDistrict.id.toString();
 
   return {
     /**
-     * Mantenemos el ID del IBGE como llave técnica de interoperabilidad.
+     * 🛡️ SOVEREIGN CASTING: 
+     * Resolvemos el error TS2322 inyectando la marca de tipo nominal. 
+     * Validamos que este rastro de texto es ahora una identidad territorial legítima.
      */
-    territorialTechnicalIdentifier: incomingIbgeDistrictSnapshot.id.toString(),
+    territorialTechnicalIdentifier: technicalIdLiteral as TTerritorialTechnicalIdentifier,
 
-    officialTerritoryNameLiteral,
+    officialTerritoryNameLiteral: officialName,
 
-    /** Por defecto, los registros de este endpoint se clasifican como distritos. */
+    /** Clasificación jerárquica por defecto según el endpoint de origen. */
     administrativeHierarchyLevel: 'DISTRICT',
 
-    /**
-     * Registro de integridad temporal para el motor de sincronización.
-     */
+    /** Sincronización de rastro temporal ISO 8601 */
     lastSovereignSyncTimestampISO: new Date().toISOString(),
   };
 };

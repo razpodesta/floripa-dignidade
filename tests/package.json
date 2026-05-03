@@ -1,11 +1,11 @@
 {
   "name": "@floripa-dignidade/qa-mirror",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Búnker Espejo de Calidade e Asseveração de Lógica. Implementa a Doutrina de Mirror Testing para o desacoplamento físico entre a lógica de negócio e a lógica de teste, garantindo a pureza dos artefatos de produção e a integridade do ecossistema sob o padrão ISO/IEC 25010.",
+  "description": "ISO-Standard: Bunker Espejo de Calidad y Asercion de Logica. Implementa la Doctrina de Mirror Testing para el desacoplamiento fisico de pruebas.",
   "type": "module",
   "sideEffects": false,
-  "author": "Raz Podestá - MetaShark Tech",
+  "author": "Raz Podesta - MetaShark Tech",
   "license": "UNLICENSED",
   "exports": {
     ".": {
@@ -15,7 +15,7 @@
     }
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "@swc/helpers": "~0.5.18"
   },
   "devDependencies": {
     "@testing-library/react": "16.3.0",

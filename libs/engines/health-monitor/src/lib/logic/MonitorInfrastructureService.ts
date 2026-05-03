@@ -1,93 +1,132 @@
 /**
- * @section Health Monitoring - Infrastructure Probe
- * @description Aparato de vigilancia lógica para servicios externos del ecosistema.
- * Evalúa disponibilidad y latencia, reportando anomalías al sistema de telemetría.
+ * @section Health Monitoring - Infrastructure Probe Orchestrator
+ * @description Orquestador superior encargado de la vigilancia logica de servicios
+ * externos e internos. Ejecuta sondas de salud (Health Probes), mide la latencia
+ * de respuesta y clasifica el estado ontologico del hardware bajo auditoria.
  *
- * SANEADO Zenith: Sincronizacion de importacion PascalCase (Fix TS2724).
- * Protocolo OEDP-V17.0 - Verbatim Module Syntax & ISO Technical Naming.
+ * Protocolo OEDP-V17.0 - Swarm Intelligence & High Performance SRE.
+ * SANEADO Zenith: Sincronización PascalCase (Fix TS2724) e Integridad Forense.
  *
  * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
-import { MapHttpErrorToException } from '@floripa-dignidade/exceptions'; // 🛡️ SANEADO
+import { MapHttpErrorToException } from '@floripa-dignidade/exceptions';
 import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier,
-  ReportForensicException
+  ReportForensicException,
+  TraceExecutionTime,
 } from '@floripa-dignidade/telemetry';
 
-/* 1. ADN Estructural (Verbatim Module Syntax) */
-import type {
-  HealthStatus,
-  IInfrastructureCheck
-} from '../schemas/HealthStatus.schema';
+/* 1. ADN Estructural y Átomos de Especialidad (PascalCase) */
+import type { HealthStatus, IInfrastructureCheck } from '../schemas/HealthStatus.schema';
+import { ClassifyInfrastructureHealth } from './atomic/ClassifyInfrastructureHealth';
 
-const MAXIMUM_NOMINAL_LATENCY_MILLISECONDS = 500;
+/** Identificador técnico del motor para el Neural Sentinel. */
 const MONITOR_MODULE_IDENTIFIER = 'INFRASTRUCTURE_HEALTH_MONITOR';
 
 /**
- * Ejecuta una sonda de salud sobre un servicio externo.
+ * Ejecuta una sonda de salud integral sobre un servicio del ecosistema.
+ * Implementa un patron de ejecucion blindado con triaje automatico de excepciones.
  *
- * @param targetServiceNameLiteral - Nombre técnico del servicio.
- * @param executeHealthCheckAction - Acción encapsulada de validación.
- * @returns {Promise<IInfrastructureCheck>} Reporte estructurado del estado de salud.
+ * @param targetServiceNameLiteral - Nombre tecnico del servicio (ej: SUPABASE_REST_API).
+ * @param executeHealthCheckAction - Accion atomica que valida la conexion fisica.
+ * @returns {Promise<IInfrastructureCheck>} Reporte de salud normalizado para el Ledger SRE.
  */
 export const MonitorInfrastructureService = async (
   targetServiceNameLiteral: string,
-  executeHealthCheckAction: () => Promise<void>
+  executeHealthCheckAction: () => Promise<void>,
 ): Promise<IInfrastructureCheck> => {
+  /**
+   * Generamos la "Traza de Sangre Digital" que vinculara la sonda con
+   * cualquier anomalia detectada en el bus de datos.
+   */
   const correlationIdentifier = GenerateCorrelationIdentifier();
-  const startTimeInMilliseconds = performance.now();
+  const startTimeNumeric = performance.now();
 
-  let infrastructureHealthStatus: HealthStatus = 'UP';
+  let isServiceOperationallyFunctionalBoolean = true;
 
   try {
-    await executeHealthCheckAction();
-  } catch (caughtError) {
-    infrastructureHealthStatus = 'DOWN';
+    /**
+     * @section Ejecución de Sonda (Performance Wrapped)
+     * Delegamos la ejecucion al wrapper de telemetria para asegurar que
+     * la latencia del hardware sea auditada por el sistema nervioso central.
+     */
+    await TraceExecutionTime(
+      MONITOR_MODULE_IDENTIFIER,
+      `HEALTH_PROBE_${targetServiceNameLiteral.toUpperCase()}`,
+      correlationIdentifier,
+      executeHealthCheckAction,
+    );
+  } catch (caughtError: unknown) {
+    /**
+     * @section Gestion de Colapso de Sonda
+     * Si la accion falla, marcamos el servicio como no funcional y
+     * transformamos el error en una excepcion institucional.
+     */
+    isServiceOperationallyFunctionalBoolean = false;
 
-    // 🛡️ SANEADO: Uso del atomo nivelado en PascalCase
     const infrastructureServiceException = MapHttpErrorToException(
       503,
-      `FALLO_CRITICO_EN_SERVICIO_EXTERNO: ${targetServiceNameLiteral}`,
+      `INFRASTRUCTURE_SERVICE_FAULT: ${targetServiceNameLiteral}`,
       {
         targetServiceNameLiteral,
-        originalErrorMessage: caughtError instanceof Error ? caughtError.message : String(caughtError)
-      }
+        originalErrorMessageLiteral: caughtError instanceof Error ? caughtError.message : String(caughtError),
+        correlationIdentifier,
+      },
     );
 
+    // Reporte forense inmediato para intervencion de ingenieria.
     ReportForensicException(infrastructureServiceException, correlationIdentifier);
   }
 
-  const executionLatencyInMilliseconds = performance.now() - startTimeInMilliseconds;
+  // 1. CAPTURA DE MÉTRICAS SRE
+  const executionLatencyInMillisecondsQuantity = performance.now() - startTimeNumeric;
 
-  if (
-    infrastructureHealthStatus === 'UP' &&
-    executionLatencyInMilliseconds > MAXIMUM_NOMINAL_LATENCY_MILLISECONDS
-  ) {
-    infrastructureHealthStatus = 'DEGRADED';
-  }
+  /**
+   * 2. CLASIFICACIÓN DE ESTADO (Delegación Atómica)
+   * Resolvemos el estatus (UP | DEGRADED | DOWN) basado en la disponibilidad
+   * y los umbrales de latencia definidos en la aduana de clasificacion.
+   */
+  const infrastructureHealthStatus: HealthStatus = ClassifyInfrastructureHealth(
+    isServiceOperationallyFunctionalBoolean,
+    executionLatencyInMillisecondsQuantity,
+  );
 
-  const infrastructureHealthReport: IInfrastructureCheck = {
+  /**
+   * 3. CONSTRUCCIÓN DE SNAPSHOT DE SALIDA
+   * ADN inmutable del reporte para el consumidor superior.
+   */
+  const healthReportSnapshot: IInfrastructureCheck = {
     serviceName: targetServiceNameLiteral,
     status: infrastructureHealthStatus,
-    latencyInMilliseconds: executionLatencyInMilliseconds,
-    lastCheckTimestamp: new Date().toISOString()
+    latencyInMilliseconds: executionLatencyInMillisecondsQuantity,
+    lastCheckTimestamp: new Date().toISOString(),
   };
 
+  /**
+   * 4. REPORTE DE CIERRE ZENITH (Final Audit Trail)
+   * Notificamos al Neural Sentinel la finalizacion de la auditoria fisica.
+   */
   void EmitTelemetrySignal({
-    severityLevel: infrastructureHealthStatus === 'DOWN' ? 'CRITICAL' :
-                   infrastructureHealthStatus === 'DEGRADED' ? 'WARNING' : 'INFO',
+    severityLevel:
+      infrastructureHealthStatus === 'DOWN'
+        ? 'CRITICAL'
+        : infrastructureHealthStatus === 'DEGRADED'
+        ? 'WARNING'
+        : 'INFO',
     moduleIdentifier: MONITOR_MODULE_IDENTIFIER,
-    operationCode: `HEALTH_PROBE_${targetServiceNameLiteral.toUpperCase()}_EXECUTED`,
+    operationCode: `HEALTH_PROBE_FINISHED_${targetServiceNameLiteral.toUpperCase()}`,
     correlationIdentifier,
-    message: `Sonda de salud finalizada para [${targetServiceNameLiteral}]: [${infrastructureHealthStatus}]`,
-    executionLatencyInMillisecondsQuantity: executionLatencyInMilliseconds, // 🛡️ Naming ISO
-    contextMetadataSnapshot: { // 🛡️ Naming ISO
-      infrastructureStatus: infrastructureHealthStatus,
-      isNominal: infrastructureHealthStatus === 'UP'
-    }
+    message: `Auditoria de infraestructura finalizada: [${targetServiceNameLiteral}] -> [${infrastructureHealthStatus}]`,
+    executionLatencyInMillisecondsQuantity,
+    contextMetadataSnapshot: {
+      infrastructureStatusLiteral: infrastructureHealthStatus,
+      isNominalBoolean: infrastructureHealthStatus === 'UP',
+      targetServiceNameLiteral,
+    },
   });
 
-  return infrastructureHealthReport;
+  return healthReportSnapshot;
 };

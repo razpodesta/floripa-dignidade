@@ -1,7 +1,11 @@
+/**
+ * @section tsconfig: Emitter/Consumer
+ * @description Configuracion de ejecucion para Payload CMS con Redireccion de ADN.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    /* --- GOBERNANZA DE RENDERIZADO NEXT.JS 16 --- */
     "jsx": "preserve",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "Preserve",
@@ -10,13 +14,21 @@
     "strict": true,
     "noEmit": false,
 
-    /* --- ESTRATEGIA DE SALIDA --- */
     "outDir": "../../dist/out-tsc/apps/content-manager-system",
     "tsBuildInfoFile": "../../dist/out-tsc/apps/content-manager-system/tsconfig.app.tsbuildinfo",
 
-    /* --- ADUANA DE ADN LOCAL --- */
+    /**
+     * 🛡️ MANIOBRA DE REDIRECCIÓN DE ADN (OEDP-V17.0)
+     * La aplicacion consume las firmas fisicas (.d.ts) para evitar TS6059.
+     */
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@floripa-dignidade/exceptions": ["../../dist/out-tsc/libs/core/exceptions/index.d.ts"],
+      "@floripa-dignidade/telemetry": ["../../dist/out-tsc/libs/core/telemetry/index.d.ts"],
+      "@floripa-dignidade/environment-validator": [
+        "../../dist/out-tsc/libs/core/environment-validator/index.d.ts"
+      ],
+      "@floripa-dignidade/identity": ["../../dist/out-tsc/libs/modules/identity/index.d.ts"]
     },
 
     "plugins": [
@@ -25,7 +37,6 @@
       }
     ],
 
-    /* Soporte para el rastro de hardware de Node.js (Payload context) */
     "types": ["node"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "index.d.ts", "next-env.d.ts", ".next/types/**/*.ts"],

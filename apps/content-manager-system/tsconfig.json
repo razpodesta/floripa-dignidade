@@ -1,3 +1,8 @@
+/**
+ * @section tsconfig: Gatekeeper
+ * @description Orquestrador de la configuracion de la aplicacion CMS.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
@@ -6,8 +11,6 @@
   },
   "files": [],
   "include": [],
-  /* --- SOVEREIGN PROJECT REFERENCES --- */
-  /* 🛡️ LEY DEL GRAFO: Enlaces físicos a los búnkeres consumidos por el CMS */
   "references": [
     {
       "path": "./tsconfig.app.json"

@@ -1,26 +1,21 @@
 /**
  * @section API Route Handler - Newsletter Confirmation Gateway
  * @description Orquestador soberano para la transición de ciudadanos de estado
- * PENDING a ACTIVE. Valida el desafío de identidad y gestiona la redirección localizada.
+ * PENDING a ACTIVE. Implementa el patrón Swarm Orchestration.
  *
- * Protocolo OEDP-V16.0 - High Performance Edge Architecture.
- * Vision: Hyper-Holistic UX & Cloud Sovereign Integration.
+ * Protocolo OEDP-V17.0 - High Performance Edge & PascalCase Sync.
+ * SANEADO Zenith: Sincronización de Identidad (Fix TS2724) y Atomización SRP.
  *
  * @author Raz Podestá - MetaShark Tech
+ * @license UNLICENSED
  */
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { z } from 'zod';
 
-/* 1. Infraestructura Core (PascalCase Atoms - Sorted Alphabetically) */
-import {
-  mapHttpErrorToException,
-  ValidationException,
-} from '@floripa-dignidade/exceptions';
-
+/* 1. Infraestructura Core (Atmos PascalCase) */
+import { MapHttpErrorToException, ValidationException } from '@floripa-dignidade/exceptions';
 import { DetermineDeviceLocale } from '@floripa-dignidade/routing';
-
 import {
   EmitTelemetrySignal,
   GenerateCorrelationIdentifier,
@@ -31,117 +26,79 @@ import {
 /* 2. Lógica de Dominio (Modular Lego) */
 import { ActivateCloudSubscription } from '@floripa-dignidade/newsletter';
 
+/* 3. Enjambre Atómico Local (UI/Logic Bridge) */
+import { ExtractConfirmationToken } from './logic/ExtractConfirmationToken';
+import { CalculateConfirmationRedirect } from './logic/CalculateConfirmationRedirect';
+
 /**
  * @section Gobernanza de Ejecución
- * Cumplimiento ADR 0015: Ejecución Stateless en el Edge de Vercel para latencia < 50ms.
+ * ADR 0015: Ejecución Stateless en el Edge de Vercel (Latencia < 50ms).
  */
 export const runtime = 'edge';
 
-/** Identificador técnico para el Neural Sentinel. */
-const CONFIRMATION_GATEWAY_IDENTIFIER = 'API_NEWSLETTER_CONFIRM_GATEWAY';
+/** Identificador técnico del sensor de frontera. */
+const GATEWAY_IDENTIFIER = 'API_NEWSLETTER_CONFIRM_GATEWAY';
 
 /**
- * @name NewsletterConfirmationQuerySchema
- * @description Aduana de ADN para los parámetros de búsqueda de la URL.
- * SANEADO: Se utiliza el estándar UUID para el token de seguridad.
- */
-const NewsletterConfirmationQuerySchema = z.object({
-  token: z.string()
-    .uuid({ message: 'INVALID_TOKEN_FORMAT' })
-    .describe('Token de verificación generado en el registro inicial.'),
-}).readonly();
-
-/**
- * Manejador de solicitudes GET para la consolidación de suscripción.
- * Realiza el triaje de identidad y redirige al ciudadano a su destino final.
- *
- * @param incomingRequest - Objeto de solicitud nativa del motor Next.js.
- * @returns {Promise<NextResponse>} Redirección localizada basada en el resultado de activación.
+ * Manejador GET: Consolidación de Identidad Ciudadana.
  */
 export const GET = async (incomingRequest: NextRequest): Promise<NextResponse> => {
   const correlationIdentifier = GenerateCorrelationIdentifier();
 
-  // 1. INFERENCIA DE LOCALIZACIÓN PARA REDIRECCIÓN (UX Localization)
+  // 1. INFERENCIA SENSORIAL (UX Detection)
   const acceptLanguageHeaderLiteral = incomingRequest.headers.get('accept-language');
   const detectedLocaleIdentifier = DetermineDeviceLocale(acceptLanguageHeaderLiteral);
 
   return await TraceExecutionTime(
-    CONFIRMATION_GATEWAY_IDENTIFIER,
+    GATEWAY_IDENTIFIER,
     'GATEWAY_CONFIRMATION_ORCHESTRATION',
     correlationIdentifier,
     async () => {
       try {
-        // 2. EXTRACCIÓN Y AUDITORÍA DE ADN (Search Parameters)
+        // 2. EXTRACCIÓN DE ADN (Delegación Atómica)
         const { searchParams } = new URL(incomingRequest.url);
-        const queryValidationResult = NewsletterConfirmationQuerySchema.safeParse({
-          token: searchParams.get('token'),
-        });
+        const verificationTokenLiteral = ExtractConfirmationToken(searchParams);
 
-        if (!queryValidationResult.success) {
-          throw new ValidationException('TOKEN_DE_CONFIRMACION_INVALIDO', {
-            validationIssues: queryValidationResult.error.flatten(),
-          });
-        }
-
-        const { token: verificationTokenLiteral } = queryValidationResult.data;
-
-        // 3. INVOCACIÓN DEL ÁTOMO DE ACTIVACIÓN (Soberanía Cloud)
+        // 3. ACTIVACIÓN SOBERANA (Cloud Domain)
         const activationResult = await ActivateCloudSubscription(verificationTokenLiteral);
 
-        // 4. ORQUESTACIÓN DE SALIDA (Redirección Inteligente)
-        if (activationResult.isActivationSuccessfulBoolean) {
-          const targetSuccessUrlLiteral = new URL(
-            `/${detectedLocaleIdentifier}/newsletter/welcome?status=success`,
-            incomingRequest.url
-          );
-
-          EmitTelemetrySignal({
-            severityLevel: 'INFO',
-            moduleIdentifier: CONFIRMATION_GATEWAY_IDENTIFIER,
-            operationCode: 'CITIZEN_ACTIVATION_REDIRECTION',
-            correlationIdentifier,
-            message: `Ciudadano activado exitosamente. Redirigiendo a zona de bienvenida [${detectedLocaleIdentifier}].`,
-          });
-
-          return NextResponse.redirect(targetSuccessUrlLiteral);
-        }
-
-        // Caso: Token válido pero no encontrado en base o ya utilizado (Anomalía)
-        const targetFailureUrlLiteral = new URL(
-          `/${detectedLocaleIdentifier}/newsletter/invalid-token`,
+        // 4. CÁLCULO DE NAVEGACIÓN (Delegación Atómica)
+        const targetUrl = CalculateConfirmationRedirect(
+          activationResult,
+          detectedLocaleIdentifier,
           incomingRequest.url
         );
 
-        EmitTelemetrySignal({
-          severityLevel: 'WARNING',
-          moduleIdentifier: CONFIRMATION_GATEWAY_IDENTIFIER,
-          operationCode: 'ACTIVATION_TOKEN_NOT_FOUND',
+        // 5. REPORTE SRE (Visibility)
+        void EmitTelemetrySignal({
+          severityLevel: activationResult.isActivationSuccessfulBoolean ? 'INFO' : 'WARNING',
+          moduleIdentifier: GATEWAY_IDENTIFIER,
+          operationCode: activationResult.isActivationSuccessfulBoolean ? 'ACTIVATION_SUCCESS' : 'ACTIVATION_FAILED',
           correlationIdentifier,
-          message: 'Intento de activación con token inexistente o expirado.',
+          message: `Resultado de activación procesado para [${detectedLocaleIdentifier}].`,
         });
 
-        return NextResponse.redirect(targetFailureUrlLiteral);
+        return NextResponse.redirect(targetUrl);
 
       } catch (caughtError: unknown) {
-        // 5. GESTIÓN FORENSE DE FALLOS (Resilience Layer)
+        // 6. GESTIÓN FORENSE DE FALLO (Resilience Layer)
 
-        /** 🛡️ SANEADO: Extracción segura de la excepción para reporte forense */
         const normalizedException = caughtError instanceof ValidationException
           ? caughtError
-          : mapHttpErrorToException(500, 'UNEXPECTED_CONFIRMATION_FAULT', {
+          : MapHttpErrorToException(500, 'UNEXPECTED_CONFIRMATION_FAULT', {
               originalErrorLiteral: caughtError instanceof Error ? caughtError.message : String(caughtError),
             });
 
-        // Reporte automático al Neural Sentinel
+        // Alerta automática al Neural Sentinel
         ReportForensicException(normalizedException, correlationIdentifier);
 
-        // Redirección de seguridad a página de error del sistema
-        const targetErrorUrlLiteral = new URL(
+        // Redirección de seguridad a página de fallo localizada
+        const targetErrorUrl = new URL(
           `/${detectedLocaleIdentifier}/error?code=CONFIRMATION_FAULT&trace=${correlationIdentifier}`,
           incomingRequest.url
         );
 
-        return NextResponse.redirect(targetErrorUrlLiteral);
+        return NextResponse.redirect(targetErrorUrl);
       }
     }
   );

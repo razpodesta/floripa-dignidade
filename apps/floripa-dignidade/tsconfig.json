@@ -1,24 +1,16 @@
+/**
+ * @section tsconfig: Gatekeeper
+ * @description Orquestrador de la configuracion del Portal Ciudadano.
+ * Protocolo OEDP-V17.0 - Zenith Architecture Standard.
+ */
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    /**
-     * 🛡️ ESTRATEGIA GATEKEEPER:
-     * Este archivo no emite código ni busca archivos directamente.
-     * Delega la responsabilidad de emisión al 'tsconfig.app.json'.
-     */
     "noEmit": true,
     "ignoreDeprecations": "5.0"
   },
-
-  /* 🛡️ LEY DEL ORQUESTADOR: Prohibido incluir archivos aquí para evitar colisiones de grafo. */
   "files": [],
   "include": [],
-
-  /**
-   * @section Grafo de Referencias Soberanas
-   * Define la jerarquía física de construcción. Nx y TSC utilizan este mapa
-   * para resolver las declaraciones (.d.ts) antes de procesar la App.
-   */
   "references": [
     {
       "path": "./tsconfig.app.json"

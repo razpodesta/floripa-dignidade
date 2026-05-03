@@ -1,46 +1,47 @@
 /**
  * @section Messaging DNA - Communication Group Schema
- * @description Contrato soberano para la gestión de Grupos de Comunicación e Impacto.
- * Define la estructura de "Action Hubs" territoriales e institucionales, con
- * soporte para gobernanza multinivel y auditoría social.
+ * @description Contrato soberano para la gestión de Grupos de Comunicación (Action Hubs).
+ * Define la estructura de gobernanza, visibilidad e integridad territorial.
  *
- * Protocolo OEDP-V16.0 - High Performance SRE & Data Sovereignty.
- * Vision: Context-Aware Communication Hubs (Superior to WhatsApp/Twitter).
- *
- * @author Raz Podestá - MetaShark Tech
+ * Protocolo OEDP-V17.0 - High Performance & Data Sovereignty.
  */
 
 import { z } from 'zod';
 
 /**
- * @section ADN Criptográfico - Tipado Nominal
+ * @section ADN Criptográfico - Tipado Nominal (Branding)
+ * 🛡️ Blindaje contra confusión de identificadores en el Data Lake.
  */
 export const GroupIdentifierSchema = z.string().uuid().brand<'CommunicationGroupIdentifier'>();
-export type GroupIdentifier = z.infer<typeof GroupIdentifierSchema>;
+export type TGroupIdentifier = z.infer<typeof GroupIdentifierSchema>;
 
 /**
  * Modelos de Gobernanza de Grupo.
- * BROADCAST_ONLY: Solo autoridades emiten (Ej: Alertas oficiales).
- * MODERATED_DIALOGUE: Participación ciudadana con filtro previo.
- * OPEN_COLLABORATION: Interacción fluida entre ciudadanos verificados.
  */
 export const GroupGovernanceModelSchema = z.enum([
-  'BROADCAST_ONLY',
-  'MODERATED_DIALOGUE',
-  'OPEN_COLLABORATION'
-]).describe('Modelo de interacción y permisos de despacho del grupo.');
+  'BROADCAST_ONLY',      // Solo autoridades emiten.
+  'MODERATED_DIALOGUE',  // Participación ciudadana con filtro.
+  'OPEN_COLLABORATION'   // Interacción fluida entre ciudadanos verificados.
+]).describe('Modelo de interacción y permisos de despacho del hub.');
 
 /**
  * Niveles de Visibilidad Soberana.
- * PUBLIC_TRANSPARENCY: Indexable y visible para cualquier ciudadano.
- * VERIFIED_ONLY: Solo accesible para identidades validadas por la ONG.
- * INSTITUTIONAL_PRIVATE: Grupos técnicos de operación interna.
  */
 export const GroupVisibilityModeSchema = z.enum([
-  'PUBLIC_TRANSPARENCY',
-  'VERIFIED_ONLY',
-  'INSTITUTIONAL_PRIVATE'
-]).describe('Nivel de exposición del grupo en el buscador universal.');
+  'PUBLIC_TRANSPARENCY',   // Indexable universalmente.
+  'VERIFIED_ONLY',         // Solo identidades validadas.
+  'INSTITUTIONAL_PRIVATE'  // Operación técnica interna.
+]).describe('Nivel de exposición en el buscador universal.');
+
+/**
+ * Metadatos de Participación e Impacto.
+ * ⚡ ATOMIZADO: Permite el triaje estadístico por el Neural Sentinel.
+ */
+export const GroupParticipationMetadataSchema = z.object({
+  totalMemberQuantity: z.number().int().nonnegative().default(0),
+  isOfficialVerifiedBoolean: z.boolean().default(false),
+  lastActivityTimestampISO: z.string().datetime().optional()
+}).default({});
 
 /**
  * @name CommunicationGroupSchema
@@ -48,40 +49,29 @@ export const GroupVisibilityModeSchema = z.enum([
  */
 export const CommunicationGroupSchema = z.object({
   
-  /** Identificador único inalterable del Hub. */
+  /** Identificador único inalterable. */
   groupIdentifier: GroupIdentifierSchema,
 
-  /** Nombre oficial del grupo (Ej: "Comité de Ética - Bairro Tapera"). */
+  /** Nombre oficial (Ej: "Comité de Ética - Bairro Tapera"). */
   officialDisplayNameLiteral: z.string()
-    .min(3)
-    .max(120)
-    .describe('Nombre público del círculo de comunicación.'),
+    .min(3, 'NOMBRE_DEMASIADO_CORTO')
+    .max(120, 'NOMBRE_DEMASIADO_LARGO'),
 
-  /** 
-   * Identificador de Red (Slug).
-   * ISO Standard Path: Ej. "alerta-tapera-norte".
-   */
+  /** Identificador de Red (Slug) ISO Standard. */
   technicalSlugLiteral: z.string()
-    .regex(/^[a-z0-9-]+$/)
-    .describe('Identificador único para URLs y menciones técnicas.'),
+    .regex(/^[a-z0-9-]+$/, 'FORMATO_SLUG_INVALIDO')
+    .describe('Identificador único para URLs y ruteo técnico.'),
 
   groupDescriptionLiteral: z.string()
-    .max(500)
-    .describe('Propósito y reglas de convivencia del grupo.'),
+    .max(500, 'DESCRIPCION_DEMASIADO_LARGA'),
 
-  /** 
-   * Vínculo Institucional.
-   * Referencia al UUID de la Organización propietaria en el CMS.
-   */
+  /** Referencia a la Organización propietaria (CMS Link). */
   organizationalOwnerIdentifier: z.string().uuid()
-    .describe('Entidad responsable de la moderación y veracidad del grupo.'),
+    .describe('Entidad responsable de la moderación.'),
 
-  /** 
-   * Enfoque Territorial (IBGE Integration).
-   * ID técnico del distrito o barrio capturado del territorial-engine.
-   */
+  /** Vínculo Territorial (Integración con territorial-engine). */
   territorialFocusIdentifier: z.string().optional()
-    .describe('ID de localidad oficial que ancla el grupo a un territorio físico.'),
+    .describe('ID de localidad oficial (Barrio/Distrito).'),
 
   governanceModelLiteral: GroupGovernanceModelSchema
     .default('MODERATED_DIALOGUE'),
@@ -89,27 +79,21 @@ export const CommunicationGroupSchema = z.object({
   visibilityModeLiteral: GroupVisibilityModeSchema
     .default('VERIFIED_ONLY'),
 
-  /** 
-   * Metadatos de Participación.
-   * Permite al Neural Sentinel realizar triaje estadístico de impacto.
-   */
-  participationMetadata: z.object({
-    totalMemberQuantity: z.number().int().nonnegative().default(0),
-    isOfficialVerifiedBoolean: z.boolean().default(false),
-    lastActivityTimestampISO: z.string().datetime().optional()
-  }),
-
   /** Estado Operativo (Soft Delete Protocol). */
   operationalStatusLiteral: z.enum(['ACTIVE', 'SUSPENDED', 'ARCHIVED'])
     .default('ACTIVE'),
 
-  occurrenceTimestampISO: z.string().datetime()
-    .describe('Fecha de creación del Hub en la infraestructura soberana.'),
+  participationMetadata: GroupParticipationMetadataSchema,
+
+  /** Marca temporal de creación en la infraestructura. */
+  occurrenceTimestampISO: z.string().datetime(),
 
 }).readonly();
 
 /**
  * @section ADN Tipado (Verbatim Module Syntax)
+ * Exportaciones nominales para erradicar errores de resolución de tipos.
  */
 export type ICommunicationGroup = z.infer<typeof CommunicationGroupSchema>;
 export type TGroupGovernanceModel = z.infer<typeof GroupGovernanceModelSchema>;
+export type TGroupVisibilityMode = z.infer<typeof GroupVisibilityModeSchema>;

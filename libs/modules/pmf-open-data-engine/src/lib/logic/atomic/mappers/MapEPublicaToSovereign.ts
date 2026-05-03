@@ -5,20 +5,26 @@
  * en inteligencia civil inmutable y validada por Zod.
  *
  * Protocolo OEDP-V17.0 - Swarm Intelligence & ISO Technical Naming.
- * SANEADO Zenith: Resolución de error 'sort-imports' y atomización total.
+ * SANEADO Zenith: Remoción de extensiones .js para compatibilidad con Next.js 16,
+ * sincronización de Branded Types y cumplimiento de Rutas Limpias.
  *
  * @author Raz Podestá - MetaShark Tech
  */
 
 import { EmitTelemetrySignal, TraceExecutionTime } from '@floripa-dignidade/telemetry';
 
-/* 1. ADN de Entrada y Salida (Alphabetical Order - ISO Compliance) */
+/* 1. ADN de Entrada y Salida (Verbatim Module Syntax - RUTAS LIMPIAS) */
+/**
+ * 🛡️ RESOLUCIÓN ZENITH: Se purgan las extensiones .js. El Bundler orquestado
+ * por Next.js 16 resolverá los archivos .ts de forma nativa.
+ */
 import {
-  type ExpenditureIdentifier,
-  type IPublicExpenditure,
   PublicExpenditureSchema,
-  type TerritorialTechnicalIdentifier,
+  type IPublicExpenditure,
+  type TPublicExpenditureIdentifier,
+  type TTerritorialTechnicalIdentifier,
 } from '../../../schemas/sovereign/PublicExpenditure.schema';
+
 import type { IEPublicaExpenseRaw } from '../../../schemas/protocol/EPublicaExpense.schema';
 
 /* 2. Enjambre Atómico de Soporte (Mappers especializados) */
@@ -72,14 +78,15 @@ export const MapEPublicaToSovereign = async (
        * Construimos el snapshot inmutable para el Data Lake.
        */
       const sovereignExpenditureSnapshot = {
-        expenditureIdentifier: `PMF-EXP-${registro.empenho.numero}` as ExpenditureIdentifier,
+        /** 🛡️ CASTING SOBERANO: Vinculación con los tipos bridados nominales */
+        expenditureIdentifier: `PMF-EXP-${registro.empenho.numero}` as TPublicExpenditureIdentifier,
         governmentTechnicalReferenceLiteral: registro.empenho.numero.toString(),
 
         /**
          * @future_integration
-         * Vinculación geográfica basada en el rastro del IBGE.
+         * Vinculación geográfica basada en el rastro del IBGE (Fase 8).
          */
-        targetTerritoryIdentifier: '4205407' as TerritorialTechnicalIdentifier,
+        targetTerritoryIdentifier: '4205407' as TTerritorialTechnicalIdentifier,
 
         totalExecutedAmountNumeric,
         providerMetadata,
@@ -103,20 +110,20 @@ export const MapEPublicaToSovereign = async (
           operationCode: 'SOVEREIGN_MAPPING_VIOLATION',
           correlationIdentifier,
           message: 'Fallo al homogenizar registro: El ADN de salida viola el contrato.',
-          contextMetadata: { issuesCollection: validationResult.error.flatten() },
+          contextMetadataSnapshot: { issuesCollection: validationResult.error.flatten() },
         });
 
         throw new Error('PMF_ENGINE.ERRORS.MAPPING_TRANSFORMATION_FAULT');
       }
 
-      // 4. REPORTE DE ÉXITO
+      // 4. REPORTE DE ÉXITO (SRE Visibility)
       void EmitTelemetrySignal({
         severityLevel: 'INFO',
         moduleIdentifier: DATA_MAPPER_IDENTIFIER,
         operationCode: 'RECORD_NORMALIZATION_SUCCESS',
         correlationIdentifier,
         message: 'PMF_ENGINE.LOGS.RECORD_MAPPED',
-        contextMetadata: { id: sovereignExpenditureSnapshot.expenditureIdentifier },
+        contextMetadataSnapshot: { id: sovereignExpenditureSnapshot.expenditureIdentifier },
       });
 
       return validationResult.data;
